@@ -1,4 +1,5 @@
 import Button from "@/components/ui/Button";
+import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { ChevronRight } from "lucide-react";
 
 export function HeroSection() {
@@ -30,7 +31,7 @@ export function HeroSection() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 sm:mb-16 animate-fade-in-buttons">
           <Button text="Learn More" href="/services" variant="outline" />
           <Button text="Contact Us" variant="common" href="/contact" />
-          <Button
+          <CommonButton
             text="Get Started"
             icon={<ChevronRight className="w-6 h-6" />}
           />

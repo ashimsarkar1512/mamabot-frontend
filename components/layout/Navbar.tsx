@@ -71,7 +71,7 @@ export default function Navbar() {
                 className="w-full h-full object-contain text-foreground "
               />
             </div>
-            <span className="text-lg text-primary font-semibold text-foreground">
+            <span className="text-lg text-[#D82479] font-semibold text-foreground">
               Mamabot
             </span>
           </Link>

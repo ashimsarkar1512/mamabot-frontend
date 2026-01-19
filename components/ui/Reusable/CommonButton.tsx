@@ -25,7 +25,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
       className={cn(
         // base
         "group inline-flex items-center justify-center gap-2",
-        "px-6 py-3 rounded-xl",
+        "px-6 py-3 rounded-full cursor-pointer",
         "text-sm sm:text-base md:text-lg font-semibold",
         "transition-all duration-300 ease-out",
 
