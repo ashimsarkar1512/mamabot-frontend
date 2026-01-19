@@ -12,7 +12,7 @@ export default function AdminSidebar() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto pt-16 md:pt-0">
+    <div className="h-full flex flex-col overflow-y-auto  pt-16 md:pt-0 sidebar-scroll">
       <div className="flex border-b !border-b-[#F3BBD5] pb-10 items-center duration-200 cursor-pointer">
         <div className="w-10 h-10 md:w-12 md:h-12 mr-1 flex items-center justify-center">
           <Image
@@ -58,12 +58,12 @@ export default function AdminSidebar() {
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3">
             <Image
-            src="/images/Avatar.png"
-            alt="Cliste"
-            width={48}
-            height={48}
-            className="w-full h-full object-contain text-foreground "
-          />
+              src="/images/Avatar.png"
+              alt="Cliste"
+              width={48}
+              height={48}
+              className="w-full h-full object-contain text-foreground "
+            />
           </div>
           <div>
             <p className="text-lg font-medium text-gray-800">Sarah Colins</p>
@@ -74,3 +74,9 @@ export default function AdminSidebar() {
     </div>
   );
 }
+
+
+
+
+
+
