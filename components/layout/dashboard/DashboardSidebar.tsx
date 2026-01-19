@@ -8,7 +8,7 @@ export default function DashboardSidebar() {
         <h2 className="text-lg font-semibold text-gray-800">Dashboard Panel</h2>
       </div>
 
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 ">
         <ul className="space-y-2">
           <li>
             <a

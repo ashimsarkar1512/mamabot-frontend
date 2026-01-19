@@ -1,50 +1,131 @@
+"use client";
 import React from "react";
-import { Home, Users, BarChart3, Settings, LogOut, User } from "lucide-react";
+import {
+  Users,
+  User,
+  Search,
+  MessagesSquare,
+  TriangleAlert,
+  BellIcon,
+  CalendarRange,
+  AppleIcon,
+  TrendingUp,
+  BrainCircuit,
+  MenuSquare,
+} from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function AdminSidebar() {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => pathname === href;
+
   return (
     <div className="h-full flex flex-col pt-16 md:pt-0">
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800">Admin Panel</h2>
+      <div className="flex border-b !border-b-[#F3BBD5] pb-10 items-center duration-200 cursor-pointer">
+        <div className="w-10 h-10 md:w-12 md:h-12 mr-1 flex items-center justify-center">
+          <Image
+            src="/images/icon.png"
+            alt="Cliste"
+            width={36}
+            height={36}
+            className="w-full h-full object-contain text-foreground "
+          />
+        </div>
+        <span className="text-3xl text-[#D82479] font-semibold text-foreground">
+          Mamabot
+        </span>
+        <Search className="text-[#D82479] w-5 h-5 ml-auto" />
       </div>
 
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
+      <nav className="flex-1 pt-10 ">
+        <ul className="space-y-2 ">
           <li>
             <Link
               href="/admin-dashboard"
-              className="flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group"
+              className={`flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group ${
+                isActive("/admin-dashboard")
+                  ? "bg-[#F3BBD5] text-[#D82479]"
+                  : "text-[#D82479] hover:bg-[#F3BBD5]"
+              }
+    `}
             >
-              <Home className="w-5 h-5" />
-              <span className="ml-3">Overview</span>
+              <Users className="w-5 h-5" />
+              <span className="ml-3">User Management</span>
             </Link>
           </li>
           <li>
             <Link
               href="/admin-dashboard/users"
-              className="flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
             >
-              <Users className="w-5 h-5" />
-              <span className="ml-3">Users</span>
+              <MessagesSquare className="w-5 h-5" />
+              <span className="ml-3">Community Monitoring</span>
             </Link>
           </li>
           <li>
             <Link
               href="/admin-dashboard/analytics"
-              className="flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
             >
-              <BarChart3 className="w-5 h-5" />
+              <TriangleAlert className="w-5 h-5" />
+              <span className="ml-3">Reported Content</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-dashboard/settings"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
+            >
+              <BellIcon className="w-5 h-5" />
+              <span className="ml-3">Announcements</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-dashboard/settings"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
+            >
+              <CalendarRange className="w-5 h-5" />
+              <span className="ml-3">Weekly Pregnancy Content</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-dashboard/settings"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
+            >
+              <AppleIcon className="w-5 h-5" />
+              <span className="ml-3">Diet & Hydration</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-dashboard/settings"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
+            >
+              <TrendingUp className="w-5 h-5" />
               <span className="ml-3">Analytics</span>
             </Link>
           </li>
           <li>
             <Link
               href="/admin-dashboard/settings"
-              className="flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
             >
-              <Settings className="w-5 h-5" />
-              <span className="ml-3">Settings</span>
+              <BrainCircuit className="w-5 h-5" />
+              <span className="ml-3">AI Rules</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/admin-dashboard/settings"
+              className="flex items-center p-3 text-lg text-[#D82479] rounded-lg hover:bg-gray-100 group"
+            >
+              <MenuSquare className="w-5 h-5" />
+              <span className="ml-3">Content Management</span>
             </Link>
           </li>
         </ul>
