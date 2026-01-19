@@ -4,7 +4,7 @@ import Link from "next/link";
 export async function Footer() {
   console.log("Generated  Footer");
   return (
-    <footer className="border-t border-border bg-background text-foreground">
+    <footer className=" border border-[#E0E0E0] bg-footer-bg  text-foreground">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div>
@@ -14,15 +14,15 @@ export async function Footer() {
             >
               <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
                 <Image
-                  src="/images/cliste-logo.png"
+                  src="/images/icon.png"
                   alt="Cliste"
                   width={40}
                   height={40}
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-lg font-semibold text-foreground">
-                NextJS Template
+              <span className="text-lg font-semibold text-primary text-foreground">
+                Mamabot.de
               </span>
             </Link>
             <p className="text-sm text-muted-foreground">
