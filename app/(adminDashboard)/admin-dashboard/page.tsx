@@ -1,12 +1,9 @@
+
+
 import React from "react";
 import { Check, AlertCircle } from "lucide-react";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Admin Dashboard - Next JS 16 Template",
-  description:
-    "Admin dashboard for managing the Next.js 16 template application",
-};
+
 
 export default function AdminDashboard() {
   return (
