@@ -1,4 +1,5 @@
-import { HeroSection } from "@/components/landing/home/HeroSection";
+import ChatSection from "@/components/landing/home/ChatSection";
+import HeroSection from "@/components/landing/home/HeroSection";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <HeroSection />
+      <HeroSection/>
+      <ChatSection/>
     </main>
   );
 }
