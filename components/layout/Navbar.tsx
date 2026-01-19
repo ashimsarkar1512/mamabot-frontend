@@ -56,7 +56,7 @@ export default function Navbar() {
   return (
     <section className="bg-background">
       <nav className="fixed top-0 right-0 left-0 z-50 px-4 py-4 sm:px-6">
-        <div className="relative mx-auto flex max-w-7xl items-center justify-between rounded-full bg-white/10 px-4 py-3 shadow-sm backdrop-blur-sm sm:px-8 sm:py-4 border  ">
+        <div className="relative mx-auto flex max-w-7xl items-center justify-between rounded-full bg-white px-4 py-3 shadow-sm backdrop-blur-sm sm:px-4 sm:py-2 border  ">
           {/* Logo */}
           <Link
             href="/"
@@ -88,19 +88,25 @@ export default function Navbar() {
               href="/about"
               className="text-base font-medium text-foreground transition-colors hover:text-primary"
             >
-              About
+              About Us
             </Link>
             <Link
-              href="/services"
+              href="/blog"
               className="text-base font-medium text-foreground transition-colors hover:text-primary"
             >
-              Services
+             Blog
             </Link>
             <Link
-              href="/contact"
+              href="/community"
               className="text-base font-medium text-foreground transition-colors hover:text-primary"
             >
-              Contact
+              Community
+            </Link>
+            <Link
+              href="/newsletter"
+              className="text-base font-medium text-foreground transition-colors hover:text-primary"
+            >
+              Newsletter
             </Link>
           </div>
 
@@ -222,21 +228,28 @@ export default function Navbar() {
                 className="text-base font-medium text-foreground transition-colors hover:text-primary"
                 onClick={toggleMenu}
               >
-                About
+                About us
               </Link>
               <Link
-                href="/services"
+                href="/blog"
                 className="text-base font-medium text-foreground transition-colors hover:text-primary"
                 onClick={toggleMenu}
               >
-                Services
+                Blog
               </Link>
               <Link
-                href="/contact"
+                href="/community"
                 className="text-base font-medium text-foreground transition-colors hover:text-primary"
                 onClick={toggleMenu}
               >
-                Contact
+               Community
+              </Link>
+              <Link
+                href="/newsletter"
+                className="text-base font-medium text-foreground transition-colors hover:text-primary"
+                onClick={toggleMenu}
+              >
+                Newsletter
               </Link>
               <ThemeToggle />
               {isAuthenticated && user ? (
