@@ -56,23 +56,23 @@ export default function Navbar() {
   return (
     <section className="bg-background">
       <nav className="fixed top-0 right-0 left-0 z-50 px-4 py-4 sm:px-6">
-        <div className="relative mx-auto flex max-w-7xl items-center justify-between rounded-full bg-white/10 px-4 py-3 shadow-sm backdrop-blur-sm sm:px-8 sm:py-4 border ">
+        <div className="relative mx-auto flex max-w-7xl items-center justify-between rounded-full bg-white/10 px-4 py-3 shadow-sm backdrop-blur-sm sm:px-8 sm:py-4 border  ">
           {/* Logo */}
           <Link
             href="/"
             className="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
           >
-            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+            <div className="w-10 h-10 md:w-12 md:h-12 mr-1 flex items-center justify-center">
               <Image
-                src="/images/cliste-logo.png"
+                src="/images/icon.png"
                 alt="Cliste"
                 width={40}
                 height={40}
                 className="w-full h-full object-contain text-foreground "
               />
             </div>
-            <span className="text-lg font-semibold text-foreground">
-              Next.js Templates
+            <span className="text-lg text-[#D82479] font-semibold text-foreground">
+              Mamabot
             </span>
           </Link>
 
@@ -106,7 +106,7 @@ export default function Navbar() {
 
           {/* Right Side Actions */}
           <div className="hidden sm:flex items-center gap-3">
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
             {isAuthenticated && user ? (
               <div className="relative" ref={authDropdownRef}>
                 <button
@@ -182,12 +182,12 @@ export default function Navbar() {
             ) : (
               <div className="flex items-center gap-2">
                 <Button text="Log in" variant="outline" href="/login" />
-                <Button
+                {/* <Button
                   text="Get Started"
                   className="bg-white"
                   icon={<ChevronRight size={16} />}
                   href="/register"
-                />
+                /> */}
               </div>
             )}
           </div>
