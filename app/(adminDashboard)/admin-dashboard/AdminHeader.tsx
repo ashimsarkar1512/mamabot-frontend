@@ -10,7 +10,7 @@ export default function AdminHeader() {
 
   return (
     <header className="mb-8">
-      <h1 className="text-[#229ECF] font-semibold" style={{ fontSize: "40px" }}>
+      <h1 className="text-[#229ECF] font-bold" style={{ fontSize: "40px" }}>
         {activeItem?.label ?? "Dashboard"}
       </h1>
     </header>

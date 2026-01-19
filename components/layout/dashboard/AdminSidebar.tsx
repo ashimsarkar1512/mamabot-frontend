@@ -41,8 +41,8 @@ export default function AdminSidebar() {
                   href={item.href}
                   className={`flex items-center p-3 rounded-lg transition ${
                     active
-                      ? "bg-[#F3BBD5] text-[#D82479]"
-                      : "text-[#D82479] hover:bg-[#F3BBD5]"
+                      ? "bg-[#FBE9F2] text-[#D82479]"
+                      : "text-[#D82479] hover:bg-[#FBE9F2]"
                   }`}
                 >
                   <Icon className="w-5 h-5" />
