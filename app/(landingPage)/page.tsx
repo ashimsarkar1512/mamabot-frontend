@@ -14,9 +14,9 @@ export default function Home() {
   return (
     <main>
       <HeroSection/>
-      <ChatSection/>
+       <ChatSection/>
       <SupportSection/>
-     <LearnAndGrow/>
+     <LearnAndGrow/> 
     </main>
   );
 }

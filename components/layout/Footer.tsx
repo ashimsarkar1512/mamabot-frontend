@@ -123,7 +123,7 @@ import Link from 'next/link';
 export function Footer() {
   return (
 
-      <div className="max-w-7xl mx-auto  py-6 text-gray-900">
+      <div className="  py-6 text-gray-900">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 ">
         <div>
             <Link
