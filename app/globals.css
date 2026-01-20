@@ -46,6 +46,11 @@
 .bg-primary {
   background-color: var(--primary);
 }
+
+.bg-landing {
+  background-color: #F2F4F8;
+}
+
 .bg-primary-foreground {
   background-color: var(--primary-foreground);
 }
