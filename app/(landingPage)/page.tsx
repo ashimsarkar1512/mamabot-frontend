@@ -2,6 +2,9 @@ import ChatSection from "@/components/landing/home/ChatSection";
 import HeroSection from "@/components/landing/home/HeroSection";
 import LearnAndGrow from "@/components/landing/home/LearnAndGrowSection";
 
+
+
+
 import SupportSection from "@/components/landing/home/SupportSection";
 import type { Metadata } from "next";
 
@@ -17,6 +20,7 @@ export default function Home() {
        <ChatSection/>
       <SupportSection/>
      <LearnAndGrow/> 
+   
     </main>
   );
 }
