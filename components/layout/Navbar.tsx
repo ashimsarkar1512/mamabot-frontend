@@ -434,7 +434,7 @@ export default function Navbar() {
                 <div className="h-8 w-8 flex items-center justify-center rounded-full bg-[#D82479] text-white">
                   <User size={16} />
                 </div>
-                <span className="max-w-[100px] truncate">
+                <span className="max-w-25 truncate">
                   {user.name || user.email}
                 </span>
               </button>

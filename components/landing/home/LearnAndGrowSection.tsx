@@ -125,34 +125,34 @@ export default function LearnAndGrow() {
       </div>
 
       {/* Articles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
         {articles.map((article) => (
           <div
             key={article.id}
-            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
           >
             {/* Article Image */}
-            <div className="h-64 md:h-80 bg-gray-200">
+            <div className="relative w-full h-64 md:h-80 overflow-hidden">
               <Image
                 src={article.image || "/placeholder.svg"}
                 alt={article.title}
-                width={400}
-                height={300}
-                className="w-full h-full"
+                fill
+                className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                style={{ objectPosition: "center" }}
               />
             </div>
 
             {/* Article Content */}
-            <div className="p-6">
-              <h4 className="font-bold text-gray-900 text-base mb-3 line-clamp-2">
+            <div className="p-4 md:p-6">
+              <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2">
                 {article.title}
               </h4>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+              <p className="text-gray-600 text-sm mb-3 line-clamp-3">
                 {article.description}
               </p>
               <CommonButton
-                className="rounded-lg py-2 px-3 text-sm "
                 text="Read Article"
+                className="rounded-lg py-1 px-4 text-sm bg-pink-600 hover:bg-pink-700 text-white"
               />
             </div>
           </div>
@@ -160,8 +160,8 @@ export default function LearnAndGrow() {
       </div>
 
       {/* See More Link */}
-      <div className="flex justify-center">
-        <button className="text-pink-500 hover:text-pink-600 font-semibold text-sm transition-colors">
+      <div className="flex justify-center mt-8 ">
+        <button className="text-pink-500 hover:text-pink-600 font-semibold text-sm transition-colors border px-5 py-2 rounded-md cursor-pointer">
           See More
         </button>
       </div>
