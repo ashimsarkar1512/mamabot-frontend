@@ -43,6 +43,7 @@
 
 'use client'
 
+import CommonButton from '@/components/ui/Reusable/CommonButton'
 import { Heart } from 'lucide-react'
 import Image from 'next/image'
 
@@ -89,9 +90,11 @@ export default function HeroSection() {
           </p>
 
           {/* CTA Button */}
-          <button className="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 px-10 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+          {/* <button className="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 px-10 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
             Ask Mamabot
-          </button>
+          </button> */}
+
+          <CommonButton className='text-white font-semibold py-3 px-10 rounded-full ' text=' Ask Mamabot'/>
         </div>
 
         {/* Right Decoration Image */}

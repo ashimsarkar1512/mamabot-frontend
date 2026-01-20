@@ -351,12 +351,15 @@ import {
   CreditCard,
   ChevronRight,
   LogOut,
+  LogIn,
+  CircleUserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Button from "../ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import CommonButton from "../ui/Reusable/CommonButton";
 
 type UserType = {
   name?: string;
@@ -472,7 +475,12 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex gap-2">
-              <Button text="Log in" href="/login" variant="outline" />
+              <CommonButton
+                className="px-6 py-2"
+                text="Login"
+                icon={<CircleUserRound size={20} />}
+              />
+              {/* <Button text="Log in" href="/login" variant="outline" /> */}
               {/* <Button
                 text="Get Started"
                 href="/register"
@@ -492,16 +500,18 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="sm:hidden bg-white shadow-md border-t">
           <div className="flex flex-col px-4 py-4 gap-3">
-            {["Home", "About", "Blog", "Community", "Newsletter"].map((item) => (
-              <Link
-                key={item}
-                href={`/${item === "Home" ? "" : item.toLowerCase()}`}
-                onClick={toggleMenu}
-                className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
-              >
-                {item}
-              </Link>
-            ))}
+            {["Home", "About", "Blog", "Community", "Newsletter"].map(
+              (item) => (
+                <Link
+                  key={item}
+                  href={`/${item === "Home" ? "" : item.toLowerCase()}`}
+                  onClick={toggleMenu}
+                  className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
+                >
+                  {item}
+                </Link>
+              ),
+            )}
 
             <ThemeToggle />
 
@@ -543,7 +553,12 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex flex-col gap-2 mt-2 border-t pt-2">
-                <Button text="Log in" href="/login" variant="outline" onClick={toggleMenu} />
+                <Button
+                  text="Log in"
+                  href="/login"
+                  variant="outline"
+                  onClick={toggleMenu}
+                />
                 <Button
                   text="Get Started"
                   href="/register"
