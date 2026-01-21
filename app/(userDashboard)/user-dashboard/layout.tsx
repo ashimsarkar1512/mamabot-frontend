@@ -2,7 +2,7 @@
 
 import DashboardLayout from "@/components/layout/dashboard/DashboardLayout";
 import UserSidebar from "@/components/layout/dashboard/UserSidebar";
-import RoleGuard from "@/components/auth/RoleGuard";
+// import RoleGuard from "@/components/auth/RoleGuard";
 import ChatBot from "@/features/ChatBot";
 
 type UserDashboardLayoutProps = {
@@ -13,11 +13,11 @@ export default function UserDashboardLayout({
   children,
 }: UserDashboardLayoutProps) {
   return (
-    <RoleGuard allowedRoles={["USER", "ADMIN", "MODERATOR"]}>
-      <DashboardLayout sidebar={<UserSidebar />}>
-        <ChatBot />
-        {children}
-      </DashboardLayout>
-    </RoleGuard>
+    // <RoleGuard allowedRoles={["USER", "ADMIN", "MODERATOR"]}>
+    <DashboardLayout sidebar={<UserSidebar />}>
+      <ChatBot />
+      {children}
+    </DashboardLayout>
+    // </RoleGuard>
   );
 }
