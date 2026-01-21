@@ -475,11 +475,13 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex gap-2">
+            <Link href='/login'>
               <CommonButton
                 className="px-6 py-2"
                 text="Login"
                 icon={<CircleUserRound size={20} />}
               />
+            </Link>
               {/* <Button text="Log in" href="/login" variant="outline" /> */}
               {/* <Button
                 text="Get Started"
@@ -559,12 +561,7 @@ export default function Navbar() {
                   variant="outline"
                   onClick={toggleMenu}
                 />
-                <Button
-                  text="Get Started"
-                  href="/register"
-                  icon={<ChevronRight size={16} />}
-                  onClick={toggleMenu}
-                />
+                
               </div>
             )}
           </div>
