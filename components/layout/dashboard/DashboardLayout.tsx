@@ -16,7 +16,9 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div
+      className="flex h-screen bg-gradient-to-r from-[#FFECF4] via-[#FFF9FB] to-[#FFF9FB]"
+    >
       {/* Mobile backdrop */}
       {sidebarOpen && (
         <div
@@ -27,7 +29,7 @@ export default function DashboardLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300
+        className={`fixed inset-y-0 left-0  my-11 rounded-3xl p-11 w-90 ml-6 bg-white shadow-lg transform transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
         md:static md:translate-x-0`}
       >
@@ -36,13 +38,8 @@ export default function DashboardLayout({
 
       {/* Main content */}
       <div className="flex flex-col flex-1">
-        {/* Navbar */}
-        <header className="sticky top-0 z-30 bg-white border-b">
-          <DashboardNavbar />
-        </header>
-
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto my-11 px-7">{children}</main>
       </div>
 
       {/* Mobile menu button */}

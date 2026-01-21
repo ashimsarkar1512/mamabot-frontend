@@ -2,6 +2,12 @@
 
 A modern Next.js 16 template featuring TypeScript, Redux Toolkit, Tailwind CSS, and essential configurations for scalable applications.
 
+## Main colors
+
+- Primary: [#D82479] (pink)
+- Secondary: [#229ECF] (blue)
+- Accent: [#FBE9F2] (light pink)
+
 ## Features
 
 - **Next.js 16** - Latest Next.js framework with App Router
