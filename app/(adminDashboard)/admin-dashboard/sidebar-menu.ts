@@ -14,12 +14,12 @@ import {
 export const adminSidebarMenu = [
   {
     label: "User Management",
-    href: "/admin-dashboard",
+    href: "/admin-dashboard/user-management",
     icon: Users,
   },
   {
     label: "Community Monitoring",
-    href: "/admin-dashboard/users",
+    href: "/admin-dashboard/community-monitoring",
     icon: MessagesSquare,
   },
   {
