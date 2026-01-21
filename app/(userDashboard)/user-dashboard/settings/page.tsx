@@ -1,11 +1,9 @@
 "use client";
 
-import React from "react";
-import RoleGuard from "@/components/auth/RoleGuard";
 
 export default function UserSettingsPage() {
   return (
-    <RoleGuard allowedRoles={["USER", "ADMIN", "MODERATOR"]}>
+ 
       <div className="max-w-full">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Account Settings</h1>
@@ -157,6 +155,6 @@ export default function UserSettingsPage() {
           </div>
         </div>
       </div>
-    </RoleGuard>
+   
   );
 }

@@ -3,7 +3,7 @@
 import React from "react";
 
 import { useState } from "react";
-import { Eye, EyeOff, User, Mail, Lock, X, MoveLeft } from "lucide-react";
+import { Eye, EyeOff, User, Mail, Lock, X, MoveLeft, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -66,11 +66,11 @@ export default function SignUpPage() {
     checkboxes.autoRenewal;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen  flex flex-col items-center justify-center p-4">
       {/* Close Button */}
-      <div onClick={handleBack} className="absolute top-8 left-8 ">
+     <div onClick={handleBack} className="absolute top-8 left-8 ">
         <button className="border p-1 rounded-full  border-pink-600! cursor-pointer">
-          <MoveLeft className="w-4 h-4 text-pink-500" />
+         <ArrowLeft className="text-pink-500" size={18} />
         </button>
       </div>
 
@@ -91,7 +91,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Form Container */}
-      <div className="w-full max-w-3xl bg-white rounded-lg shadow-sm p-8">
+      <div className="w-full max-w-3xl bg-white/5 rounded-2xl shadow-xl p-8 border">
         <form onSubmit={handleSubmit} className="space-y-3">
           {/* Name Row */}
           <div className="grid grid-cols-2 gap-4">
@@ -366,6 +366,7 @@ export default function SignUpPage() {
           </div>
 
           {/* Sign Up Button */}
+         <Link href="/verification">
           <button
             type="submit"
             disabled={!isFormValid}
@@ -378,13 +379,15 @@ export default function SignUpPage() {
           >
             Sign Up
           </button>
+         </Link>
 
           {/* Login Link */}
           <div className="text-center text-sm text-foreground/80">
             Already have an account?{" "}
-            <a href="#" className="text-primary font-medium hover:underline">
-              Log In
-            </a>
+
+            <Link className="text-primary font-medium hover:underline" href='/login'>
+             Log In
+            </Link>
           </div>
         </form>
       </div>
