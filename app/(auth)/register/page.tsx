@@ -1,18 +1,22 @@
-'use client';
+"use client";
 
-import React from "react"
+import React from "react";
 
-import { useState } from 'react';
-import { Eye, EyeOff, User, Mail, Lock, X } from 'lucide-react';
+import { useState } from "react";
+import { Eye, EyeOff, User, Mail, Lock, X, MoveLeft } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +29,14 @@ export default function SignUpPage() {
     rightOfWithdrawal: false,
     autoRenewal: false,
   });
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/login");
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,23 +56,37 @@ export default function SignUpPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', { formData, checkboxes });
+    console.log("Form submitted:", { formData, checkboxes });
   };
+
+  const isFormValid =
+    checkboxes.privacyPolicy &&
+    checkboxes.healthData &&
+    checkboxes.rightOfWithdrawal &&
+    checkboxes.autoRenewal;
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       {/* Close Button */}
-      <button className="absolute top-6 left-6 text-foreground/60 hover:text-foreground transition">
-        <X size={24} />
-      </button>
+      <div onClick={handleBack} className="absolute top-8 left-8 ">
+        <button className="border p-1 rounded-full  border-pink-600! cursor-pointer">
+          <MoveLeft className="w-4 h-4 text-pink-500" />
+        </button>
+      </div>
 
       {/* Logo and Title */}
       <div className="flex flex-col items-center mb-4">
-        <div className="w-16 h-16 mb-6 flex items-center justify-center">
-          <div className="text-4xl">👋</div>
-        </div>
-        <h1 className="text-2xl font-semibold text-foreground mb-1">
-          Sing Up to Mamabot
+        <Link href="/" className="flex items-center gap-2 mb-6 ">
+          <Image
+            src="/images/icon.png"
+            alt="Mamabot"
+            width={48}
+            height={48}
+            className="object-contain"
+          />
+        </Link>
+        <h1 className="text-2xl font-semibold text-gray-800">
+          Login to Momabot
         </h1>
       </div>
 
@@ -74,7 +100,10 @@ export default function SignUpPage() {
                 First Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+                  size={20}
+                />
                 <input
                   type="text"
                   name="firstName"
@@ -90,7 +119,10 @@ export default function SignUpPage() {
                 Last Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+                  size={20}
+                />
                 <input
                   type="text"
                   name="lastName"
@@ -109,7 +141,10 @@ export default function SignUpPage() {
               Username
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+              <Mail
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+                size={20}
+              />
               <input
                 type="text"
                 name="username"
@@ -127,7 +162,10 @@ export default function SignUpPage() {
               Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+              <Mail
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+                size={20}
+              />
               <input
                 type="email"
                 name="email"
@@ -146,9 +184,12 @@ export default function SignUpPage() {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+                  size={20}
+                />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Password"
                   value={formData.password}
@@ -169,9 +210,12 @@ export default function SignUpPage() {
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/40"
+                  size={20}
+                />
                 <input
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   placeholder="Password"
                   value={formData.confirmPassword}
@@ -183,14 +227,18 @@ export default function SignUpPage() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground"
                 >
-                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
             </div>
           </div>
 
           {/* Checkboxes */}
-          <div className="space-y-4  pt-6">
+          <div className="space-y-2  pt-3">
             <div className="flex items-start gap-3">
               <input
                 type="checkbox"
@@ -198,15 +246,24 @@ export default function SignUpPage() {
                 name="privacyPolicy"
                 checked={checkboxes.privacyPolicy}
                 onChange={handleCheckboxChange}
-                className="w-5 h-5 rounded border-border mt-0.5 accent-primary"
+                className="w-3 h-3 rounded border-border mt-0.5 accent-primary"
               />
-              <label htmlFor="privacyPolicy" className="text-sm text-foreground/80">
-                I have read and accept the{' '}
-                <a href="#" className="text-primary font-medium hover:underline">
+              <label
+                htmlFor="privacyPolicy"
+                className="text-sm text-foreground/80"
+              >
+                I have read and accept the{" "}
+                <a
+                  href="#"
+                  className="text-primary font-medium hover:underline"
+                >
                   Privacy Policy
-                </a>{' '}
-                and{' '}
-                <a href="#" className="text-primary font-medium hover:underline">
+                </a>{" "}
+                and{" "}
+                <a
+                  href="#"
+                  className="text-primary font-medium hover:underline"
+                >
                   Terms & Conditions
                 </a>
                 <span className="text-red-500">*</span>
@@ -220,11 +277,19 @@ export default function SignUpPage() {
                 name="healthData"
                 checked={checkboxes.healthData}
                 onChange={handleCheckboxChange}
-                className="w-5 h-5 rounded border-border mt-0.5 accent-primary"
+                className="w-3 h-3 rounded border-border mt-0.5 accent-primary"
               />
-              <label htmlFor="healthData" className="text-sm text-foreground/80">
-                I consent to Mamabot processing my health data (pregnancy week, baby&apos;s age, chat history) to provide me with personalized advice. I can withdraw this consent at any time.{' '}
-                <a href="#" className="text-primary font-medium hover:underline">
+              <label
+                htmlFor="healthData"
+                className="text-sm text-foreground/80"
+              >
+                I consent to Mamabot processing my health data (pregnancy week,
+                baby&apos;s age, chat history) to provide me with personalized
+                advice. I can withdraw this consent at any time.{" "}
+                <a
+                  href="#"
+                  className="text-primary font-medium hover:underline"
+                >
                   Learn more
                 </a>
                 <span className="text-red-500">*</span>
@@ -238,14 +303,18 @@ export default function SignUpPage() {
                 name="newsletter"
                 checked={checkboxes.newsletter}
                 onChange={handleCheckboxChange}
-                className="w-5 h-5 rounded  mt-0.5 accent-primary"
+                className="w-3 h-3 rounded  mt-0.5 accent-primary"
               />
-              <label htmlFor="newsletter" className="text-sm text-foreground/80">
-                I would like to receive the Mamabot newsletter with tips for parents
+              <label
+                htmlFor="newsletter"
+                className="text-sm text-foreground/80"
+              >
+                I would like to receive the Mamabot newsletter with tips for
+                parents
               </label>
             </div>
 
-            <div className="mt-6 pt-4 ">
+            <div className=" pt-3 ">
               <p className="text-xs font-semibold text-foreground mb-3 uppercase tracking-wide">
                 Premium Subscription Checkout:
               </p>
@@ -256,14 +325,21 @@ export default function SignUpPage() {
                   name="rightOfWithdrawal"
                   checked={checkboxes.rightOfWithdrawal}
                   onChange={handleCheckboxChange}
-                  className="w-5 h-5 rounded border-border mt-0.5 accent-primary"
+                  className="w-3 h-3 rounded border-border mt-0.5 accent-primary"
                 />
-                <label htmlFor="rightOfWithdrawal" className="text-sm text-foreground/80">
-                  I have read the{' '}
-                  <a href="#" className="text-primary font-medium hover:underline">
+                <label
+                  htmlFor="rightOfWithdrawal"
+                  className="text-sm text-foreground/80"
+                >
+                  I have read the{" "}
+                  <a
+                    href="#"
+                    className="text-primary font-medium hover:underline"
+                  >
                     Right of Withdrawal
-                  </a>{' '}
-                  and expressly waive my right of withdrawal so I can use the Premium subscription immediately.
+                  </a>{" "}
+                  and expressly waive my right of withdrawal so I can use the
+                  Premium subscription immediately.
                   <span className="text-red-500">*</span>
                 </label>
               </div>
@@ -275,10 +351,14 @@ export default function SignUpPage() {
                   name="autoRenewal"
                   checked={checkboxes.autoRenewal}
                   onChange={handleCheckboxChange}
-                  className="w-5 h-5 rounded border-border mt-0.5 accent-primary"
+                  className="w-3 h-3 rounded border-border mt-0.5 accent-primary"
                 />
-                <label htmlFor="autoRenewal" className="text-sm text-foreground/80">
-                  I accept that the subscription will renew automatically unless I cancel.
+                <label
+                  htmlFor="autoRenewal"
+                  className="text-sm text-foreground/80"
+                >
+                  I accept that the subscription will renew automatically unless
+                  I cancel.
                   <span className="text-red-500">*</span>
                 </label>
               </div>
@@ -288,14 +368,20 @@ export default function SignUpPage() {
           {/* Sign Up Button */}
           <button
             type="submit"
-            className="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary/90 transition mt-8"
+            disabled={!isFormValid}
+            className={`w-full font-semibold py-3 rounded-lg transition mt-8
+    ${
+      isFormValid
+        ? "bg-primary text-white hover:bg-primary/90 cursor-pointer"
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+    }`}
           >
             Sign Up
           </button>
 
           {/* Login Link */}
           <div className="text-center text-sm text-foreground/80">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <a href="#" className="text-primary font-medium hover:underline">
               Log In
             </a>

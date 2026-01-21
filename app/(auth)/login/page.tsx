@@ -7,11 +7,21 @@ import { Input } from "@/components/ui/input";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/"); 
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +30,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex items-center justify-center  p-4">
-      <div className="absolute top-8 left-8">
+      <div onClick={handleBack} className="absolute top-8 left-8 cursor-pointer">
         <button className="border p-1 rounded-full  border-pink-600!">
           <MoveLeft className="w-4 h-4 text-pink-500" />
         </button>
@@ -44,7 +54,7 @@ export default function Home() {
           </h1>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 border">
+        <div className="bg-white/5 rounded-2xl shadow-xl p-8 border">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label
@@ -100,7 +110,7 @@ export default function Home() {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  className="text-xs text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
+                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
                 >
                   Forgot Password?
                 </button>
