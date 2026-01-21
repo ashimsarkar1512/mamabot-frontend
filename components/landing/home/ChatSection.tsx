@@ -207,7 +207,7 @@ export default function ChatSection() {
             </Link>
 
             {/* Heading */}
-            <div className="mb-8 sm:mb-12 flex-grow">
+            <div className="mb-8 sm:mb-12 grow">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-gray-900 leading-tight">
                 Command Your Health Journey
               </h1>

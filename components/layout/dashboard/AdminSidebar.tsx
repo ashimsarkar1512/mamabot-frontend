@@ -13,7 +13,7 @@ export default function AdminSidebar() {
 
   return (
     <div className="h-full flex flex-col overflow-y-auto  pt-16 md:pt-0 sidebar-scroll">
-      <div className="flex border-b !border-b-[#F3BBD5] pb-10 items-center duration-200 cursor-pointer">
+      <div className="flex border-b border-b-[#F3BBD5]! pb-10 items-center duration-200 cursor-pointer">
         <div className="w-10 h-10 md:w-12 md:h-12 mr-1 flex items-center justify-center">
           <Image
             src="/images/icon.png"
@@ -39,11 +39,10 @@ export default function AdminSidebar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center p-3 rounded-lg transition ${
-                    active
+                  className={`flex items-center p-3 rounded-lg transition ${active
                       ? "bg-[#FBE9F2] text-[#D82479]"
                       : "text-[#D82479] hover:bg-[#FBE9F2]"
-                  }`}
+                    }`}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="ml-3 text-lg">{item.label}</span>

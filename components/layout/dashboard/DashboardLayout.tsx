@@ -17,9 +17,7 @@ export default function DashboardLayout({
 
   return (
     <div
-      className="flex h-screen bg-gradient-to-r 
-    from-[#D8247915] 
-    to-[#D824795]"
+      className="flex h-screen bg-gradient-to-r from-[#FFECF4] via-[#FFF9FB] to-[#FFF9FB]"
     >
       {/* Mobile backdrop */}
       {sidebarOpen && (

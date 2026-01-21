@@ -434,7 +434,7 @@ export default function Navbar() {
                 <div className="h-8 w-8 flex items-center justify-center rounded-full bg-[#D82479] text-white">
                   <User size={16} />
                 </div>
-                <span className="max-w-[100px] truncate">
+                <span className="max-w-25 truncate">
                   {user.name || user.email}
                 </span>
               </button>
@@ -475,11 +475,13 @@ export default function Navbar() {
             </div>
           ) : (
             <div className="flex gap-2">
+            <Link href='/login'>
               <CommonButton
                 className="px-6 py-2"
                 text="Login"
                 icon={<CircleUserRound size={20} />}
               />
+            </Link>
               {/* <Button text="Log in" href="/login" variant="outline" /> */}
               {/* <Button
                 text="Get Started"
@@ -559,12 +561,7 @@ export default function Navbar() {
                   variant="outline"
                   onClick={toggleMenu}
                 />
-                <Button
-                  text="Get Started"
-                  href="/register"
-                  icon={<ChevronRight size={16} />}
-                  onClick={toggleMenu}
-                />
+                
               </div>
             )}
           </div>
