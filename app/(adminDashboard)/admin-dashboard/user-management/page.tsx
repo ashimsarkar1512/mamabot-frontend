@@ -19,22 +19,22 @@ interface User {
 const DUMMY_DASHBOARD_CARDS: DashboardCardProps[] = [
     {
         title: "Total Users",
-        value: "102348",
+        value: 102348,
         percentage: 100,
     },
     {
         title: "Active Users",
-        value: "2390",
+        value: 2390,
         percentage: -23,
     },
     {
         title: "AI Chat Logs",
-        value: "43",
+        value: 43,
         percentage: 50,
     },
     {
         title: "Postpartum Segment",
-        value: "50",
+        value: 50,
         percentage: 0.23,
     },
 ];
@@ -125,7 +125,7 @@ export default function UserManagementPage() {
                 />
             </div>
 
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {DUMMY_DASHBOARD_CARDS.map((card, index) => (
                     <DashboardCard key={index} {...card} />
                 ))}

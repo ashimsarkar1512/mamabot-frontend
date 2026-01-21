@@ -19,7 +19,7 @@ export const adminSidebarMenu = [
   },
   {
     label: "Community Monitoring",
-    href: "/admin-dashboard/users",
+    href: "/admin-dashboard/community-monitoring",
     icon: MessagesSquare,
   },
   {
