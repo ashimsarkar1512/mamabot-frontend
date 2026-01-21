@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, Smile, MoveLeft } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Smile, MoveLeft, ArrowLeft } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
@@ -30,9 +30,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex items-center justify-center  p-4">
-      <div onClick={handleBack} className="absolute top-8 left-8 cursor-pointer">
-        <button className="border p-1 rounded-full  border-pink-600!">
-          <MoveLeft className="w-4 h-4 text-pink-500" />
+    <div onClick={handleBack} className="absolute top-8 left-8 ">
+        <button className="border p-1 rounded-full  border-pink-600! cursor-pointer">
+         <ArrowLeft className="text-pink-500" size={18} />
         </button>
       </div>
 
