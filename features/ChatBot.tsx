@@ -1,6 +1,7 @@
 "use client"
 import ChatBotIcon from "@/public/images/ChatIcon.jpg"
 import Image from "next/image";
+import Link from "next/link";
 
 const COLORS = {
     primary: "#D82479",
@@ -12,11 +13,12 @@ const COLORS = {
 const ChatBot = () => {
     return (
         <>
-            <button
+            <Link
+                href="/user-dashboard/chat-bot"
                 className="fixed bottom-14 md:bottom-8 right-8 bg-white border p-2 rounded-3xl shadow-2xl hover:scale-105 hover:cursor-pointer transition-transform duration-300 z-9999 animate-pulse-slow"
             >
                 <Image src={ChatBotIcon} alt="ChatBot" height={60} width={60} />
-            </button>
+            </Link>
 
             {/* ANIMATIONS */}
             <style jsx global>{`
