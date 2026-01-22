@@ -1,6 +1,7 @@
 import ChatSection from "@/components/landing/home/ChatSection";
 import HeroSection from "@/components/landing/home/HeroSection";
 import LearnAndGrow from "@/components/landing/home/LearnAndGrowSection";
+import PricingSection from "@/components/landing/home/PricingSection";
 
 
 
@@ -20,6 +21,7 @@ export default function Home() {
        <ChatSection/>
       <SupportSection/>
      <LearnAndGrow/> 
+     <PricingSection/>
    
     </main>
   );
