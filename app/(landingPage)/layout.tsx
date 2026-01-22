@@ -4,7 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Next JS 16 Template - Landing Page",
+  title: "Mamabot",
   description: "mamabot",
 };
 
