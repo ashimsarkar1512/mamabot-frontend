@@ -1,9 +1,7 @@
 import ChatSection from "@/components/landing/home/ChatSection";
 import HeroSection from "@/components/landing/home/HeroSection";
 import LearnAndGrow from "@/components/landing/home/LearnAndGrowSection";
-
-
-
+import Newsletter from "@/components/landing/home/Newsletter";
 
 import SupportSection from "@/components/landing/home/SupportSection";
 import type { Metadata } from "next";
@@ -16,11 +14,11 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <HeroSection/>
-       <ChatSection/>
-      <SupportSection/>
-     <LearnAndGrow/> 
-   
+      <HeroSection />
+      <ChatSection />
+      <SupportSection />
+      <LearnAndGrow />
+      <Newsletter />
     </main>
   );
 }
