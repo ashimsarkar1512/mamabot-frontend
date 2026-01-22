@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Paperclip, Camera, Mic, ArrowUp } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import ChatBotIcon from "@/public/images/icon.png"
@@ -15,7 +15,7 @@ export default function ChatArea({ store }: any) {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#F8FAFC]">
+    <div className="flex-1 flex flex-col h-full">
       <div className="flex-1 overflow-auto p-4 space-y-4">
         {chat.messages.map((m: any) => (
           <MessageBubble key={m.id} msg={m} />
@@ -23,7 +23,7 @@ export default function ChatArea({ store }: any) {
       </div>
 
       {/* Input Area (Pinned Bottom) */}
-      <div className="p-4 bg-white border-t">
+      <div className="p-4 bg-white border-t border-gray-100!">
          <ActiveChatInput onSend={(text) => store.sendMessage(text)} />
       </div>
     </div>
@@ -32,6 +32,8 @@ export default function ChatArea({ store }: any) {
 
 function LandingPage({ store, chat }: any) {
   const [inputValue, setInputValue] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
      if (!inputValue.trim()) return;
@@ -50,9 +52,32 @@ function LandingPage({ store, chat }: any) {
     }
   };
 
+  const handleFileChange = (e: any) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setInputValue((prev) => prev + `[Attached: ${file.name}] `);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col h-full bg-[#FDFDFD] relative overflow-y-auto">
        
+       {/* Hidden Inputs */}
+       <input 
+          type="file" 
+          ref={fileInputRef} 
+          className="hidden" 
+          onChange={handleFileChange} 
+       />
+       <input 
+          type="file" 
+          ref={cameraInputRef} 
+          accept="image/*" 
+          capture="environment" // Forces camera on mobile
+          className="hidden" 
+          onChange={handleFileChange} 
+       />
+
        {/* Top Disclaimer */}
        <div className="flex justify-center pt-4 pb-2">
           <div className="bg-orange-50 border border-orange-200 text-orange-600 text-xs px-3 py-1 rounded-full flex gap-2">
@@ -91,16 +116,28 @@ function LandingPage({ store, chat }: any) {
              
              <div className="flex items-center justify-between px-2 pb-1">
                 <div className="flex gap-2">
-                   <button className="p-2 hover:bg-gray-100 rounded-full text-gray-400">
+                   <button 
+                      onClick={() => fileInputRef.current?.click()}
+                      className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+                      title="Attach File"
+                   >
                       <Paperclip className="w-5 h-5" />
                    </button>
-                   <button className="p-2 hover:bg-gray-100 rounded-full text-gray-400">
+                   <button 
+                      onClick={() => cameraInputRef.current?.click()}
+                      className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+                      title="Use Camera"
+                   >
                       <Camera className="w-5 h-5" />
                    </button>
                 </div>
                 
                 <div className="flex gap-2 items-center">
-                   <button className="p-2 hover:bg-gray-100 rounded-full text-gray-400">
+                   <button 
+                      onClick={() => alert("Listening... (Microphone access not implemented)")}
+                      className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+                      title="Voice Input"
+                   >
                       <Mic className="w-5 h-5" />
                    </button>
                    <button 
