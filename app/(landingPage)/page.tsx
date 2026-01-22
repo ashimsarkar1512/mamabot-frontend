@@ -8,6 +8,7 @@ import PricingPricing from "@/components/landing/home/PricingSection";
 
 
 import SupportSection from "@/components/landing/home/SupportSection";
+import YoureNotAlone from "@/components/landing/home/YoureNotAlone";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function Home() {
       <ChatSection />
       <SupportSection />
       <LearnAndGrow />
+      <YoureNotAlone/>
       <PricingPricing/>
       <MeetOurTeam/>
       <GetInTouch/>
