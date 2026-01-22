@@ -1,7 +1,8 @@
+"use client";
+
 import React from "react";
 import TeamCard from "./TeamMemberCard";
 import { teamMembers } from "@/lib/data/meetoutteamdata";
-
 
 const MeetOurTeam = () => {
   return (
