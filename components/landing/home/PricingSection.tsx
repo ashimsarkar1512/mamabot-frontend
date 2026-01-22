@@ -58,7 +58,7 @@ export default function PricingPricing() {
         }
       };
   return (
-    <div className="py-20 px-4 bg-white/25 rounded-2xl border border-white  my-10">
+    <div className="py-20 px-4 bg-white/25 rounded-2xl border border-white shadow-lg my-10">
   
       {/* Header */}
       <div className="max-w-6xl mx-auto  my-10">
