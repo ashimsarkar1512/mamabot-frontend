@@ -8,14 +8,17 @@ import {
   CreditCard,
   LogOut,
   Bell,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { AnimatePresence,motion } from "framer-motion";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  
 
   // Mock state for demonstration (matching the image provided)
   const [isAuthenticated] = useState(true);
@@ -75,34 +78,91 @@ export default function UserHomeNavbar() {
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
                 {/* User Info Group */}
-                <div className="relative flex items-center gap-3 ">
-                   <div className="text-right hidden sm:block">
-                     <p className="text-sm font-semibold text-[#0ea5e9] leading-tight">{user.name}</p>
-                     <p className="text-[11px] text-gray-400">{user.email}</p>
-                   </div>
-                   <button 
-                    onClick={() => setIsAuthOpen(!isAuthOpen)}
-                    className="h-10 w-10 rounded-full overflow-hidden  hover:border-[#D82479] transition-all"
-                   >
-                     <Image 
-                        src="/images/avatar.png" // The woman in your image
-                        alt="Profile" 
-                        width={40} 
-                        height={40} 
-                        className="object-cover"
-                      />
-                   </button>
+             <div className="relative flex items-center gap-3">
+      {/* User Info Text */}
+      <div className="text-right hidden sm:block">
+        <p className="text-sm font-semibold text-[#0ea5e9] leading-tight">{user.name}</p>
+        <p className="text-[11px] text-gray-400">{user.email}</p>
+      </div>
 
-                   {/* Dropdown Menu */}
-                   {isAuthOpen && (
-                    <div ref={authDropdownRef} className="absolute right-0 top-full mt-4 w-48 rounded-2xl bg-white p-2 shadow-xl border border-gray-50">
-                        <Link href="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-xl"><User size={16}/> Profile</Link>
-                        <Link href="/settings" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-xl"><Settings size={16}/> Settings</Link>
-                        <div className="border-t my-1 border-gray-50" />
-                        <button className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-xl"><LogOut size={16}/> Logout</button>
-                    </div>
-                   )}
-                </div>
+      {/* Profile Button */}
+      <button
+        onClick={() => setIsAuthOpen(!isAuthOpen)}
+        className={`h-10 w-10 rounded-full overflow-hidden border-2 transition-all ${
+          isAuthOpen ? 'border-[#D82479]' : 'border-transparent'
+        }`}
+      >
+        <Image
+          src="/images/avatar.png"
+          alt="Profile"
+          width={40}
+          height={40}
+          className="object-cover"
+        />
+      </button>
+
+      {/* Dropdown Menu with Framer Motion */}
+      <AnimatePresence>
+        {isAuthOpen && (
+          <motion.div
+            ref={authDropdownRef}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute right-0 top-full mt-4 w-64 rounded-[2rem] bg-white/90 backdrop-blur-md p-3 shadow-2xl border border-pink-50 z-50 overflow-hidden"
+          >
+            {/* Decorative Flower Background */}
+            <div className="absolute bottom-0 right-0 opacity-20 pointer-events-none">
+                <Image 
+                    src="/images/flowers-bg.png" 
+                    alt="bg" 
+                    width={100} 
+                    height={100} 
+                />
+            </div>
+
+            <div className="relative z-10 space-y-1">
+              <Link
+                href="/profile"
+                className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
+              >
+                My Profile
+              </Link>
+
+              {/* Highlighted Item */}
+              <Link
+                href="/saved"
+                className="flex items-center gap-3 px-4 py-3 text-[15px] font-bold text-[#D82479] bg-white shadow-sm border border-pink-50 rounded-full"
+              >
+                <BookOpen size={18} fill="#D82479" />
+                Saved Recommends
+              </Link>
+
+              <Link
+                href="/subscription"
+                className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
+              >
+                Subscription & Plan
+              </Link>
+
+              <Link
+                href="/settings"
+                className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
+              >
+                Settings
+              </Link>
+
+              <button
+                className="flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
+              >
+                Logout
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
                 
                 {/* Notification Bell */}
                 <button className="text-[#0ea5e9] hover:bg-blue-50 p-2 rounded-full transition-colors">
