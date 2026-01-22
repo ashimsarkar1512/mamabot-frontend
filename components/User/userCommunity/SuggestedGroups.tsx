@@ -30,18 +30,20 @@ const MOCK_GROUPS = [
 ];
 const SuggestedGroups = () => {
   return (
-    <div className="bg-sky-50/50 rounded-2xl p-6 mb-8 border border-sky-100">
-      <div className="flex items-center gap-2 mb-1">
-        <Users className="w-5 h-5 text-sky-600" />
-        <h3 className="text-lg font-bold text-gray-800">
-          Suggested Community Groups
-        </h3>
+    <div className="mb-6 bg-sky-50/50 rounded-2xl  border-3 border-white! overflow-hidden">
+      <div className="px-6 pt-6 pb-2 bg-[#E9F5FA] border-b border-white!">
+        <div className="flex items-center gap-2 mb-1">
+          <Users className="w-5 h-5 text-sky-600" />
+          <h3 className="text-lg font-bold text-gray-800">
+            Suggested Community Groups
+          </h3>
+        </div>
+        <p className="text-sm text-gray-500 mb-4">
+          Join groups based on your pregnancy stage
+        </p>
       </div>
-      <p className="text-sm text-gray-500 mb-4 ml-7">
-        Join groups based on your pregnancy stage
-      </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
         {MOCK_GROUPS.map((group) => (
           <div
             key={group.id}
@@ -54,7 +56,7 @@ const SuggestedGroups = () => {
                 <group.Icon className={`w-6 h-6 ${group.iconColor}`} />
               </div>
               <div>
-                <h4 className="font-bold text-sky-500 text-sm leading-tight mb-1">
+                <h4 className="font-bold text-[#229ECF] text-sm leading-tight mb-1">
                   {group.name}
                 </h4>
                 <div className="text-xs text-gray-500 flex items-center gap-2">

@@ -10,6 +10,7 @@ import {
   Paperclip,
   Users,
   Plus,
+  UserPlus,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -31,7 +32,7 @@ const PostCard = ({ post }: { post: any }) => {
   return (
     <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
       {/* Group Header Line */}
-      <div className="flex justify-between items-center mb-4 border-b border-gray-200 pb-3">
+      <div className="flex justify-between items-center pb-3">
         <h3 className="font-medium text-gray-700 text-lg">{post.groupName}</h3>
         <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
           <Plus className="w-4 h-4 mr-1" /> Join Group
@@ -56,7 +57,7 @@ const PostCard = ({ post }: { post: any }) => {
                 {post.user.week}
               </span>
               <button className="text-pink-500 text-xs font-medium flex items-center gap-1 hover:text-pink-600">
-                <Users className="w-3 h-3" />
+                <UserPlus className="w-3 h-3" />
                 {post.user.isFollowing ? "Following" : "Follow"}
               </button>
             </div>
@@ -126,7 +127,7 @@ const PostCard = ({ post }: { post: any }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between border-t border-b border-gray-200 py-2 mb-4">
+      <div className="flex items-center justify-between border-t border-b border-gray-200! py-2 mb-4">
         <button
           onClick={handleLike}
           className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors ${
@@ -154,28 +155,32 @@ const PostCard = ({ post }: { post: any }) => {
             className="object-cover"
           />
         </div>
-        <div className="flex-1 bg-gray-100 rounded-xl flex items-center px-3 py-2 gap-2 border border-transparent focus-within:border-sky-300 focus-within:bg-white transition-all">
-          <input
-            type="text"
+        <div className="flex-1 flex flex-col bg-[#229ECF]/2 rounded-xl  px-3 py-2 gap-2 border border-[#229ECF]/30! duration-300 focus-within:border-[#229ECF]/50! focus-within:bg-white transition-all">
+          <textarea
+            rows={3}
             placeholder="Comment your thoughts..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             className="bg-transparent border-none outline-none text-sm w-full text-gray-700 placeholder-gray-400"
           />
-          <button className="text-gray-400 hover:text-sky-500">
-            <ImageIcon className="w-4 h-4" />
-          </button>
-          <button className="text-gray-400 hover:text-sky-500">
-            <Smile className="w-4 h-4" />
-          </button>
-          <button className="text-gray-400 hover:text-sky-500">
-            <Paperclip className="w-4 h-4" />
-          </button>
-          {comment && (
-            <button className="text-sky-500 hover:text-sky-600">
-              <Send className="w-4 h-4" />
-            </button>
-          )}
+          <div className="flex justify-between items-center mt-2">
+            <div className="flex items-center gap-2">
+              <button className="text-gray-400 hover:text-sky-500">
+                <ImageIcon className="w-4 h-4" />
+              </button>
+              <button className="text-gray-400 hover:text-sky-500">
+                <Smile className="w-4 h-4" />
+              </button>
+              <button className="text-gray-400 hover:text-sky-500">
+                <Paperclip className="w-4 h-4" />
+              </button>
+            </div>
+            {comment && (
+              <button className="text-sky-500 hover:text-sky-600">
+                <Send className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
