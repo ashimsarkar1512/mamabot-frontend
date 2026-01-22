@@ -88,7 +88,7 @@ export default function UserHomeNavbar() {
       {/* Profile Button */}
       <button
         onClick={() => setIsAuthOpen(!isAuthOpen)}
-        className={`h-10 w-10 rounded-full overflow-hidden border-2 transition-all ${
+        className={`h-10 w-10 rounded-full overflow-hidden  transition-all cursor-pointer ${
           isAuthOpen ? 'border-[#D82479]' : 'border-transparent'
         }`}
       >

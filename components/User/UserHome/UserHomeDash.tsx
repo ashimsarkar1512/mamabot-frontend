@@ -16,8 +16,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/Button";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
+import { useState } from "react";
+import HydrationModal from "./Modal/HydrationModal";
+import BabyMovementModal from "./Modal/BabyMovementModal";
 
 export default function UserHomeDashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
   return (
     <div className="min-h-screen mt-8">
       {/* ================= Header ================= */}
@@ -205,6 +210,7 @@ export default function UserHomeDashboard() {
                     />
                   </div>
                   <Button
+                    onClick={() => setIsModalOpen(true)}
                     variant="outline"
                     className="py-2 rounded-md border-[#229ECF] text-[#229ECF]"
                   >
@@ -238,6 +244,7 @@ export default function UserHomeDashboard() {
                     </div>
                   </div>
                   <Button
+                   onClick={() => setIsMovementModalOpen(true)}
                     variant="outline"
                     className="py-2 px-4 rounded-md text-primary   border-primary"
                   >
@@ -491,6 +498,16 @@ export default function UserHomeDashboard() {
           </div>
         </div>
       </main>
+      <HydrationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        currentGlasses={8}
+      />
+       <BabyMovementModal 
+    isOpen={isMovementModalOpen} 
+    onClose={() => setIsMovementModalOpen(false)}
+    pregnancyWeek={22}
+  />
     </div>
   );
 }
