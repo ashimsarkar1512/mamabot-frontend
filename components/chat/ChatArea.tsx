@@ -78,7 +78,7 @@ function LandingPage({ store, chat }: any) {
       />
 
       {/* Top Disclaimer */}
-      <div className="flex justify-center pt-4 pb-2">
+      <div className="hidden md:flex justify-center pt-4 pb-2">
         <div className="bg-orange-50 border border-orange-200 text-orange-600 text-xs px-3 py-1 rounded-full flex gap-2">
           <span className="font-semibold">Not medical advice</span>
           <span className="text-orange-300">|</span>
@@ -91,15 +91,15 @@ function LandingPage({ store, chat }: any) {
       {/* Centered Content */}
       <div className="flex-1 flex flex-col items-center justify-center max-w-3xl mx-auto w-full px-6 -mt-20">
         {/* Logo */}
-        <div className="bg-pink-100 p-4 rounded-full mb-6  border hover:scale-105 hover:cursor-pointer transition-transform duration-300 z-9999 animate-pulse-slow">
+        <div className="bg-pink-100 p-4 rounded-full mb-6  border hover:scale-105 hover:cursor-pointer transition-transform duration-300 animate-pulse-slow">
           <Image src={ChatBotIcon} alt="ChatBot" height={60} width={60} />
         </div>
 
         {/* Headline */}
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800">
+        <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-center mb-2 text-gray-800">
           Command Your Health Journey
         </h1>
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-800">
+        <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-center mb-10 text-gray-800">
           With <span className="text-pink-500">Mamabot AI</span> Studios.
         </h2>
 
