@@ -163,58 +163,57 @@ export default function ProductAndFoodRecommendationsPage() {
           </p>
         </div>
 
-     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-  {products.map((product) => (
-    <Card
-      key={product.id}
-      className="overflow-hidden bg-white border border-gray-100 hover:shadow-lg transition-shadow rounded-xl"
-    >
-      {/* Image Container */}
-      <div className="relative w-full h-56 md:h-64 bg-gray-200 overflow-hidden rounded-t-xl">
-         <Image
-    src="/images/blog/blog1.png"
-    alt={product.name}
-    fill
-    className="object-cover transition-transform duration-300 hover:scale-105"
-  />
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {products.map((product) => (
+            <Card
+              key={product.id}
+              className="overflow-hidden bg-white border border-gray-100 hover:shadow-lg transition-shadow rounded-xl"
+            >
+              {/* Image Container */}
+              <div className="relative w-full h-56 md:h-64 bg-gray-200 overflow-hidden rounded-t-xl">
+                <Image
+                  src="/images/blog/blog1.png"
+                  alt={product.name}
+                  fill
+                  className="object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
 
-      {/* Card Content */}
-      <div className="p-4 flex flex-col justify-between h-[220px]">
-        <div>
-          <h3 className="font-semibold text-gray-900 mb-2 text-lg md:text-xl">
-            {product.name}
-          </h3>
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-            {product.description}
-          </p>
+              {/* Card Content */}
+              <div className="p-4 flex flex-col justify-between h-55">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-lg md:text-xl">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    {product.description}
+                  </p>
 
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm font-semibold text-gray-900">
-                {product.rating}
-              </span>
-            </div>
-            <span className="text-sm text-gray-500">
-              ({product.reviews.toLocaleString()} reviews)
-            </span>
-          </div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-semibold text-gray-900">
+                        {product.rating}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                      ({product.reviews.toLocaleString()} reviews)
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mt-auto">
+                  <span className="text-2xl font-bold text-gray-900">
+                    ${product.price}
+                  </span>
+                  <Button className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md text-sm md:text-base">
+                    View to Shop
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
-
-        <div className="flex items-center justify-between mt-auto">
-          <span className="text-2xl font-bold text-gray-900">
-            ${product.price}
-          </span>
-          <Button className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md text-sm md:text-base">
-            View to Shop
-          </Button>
-        </div>
-      </div>
-    </Card>
-  ))}
-</div>
-
       </section>
       {/* ====================== Today's Recommended Foods ====================== */}
       <section>
