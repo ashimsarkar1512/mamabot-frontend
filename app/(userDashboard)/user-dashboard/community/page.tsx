@@ -14,7 +14,7 @@ interface ButtonTypes {
   iconUrl: any;
 }
 
-const MOCK_POSTS = [
+export const MOCK_POSTS = [
   {
     id: 101,
     groupName: "First Trimester (0-12 Weeks)",
