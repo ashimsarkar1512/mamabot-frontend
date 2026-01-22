@@ -1,6 +1,5 @@
 import {
   Facebook,
-  Instagram,
   InstagramIcon,
   Linkedin,
   Mail,
@@ -11,7 +10,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <div className="px-37  py-6 text-gray-900">
+    <div className=" p-10 mb-10 rounded-xl bg-white shadow-xl  text-gray-900">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
         <div>
           <Link href="/" className="flex items-center  cursor-pointer">
