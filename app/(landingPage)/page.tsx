@@ -4,6 +4,8 @@ import HeroSection from "@/components/landing/home/HeroSection";
 import LearnAndGrow from "@/components/landing/home/LearnAndGrowSection";
 import MeetOurTeam from "@/components/landing/home/MeetOurTeam";
 import Newsletter from "@/components/landing/home/Newsletter";
+import PricingPricing from "@/components/landing/home/PricingSection";
+
 
 import SupportSection from "@/components/landing/home/SupportSection";
 import type { Metadata } from "next";
@@ -20,6 +22,7 @@ export default function Home() {
       <ChatSection />
       <SupportSection />
       <LearnAndGrow />
+      <PricingPricing/>
       <MeetOurTeam/>
       <GetInTouch/>
       <Newsletter />
