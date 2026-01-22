@@ -58,7 +58,7 @@ export default function PricingPage() {
         }
       };
   return (
-    <div className="min-h-screen bg-white px-6 py-10 relative">
+    <div className="min-h-screen  px-6 py-10 relative">
       {/* Back Button */}
      <div onClick={handleBack} className="absolute top-8 left-8 ">
         <button className="border p-1 rounded-full  border-pink-600! cursor-pointer">

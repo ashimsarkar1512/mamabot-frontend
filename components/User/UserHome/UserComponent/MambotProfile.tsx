@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useRef, ChangeEvent } from "react";
 import {
   Camera,
@@ -11,9 +10,9 @@ import {
   X,
   ChevronDown,
   SquarePen,
+  ArrowLeft,
 } from "lucide-react";
-
-// Types for better maintainability
+import Image from "next/image";
 type ToggleState = {
   kickReminders: boolean;
   hydrationGoals: boolean;
@@ -26,6 +25,10 @@ const MamabotProfile: React.FC = () => {
   const [profileImage, setProfileImage] = useState(
     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
   );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [password, setPassword] = useState("");
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const [toggles, setToggles] = useState<ToggleState>({
     kickReminders: true,
@@ -75,6 +78,38 @@ const MamabotProfile: React.FC = () => {
     setToggles((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const handleDeleteAccount = () => {
+    // Logic for actual deletion would go here
+    setIsDeleteModalOpen(false);
+    setIsDeleted(true);
+  };
+
+  if (isDeleted) {
+    return (
+      <div className="min-h-screen  flex items-center justify-center p-4">
+        <div className="bg-white/25 rounded-xl p-10 md:p-16 max-w-3xl w-full shadow-sm border border-gray-100 text-center relative">
+          <button
+            onClick={() => window.location.reload()}
+            className="absolute top-8 left-8 flex items-center gap-2 text-gray-500 font-semibold hover:text-gray-800 transition-colors cursor-pointer"
+          >
+            <ArrowLeft size={20} /> Back to Home
+          </button>
+
+          <div className="w-24 h-24 bg-[#E91E63] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
+            <X size={48} className="text-white stroke-[3px]" />
+          </div>
+
+          <h1 className="text-[#E91E63] text-2xl md:text-3xl font-bold mb-2">
+            Your Profile Is Permanently Deleted
+          </h1>
+          <p className="text-gray-400 font-semibold text-lg">
+            No Longer Available
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className=" py-10  text-gray-700">
       <div className="container mx-auto space-y-6">
@@ -82,11 +117,15 @@ const MamabotProfile: React.FC = () => {
         <div className="bg-white/25 rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-5">
             <div className="relative">
-              <img
-                src={profileImage}
+              <Image
+                src="/images/avatar.png"
                 alt="profile"
-                className="w-24 h-24 rounded-full object-cover border-4 border-pink-50 shadow-sm"
+                width={96}
+                height={96}
+                className="rounded-full object-cover shadow-sm"
+                priority
               />
+
               {isEditing && (
                 <button
                   onClick={() => profileRef.current?.click()}
@@ -322,10 +361,16 @@ const MamabotProfile: React.FC = () => {
         {/* SECURITY & DATA */}
         <Section title="Security & Data">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <button className="flex items-center justify-between px-4 py-3 rounded-xl border border-blue-50 bg-[#F8FBFF] text-gray-700 font-medium text-sm hover:bg-blue-50 transition-colors">
+            <button
+              onClick={() => setIsPasswordModalOpen(true)}
+              className="flex items-center justify-between px-4 py-3 rounded-xl border border-blue-50 bg-[#F8FBFF] text-gray-700 font-medium text-sm hover:bg-blue-50 transition-colors cursor-pointer"
+            >
               Change Password
             </button>
-            <button className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-red-50 bg-[#FFF5F5] text-[#E91E63] font-semibold text-sm hover:bg-red-50 transition-colors cursor-pointer">
+            <button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-red-50 bg-[#FFF5F5] text-[#E91E63] font-semibold text-sm hover:bg-red-50 transition-colors cursor-pointer"
+            >
               <Trash2 size={16} /> Delete My Account
             </button>
           </div>
@@ -336,15 +381,132 @@ const MamabotProfile: React.FC = () => {
             onClick={() => toggleSwitch("twoFactor")}
           />
         </Section>
+        {isDeleteModalOpen && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-[32px] p-10 max-w-3xl w-full shadow-2xl border border-white/20">
+              <h2 className="text-[#E91E63] text-3xl font-bold text-center mb-6">
+                Are you absolutely sure?
+              </h2>
+
+              <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                This action cannot be undone. This will permanently delete your
+                account and remove all your data from our servers, including:
+              </p>
+
+              <ul className="space-y-3 mb-8 text-gray-500 text-sm font-medium">
+                <li className="flex items-center gap-2">
+                  • Your pregnancy journey records
+                </li>
+                <li className="flex items-center gap-2">
+                  • Baby movement tracking history
+                </li>
+                <li className="flex items-center gap-2">
+                  • AI chat conversations
+                </li>
+                <li className="flex items-center gap-2">
+                  • Saved recommendations
+                </li>
+                <li className="flex items-center gap-2">
+                  • Community posts and comments
+                </li>
+              </ul>
+
+              <div className="mb-8">
+                <label className="text-gray-700 text-sm font-bold block mb-2">
+                  Enter Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="************"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setIsDeleteModalOpen(false)}
+                  className="flex-1 py-3.5 rounded-xl bg-white text-gray-800 font-bold border border-gray-100 shadow-sm hover:bg-gray-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="flex-1 py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 cursor-pointer"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* CHANGE PASSWORD MODAL */}
+        {isPasswordModalOpen && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-[32px] p-10 max-w-3xl w-full shadow-2xl border border-white/20">
+              <h2 className="text-[#E91E63] text-3xl font-bold text-center mb-6">
+                Change Your Password
+              </h2>
+
+              <div className="space-y-4 mb-8">
+                <div>
+                  <label className="text-gray-700 text-sm font-bold block mb-2">
+                    Current Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="************"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-700 text-sm font-bold block mb-2">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="************"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-700 text-sm font-bold block mb-2">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="************"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setIsPasswordModalOpen(false)}
+                  className="flex-1 py-3.5 rounded-xl bg-white text-gray-800 font-bold border border-gray-100 shadow-sm hover:bg-gray-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setIsPasswordModalOpen(false)} // Add your update logic here
+                  className="flex-1 py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 cursor-pointer"
+                >
+                  Save & Exit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
 /* ===== REUSABLE UI SUB-COMPONENTS ===== */
-
 const Section = ({ title, children, hasUpload }: any) => (
-  <div className="bg-white rounded-[32px] p-8 shadow-sm border border-gray-100">
+  <div className="bg-white/25 rounded-[32px] p-8 shadow-sm border border-gray-100">
     <div className="flex justify-between items-center mb-6">
       <h2 className="text-[#3EB1E4] text-xl font-bold">{title}</h2>
       {hasUpload && (
@@ -403,10 +565,10 @@ const Toggle = ({ label, subLabel, active, onClick }: any) => (
     </div>
     <button
       onClick={onClick}
-      className={`w-12 h-6 rounded-full relative transition-colors duration-300 ease-in-out ${active ? "bg-[#3EB1E4]" : "bg-gray-300"}`}
+      className={`w-12 h-6 rounded-full relative transition-colors duration-300 ease-in-out cursor-pointer ${active ? "bg-[#3EB1E4]" : "bg-gray-300"}`}
     >
       <div
-        className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${active ? "translate-x-7" : "translate-x-1"}`}
+        className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 cursor-pointery ${active ? "translate-x-7" : "translate-x-1"}`}
       />
     </button>
   </div>

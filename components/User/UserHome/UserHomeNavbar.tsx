@@ -18,6 +18,7 @@ import { AnimatePresence,motion } from "framer-motion";
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   
 
   // Mock state for demonstration (matching the image provided)
@@ -165,7 +166,9 @@ export default function UserHomeNavbar() {
     </div>
                 
                 {/* Notification Bell */}
-                <button className="text-[#0ea5e9] hover:bg-blue-50 p-2 rounded-full transition-colors">
+                <button 
+                onClick={() => setIsNotificationsOpen(true)}
+                className="text-[#0ea5e9] hover:bg-blue-50 p-2 rounded-full transition-colors cursor-pointer">
                   <Bell size={22} />
                 </button>
               </div>
@@ -209,6 +212,62 @@ export default function UserHomeNavbar() {
           </div>
         )}
       </div>
+
+      {/* NOTIFICATIONS MODAL */}
+<AnimatePresence>
+  {isNotificationsOpen && (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="bg-white rounded-[32px] p-8 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-[#E91E63] text-2xl font-bold">Notifications</h2>
+          <button 
+            onClick={() => setIsNotificationsOpen(false)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-6 border-b border-gray-100 mb-6">
+          <button className="pb-2 text-[#3EB1E4] border-b-2 border-[#3EB1E4] font-bold text-sm">All(7)</button>
+          <button className="pb-2 text-gray-400 font-medium text-sm hover:text-gray-600">Unread</button>
+        </div>
+
+        {/* Notifications List */}
+        <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+          {[1, 2, 3, 4].map((_, i) => (
+            <div key={i} className="p-4 bg-[#F8FBFF] border border-blue-50 rounded-2xl">
+              <h3 className="text-[#3EB1E4] font-bold text-sm mb-1">
+                {i === 0 ? "New Recovery Tips Added" : "Nutrition Guidelines Updated"}
+              </h3>
+              <p className="text-gray-500 text-xs leading-relaxed">
+                We've added new personalized recovery tips to support your healing journey. 
+                Check your home screen for today's guidance.
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer Action */}
+        <div className="mt-8">
+          <button 
+            onClick={() => setIsNotificationsOpen(false)}
+            className="w-full py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 transition-colors cursor-pointer"
+          >
+            Mark all as read
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  )}
+</AnimatePresence>
     </nav>
   );
 }
