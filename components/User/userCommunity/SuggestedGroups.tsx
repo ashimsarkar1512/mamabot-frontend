@@ -43,7 +43,7 @@ const SuggestedGroups = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 p-6">
         {MOCK_GROUPS.map((group) => (
           <div
             key={group.id}

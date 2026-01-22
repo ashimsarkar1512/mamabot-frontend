@@ -115,7 +115,7 @@ const CommunityPage = () => {
           </div>
         ))}
       </div>
-      <div className="flex flex-col md:flex-row justify-between gap-4">
+      <div className="flex flex-col-reverse xl:flex-row justify-between gap-4">
         <div className="grow">
           <div className="w-full mx-auto">
             {/* Top Widget */}
