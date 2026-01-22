@@ -2,6 +2,7 @@ import ChatSection from "@/components/landing/home/ChatSection";
 import GetInTouch from "@/components/landing/home/GetInTouch";
 import HeroSection from "@/components/landing/home/HeroSection";
 import LearnAndGrow from "@/components/landing/home/LearnAndGrowSection";
+import MeetOurTeam from "@/components/landing/home/MeetOurTeam";
 import Newsletter from "@/components/landing/home/Newsletter";
 
 import SupportSection from "@/components/landing/home/SupportSection";
@@ -19,6 +20,7 @@ export default function Home() {
       <ChatSection />
       <SupportSection />
       <LearnAndGrow />
+      <MeetOurTeam/>
       <GetInTouch/>
       <Newsletter />
     </main>
