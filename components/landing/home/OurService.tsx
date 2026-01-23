@@ -19,10 +19,11 @@ const OurService = () => {
         {services.map((service, index) => {
           const isImageLeft = service.imagePosition === "left";
 
-          const gradientClass =
-            index === 1
-              ? "bg-gradient-to-r from-[#F9FAFB00] to-[#F3E8FF]" // middle card (reverse)
-              : "bg-gradient-to-r from-[#F3E8FF] to-[#F9FAFB00]"; // 1st & 3rd
+          const isMiddle = index === 1;
+
+          const gradientClass = isMiddle
+            ? "bg-gradient-to-r from-[#F9FAFB00] to-[#F3E8FF]"
+            : "bg-gradient-to-r from-[#F3E8FF] to-[#F9FAFB00]";
 
           return (
             <div
@@ -30,7 +31,7 @@ const OurService = () => {
               className={`p-6 md:p-12 rounded-full ${gradientClass}`}
             >
               <div
-                className={`flex flex-col md:flex-row items-center gap-7 md:gap-12 ${
+                className={`flex flex-col md:flex-row md:items-center gap-7 md:gap-12 ${
                   !isImageLeft ? "md:flex-row-reverse" : ""
                 }`}
               >
@@ -46,21 +47,24 @@ const OurService = () => {
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col gap-3 md:gap-6 text-center md:text-left">
+                <div
+                  className={`flex flex-col gap-3 md:gap-6 ${
+                    isMiddle
+                      ? "text-right md:items-end"
+                      : "text-left md:items-start"
+                  }`}
+                >
                   <h3 className="text-xl md:text-2xl font-semibold">
                     {service.title}
                   </h3>
 
-                  <p className="text-base text-[#677381] leading-relaxed">
+                  <p className="text-base text-[#677381] leading-relaxed max-w-xl">
                     {service.description}
                   </p>
 
-                  <a
-                    href={service.learnMoreLink}
-                    className="inline-block px-6 py-3 text-primary text-lg font-medium hover:underline"
-                  >
+                  <button className="inline-flex w-fit px-6 py-3 bg-white text-primary text-lg font-medium hover:opacity-80 rounded-lg cursor-pointer">
                     Learn More
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
