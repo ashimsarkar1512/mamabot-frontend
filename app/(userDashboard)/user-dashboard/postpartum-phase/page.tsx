@@ -19,6 +19,9 @@ import Button from "@/components/ui/Button";
 import TodaysInsight from "@/components/User/postpartumPhase/TodaysInsight";
 import DailyTaskCard from "@/components/User/postpartumPhase/DailyTaskCard";
 import DailyTaskGrid from "@/components/User/postpartumPhase/DailyTaskGrid";
+import MothersWellnessEnergy from "@/components/User/postpartumPhase/MothersWellnessEnergy";
+import TopArticlesVaginalDelivery from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
+import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
 
 export default function UserHomeDashboard() {
   // This value will come from backend in real app
@@ -190,6 +193,8 @@ export default function UserHomeDashboard() {
             </Card>
           </div>
         </div>
+        <MothersWellnessEnergy />
+        <VaginalDeliveryArticles />
       </main>
 
       <HydrationModal
