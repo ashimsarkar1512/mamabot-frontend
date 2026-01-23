@@ -17,8 +17,12 @@ import Image from "next/image";
 import { MOCK_POSTS } from "../page";
 import PostCard from "@/components/User/userCommunity/PostCard";
 
-const GroupLandingPage = ({ params }: { params: { communityId: string } }) => {
-  const { communityId } = params;
+const GroupLandingPage = ({
+  params,
+}: {
+  params: Promise<{ communityId: string }>;
+}) => {
+  const { communityId } = React.use(params);
   console.log(communityId);
 
   const [postText, setPostText] = useState("");
