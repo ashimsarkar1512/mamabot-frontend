@@ -1,11 +1,15 @@
 import ChatSection from "@/components/landing/home/ChatSection";
+import GetInTouch from "@/components/landing/home/GetInTouch";
 import HeroSection from "@/components/landing/home/HeroSection";
 import LearnAndGrow from "@/components/landing/home/LearnAndGrowSection";
-
-
+import MeetOurTeam from "@/components/landing/home/MeetOurTeam";
+import Newsletter from "@/components/landing/home/Newsletter";
+import OurService from "@/components/landing/home/OurService";
+import PricingPricing from "@/components/landing/home/PricingSection";
 
 
 import SupportSection from "@/components/landing/home/SupportSection";
+import YoureNotAlone from "@/components/landing/home/YoureNotAlone";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,11 +20,16 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <HeroSection/>
-       <ChatSection/>
-      <SupportSection/>
-     <LearnAndGrow/> 
-   
+      <HeroSection />
+      <ChatSection />
+      <SupportSection />
+      <LearnAndGrow />
+      <OurService/>
+      <YoureNotAlone/>
+      <PricingPricing/>
+      <MeetOurTeam/>
+      <GetInTouch/>
+      <Newsletter />
     </main>
   );
 }

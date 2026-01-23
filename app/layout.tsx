@@ -63,7 +63,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
         {/* Full viewport wrapper with background */}
-        <div className="min-h-screen w-full bg-[#F2F4F8] flex flex-col">
+        <div className="min-h-screen w-full bg-[#F2F4F8] px-5 md:px-20 flex flex-col">
           {children}
         </div>
       </body>

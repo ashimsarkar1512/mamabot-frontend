@@ -47,7 +47,7 @@ const plans = [
   },
 ];
 
-export default function PricingPage() {
+export default function PricingPricing() {
 
       const router = useRouter();
       const handleBack = () => {
@@ -58,14 +58,8 @@ export default function PricingPage() {
         }
       };
   return (
-    <div className="min-h-screen  px-6 py-10 relative">
-      {/* Back Button */}
-     <div onClick={handleBack} className="absolute top-8 left-8 ">
-        <button className="border p-1 rounded-full  border-pink-600! cursor-pointer">
-         <ArrowLeft className="text-pink-500" size={18} />
-        </button>
-      </div>
-
+    <div className="py-20 px-4 bg-white/25 rounded-2xl border border-white shadow-lg my-10">
+  
       {/* Header */}
       <div className="max-w-6xl mx-auto  my-10">
         <span className="inline-flex items-center  gap-2 text-xs font-medium text-pink-600 bg-pink-100 px-4 py-2 rounded-full mb-4">
