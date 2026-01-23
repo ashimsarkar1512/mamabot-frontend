@@ -16,6 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/Button";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import HydrationModal from "./Modal/HydrationModal";
 import BabyMovementModal from "./Modal/BabyMovementModal";
@@ -81,12 +82,15 @@ export default function UserHomeDashboard() {
 
             {/* Community with Flower Decor */}
             <div className="relative">
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-pink-50/30 border border-pink-100 text-slate-700 hover:bg-pink-50 transition-colors cursor-pointer">
+              <Link
+                href="/user-dashboard/community"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-pink-50/30 border border-pink-100 text-slate-700 hover:bg-pink-50 transition-colors cursor-pointer"
+              >
                 <div className="p-1 bg-pink-100 rounded-md shadow-sm">
                   <Users size={18} className="text-pink-500" />
                 </div>
                 <span className="font-medium text-sm">Community</span>
-              </button>
+              </Link>
               {/* Floating Flower Decor */}
               <span className="absolute -top-2 -right-2 text-pink-300 animate-pulse">
                 🌸
@@ -108,10 +112,10 @@ export default function UserHomeDashboard() {
                   <Heart className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-2">Today's Insight</h3>
+                  <h3 className="font-semibold mb-2">Today&apos;s Insight</h3>
                   <p className="text-sm text-muted-foreground">
-                    At week 22, your baby's senses are developing rapidly. They
-                    can now hear your voice and respond to sounds!
+                    At week 22, your baby&apos;s senses are developing rapidly.
+                    They can now hear your voice and respond to sounds!
                   </p>
                 </div>
               </div>
