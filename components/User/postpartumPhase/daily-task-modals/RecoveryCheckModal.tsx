@@ -44,7 +44,7 @@ const MOODS = [
   "Irritated",
 ];
 
-export default function IncisionCheckModal() {
+export default function RecoveryCheckModal() {
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 

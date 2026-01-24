@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@/components/ui/Button";
-import { LucideIcon } from "lucide-react";
+import { AlertCircle, LucideIcon } from "lucide-react";
 
 interface FirstStepProps {
   Icon: LucideIcon;
@@ -8,6 +8,7 @@ interface FirstStepProps {
   description: string;
   buttonText: string;
   onNext: () => void;
+  alert?: string;
 }
 
 const FirstStep: React.FC<FirstStepProps> = ({
@@ -16,6 +17,7 @@ const FirstStep: React.FC<FirstStepProps> = ({
   description,
   buttonText,
   onNext,
+  alert,
 }) => {
   return (
     <div className="text-center space-y-6 min-h-[350px] flex flex-col items-center justify-center">
@@ -26,6 +28,13 @@ const FirstStep: React.FC<FirstStepProps> = ({
       <p className="text-sm text-gray-500 leading-relaxed px-4">
         {description}
       </p>
+      {/* alert  */}
+      {alert && (
+        <div className="flex  items-center gap-2 py-3 px-6 bg-[#229ECF]/10 rounded">
+          <AlertCircle className="w-6 h-6 text-[#229ECF]" size={15} />
+          <p className="text-gray-500 font-medium text-sm text-left">{alert}</p>
+        </div>
+      )}
       <Button
         variant="primary"
         className="px-8 mx-auto rounded-2xl bg-[#229ECF]! hover:bg-[#229ECF]/80"

@@ -56,6 +56,17 @@ export default function UserHomeDashboard() {
     },
     growthStatus: "On track",
   };
+  const mockDataForInsight2 = {
+    lineText:
+      "Your baby is growing well and you're doing great! Keep up the good work and continue to follow the recommended care plan.",
+    lastFeeding: "3 hour ago",
+    totalSleepHours: "5.2",
+    diapers: {
+      wet: 6,
+      dirty: 4,
+    },
+    growthStatus: "On track",
+  };
 
   return (
     <div className="min-h-screen mt-8">
@@ -65,29 +76,53 @@ export default function UserHomeDashboard() {
       <main className="mx-auto container py-6 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* ========== Left Column ========== */}
-          <div className="col-span-1 lg:col-span-2 space-y-6">
-            {/* Insight */}
-            <Card className="px-5 py-7 sm:px-7 lg:px-9 shadow-sm border-2 border-white! bg-sky-50/50">
-              <div className="flex gap-5 items-start">
-                <div className="h-11 w-11 rounded-full bg-[#229ECF] flex items-center justify-center shrink-0">
-                  <Heart className="h-6 w-6 text-white" />
+          {deliveryType === "Vaginal Delivery" ? (
+            <div className="col-span-1 lg:col-span-2 space-y-6">
+              {/* Insight */}
+              <Card className="px-5 py-7 sm:px-7 lg:px-9 shadow-sm border-2 border-white! bg-sky-50/50">
+                <div className="flex gap-5 items-start">
+                  <div className="h-11 w-11 rounded-full bg-[#229ECF] flex items-center justify-center shrink-0">
+                    <Heart className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">
+                      Today&apos;s Insight
+                    </h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {mockDataForInsight.lineText}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">
-                    Today&apos;s Insight
-                  </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {mockDataForInsight.lineText}
-                  </p>
+              </Card>
+
+              <TodaysInsight mockData={mockDataForInsight} />
+
+              <DailyTaskGrid deliveryType={deliveryType} />
+            </div>
+          ) : (
+            <div className="col-span-1 lg:col-span-2 space-y-6">
+              {/* Insight */}
+              <Card className="px-5 py-7 sm:px-7 lg:px-9 shadow-sm border-2 border-white! bg-sky-50/50">
+                <div className="flex gap-5 items-start">
+                  <div className="h-11 w-11 rounded-full bg-[#229ECF] flex items-center justify-center shrink-0">
+                    <Heart className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">
+                      Today&apos;s Insight
+                    </h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {mockDataForInsight2.lineText}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
 
-            <TodaysInsight mockData={mockDataForInsight} />
+              <TodaysInsight mockData={mockDataForInsight2} />
 
-            <DailyTaskGrid />
-          </div>
-
+              <DailyTaskGrid deliveryType={deliveryType} />
+            </div>
+          )}
           {/* ========== Right Column - Updated to match screenshot style ========== */}
           <div className="space-y-5 lg:space-y-6 ">
             {/* Delivery Type Selector */}
@@ -193,6 +228,7 @@ export default function UserHomeDashboard() {
             </Card>
           </div>
         </div>
+
         <MothersWellnessEnergy />
         <VaginalDeliveryArticles />
       </main>
