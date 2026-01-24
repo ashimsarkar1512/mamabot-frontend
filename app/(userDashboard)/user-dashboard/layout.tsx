@@ -1,6 +1,7 @@
 // app/(userDashboard)/user-dashboard/layout.tsx
 import ChatBot from "@/features/ChatBot";
 import UserHomeNavbar from "./userNavbar/page";
+import { Footer } from "@/components/layout/Footer";
 
 type UserDashboardLayoutProps = {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ export default function UserDashboardLayout({
         {/* pt-[104px] = navbar height (adjust if your navbar height changes) */}
         <div className="w-full container mx-auto ">{children}</div>
       </main>
+      <Footer />
     </div>
   );
 }
