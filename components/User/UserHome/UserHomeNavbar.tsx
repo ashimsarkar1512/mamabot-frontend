@@ -14,9 +14,10 @@ export default function UserHomeNavbar() {
   const pathname = usePathname();
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
-    { label: "About Us", href: "/about-us" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact Us", href: "/contact-us" },
+    { label: "About Us", href: "/user-dashboard/about-us" },
+    { label: "Blog", href: "/user-dashboard/blog" },
+    { label: "Contact Us", href: "/user-dashboard/contact-us" },
+    { label: "Saved Items", href: "/user-dashboard/saved-items" },
   ];
 
   // Mock state for demonstration (matching the image provided)
@@ -73,8 +74,8 @@ export default function UserHomeNavbar() {
                   className={`font-medium transition-colors
           ${
             isActive
-              ? "text-[#0ea5e9]" // active
-              : "text-gray-500 hover:text-[#D82479]"
+              ? "text-[#229ECF]" // active
+              : "text-gray-500 hover:text-[#229ECF]"
           }
         `}
                 >

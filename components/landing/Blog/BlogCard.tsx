@@ -2,7 +2,7 @@
 
 import { comfortaa } from "@/app/fonts";
 import { BlogPost } from "@/lib/data/blogData";
-import { Bookmark, BookOpenIcon} from "lucide-react";
+import { Bookmark, BookOpenIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -15,7 +15,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   const slug = post.slug || post.title.toLowerCase().replace(/\s+/g, "-");
   const id = post.id;
   return (
-    <div className={`group relative ${comfortaa.className} bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col`}>
+    <div
+      className={`group relative ${comfortaa.className} bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col`}
+    >
       {/* Image */}
       <div className="w-80 h-40 md:w-131 md:h-80 aspect-4/3 overflow-hidden">
         <Image
@@ -49,9 +51,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
           {/* <button className="inline-flex text-base md:text-lg items-center justify-center w-full bg-[#229ECF] hover:opacity-80 cursor-pointer text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300">
            <BookOpenIcon className="mr-3"/> {post.buttonText}
           </button> */}
-          <Link 
-          href={`/blog/${slug}`}
-          // href={`/blog/blog-details/${id}`}
+          <Link
+            href={`/user-dashboard/blog/${slug}`}
+            // href={`/blog/blog-details/${id}`}
           >
             <button className="w-full bg-[#229ECF] hover:bg-[#1a7bb5] text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2.5">
               <BookOpenIcon size={20} />
