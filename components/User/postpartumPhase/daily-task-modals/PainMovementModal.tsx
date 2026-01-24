@@ -13,6 +13,7 @@ import Button from "@/components/ui/Button";
 import StepControllButtons from "./reusable/StepControllButtons";
 import ModalHeadingOne from "./reusable/ModalHeadingOne";
 import TipsCard from "./reusable/TipsCard";
+import SummeryTable from "./reusable/SummeryTable";
 
 type FormData = {
   painLevel: number;
@@ -190,6 +191,7 @@ export default function PainMovementModal() {
                     name="energy"
                     checked={formData.energy === v}
                     onChange={() => toggleEnergy(v)}
+                    className="accent-[#229ECF]"
                   />
                   {v}
                 </label>
@@ -211,22 +213,28 @@ export default function PainMovementModal() {
               </h3>
             </div>
 
-            <div className="text-sm text-left border border-[#229ECF]/40! rounded p-4 space-y-2">
-              <div className="flex justify-between items-center border-b border-[#229ECF]/40! p-2">
-                <p className="text-gray-500">Pain Intensity: </p>
-                <p className="text-[#229ECF]">{formData.painLevel}/10</p>
-              </div>
-              <div className="flex justify-between items-center border-b border-[#229ECF]/40! p-2">
-                <p className="text-gray-500">Affected Areas: </p>
-                <p className="text-[#229ECF]">
-                  {formData.painTypes.join(", ")}
-                </p>
-              </div>
-              <div className="flex justify-between items-center  p-2">
-                <p className="text-gray-500">Mobility: </p>
-                <p className="text-[#229ECF]">{formData.energy}</p>
-              </div>
-            </div>
+            <SummeryTable
+              items={[
+                {
+                  label: "Pain Intensity: ",
+                  value: (
+                    <p className="text-[#229ECF]">{formData.painLevel}/10</p>
+                  ),
+                },
+                {
+                  label: "Affected Areas: ",
+                  value: (
+                    <p className="text-[#229ECF]">
+                      {formData.painTypes.join(", ")}
+                    </p>
+                  ),
+                },
+                {
+                  label: "Mobility: ",
+                  value: <p className="text-[#229ECF]">{formData.energy}</p>,
+                },
+              ]}
+            />
             <TipsCard
               tips={
                 "Gentle stretching, Warm compress, Check posture while feeding, Take frequent breaks, Avoid strenuous activity"

@@ -1,4 +1,4 @@
-export { default as IncisionCheckModal } from "./IncisionCheck/IncisionCheckModal";
+export { default as IncisionCheckModal } from "./IncisionCheckModal";
 export { default as MovementRestrictionModal } from "./MovementRestrictionModal";
 export { default as PainMovementModal } from "./PainMovementModal";
 export { default as BabyFeedingModal } from "./BabyFeedingModal";

@@ -13,6 +13,7 @@ import Button from "@/components/ui/Button";
 import StepControllButtons from "./reusable/StepControllButtons";
 import ModalHeadingOne from "./reusable/ModalHeadingOne";
 import TipsCard from "./reusable/TipsCard";
+import SummeryTable from "./reusable/SummeryTable";
 
 type FormData = {
   streak: number;
@@ -131,21 +132,28 @@ export default function MovementRestrictionModal() {
               </p>
             </div>
 
-            <div className="text-sm text-left border border-[#229ECF]/40! rounded p-4 space-y-2">
-              <div className="flex justify-between items-center  p-2">
-                <p className="text-gray-500">Streak: </p>
-                <p className="text-[#229ECF] font-semibold text-md">
-                  {formData.streak} days
-                </p>
-              </div>
-              <div className="flex justify-between items-center p-2">
-                <p className="text-gray-500">Time: </p>
-                <p className="text-[#229ECF] font-semibold text-md">
-                  {formData.time}
-                </p>
-              </div>
+            <SummeryTable
+              items={[
+                {
+                  label: "Streak: ",
+                  value: (
+                    <p className="text-[#229ECF] font-semibold text-md">
+                      {formData.streak} days
+                    </p>
+                  ),
+                },
+                {
+                  label: "Time: ",
+                  value: (
+                    <p className="text-[#229ECF] font-semibold text-md">
+                      {formData.time}
+                    </p>
+                  ),
+                },
+              ]}
+            >
               <TipsCard tips={formData.tip} />
-            </div>
+            </SummeryTable>
             <DialogClose asChild>
               <Button className="w-full" onClick={handleFinish}>
                 Done

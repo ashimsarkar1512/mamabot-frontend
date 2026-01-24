@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { CheckCircle, RotateCw } from "lucide-react";
 import Button from "@/components/ui/Button";
-import StepControllButtons from "../reusable/StepControllButtons";
-import ModalHeadingOne from "../reusable/ModalHeadingOne";
+import StepControllButtons from "./reusable/StepControllButtons";
+import ModalHeadingOne from "./reusable/ModalHeadingOne";
+import SummeryTable from "./reusable/SummeryTable";
 
 type FormData = {
   painLevel: number;
@@ -327,28 +328,30 @@ export default function IncisionCheckModal() {
               </h3>
             </div>
 
-            <div className="text-sm text-left border border-[#229ECF]/40! rounded p-4 space-y-2">
-              <div className="flex justify-between items-center border-b border-[#229ECF]/40! p-2">
-                <p className="text-gray-500">Pain Level: </p>
-                <p>{formData.painLevel}/10</p>
-              </div>
-              <div className="flex justify-between items-center border-b border-[#229ECF]/40! p-2">
-                <p className="text-gray-500">Bleeding: </p>
-                <p>{formData.bleeding}</p>
-              </div>
-              <div className="flex justify-between items-center border-b border-[#229ECF]/40! p-2">
-                <p className="text-gray-500">Energy: </p>
-                <p>{formData.energy}</p>
-              </div>
-              <div className="flex justify-between items-center border-b border-[#229ECF]/40! p-2">
-                <p className="text-gray-500">Mood: </p>
-                <p>{formData.moods.join(", ") || "Not specified"}</p>
-              </div>
-              <div className="flex justify-between items-center  p-2">
-                <p className="text-gray-500">Clots: </p>
-                <p>{formData.clots ? "Present" : "Absent"}</p>
-              </div>
-            </div>
+            <SummeryTable
+              items={[
+                {
+                  label: "Pain Level: ",
+                  value: <p>{formData.painLevel}/10</p>,
+                },
+                {
+                  label: "Bleeding: ",
+                  value: <p>{formData.bleeding}</p>,
+                },
+                {
+                  label: "Energy: ",
+                  value: <p>{formData.energy}</p>,
+                },
+                {
+                  label: "Mood: ",
+                  value: <p>{formData.moods.join(", ") || "Not specified"}</p>,
+                },
+                {
+                  label: "Clots: ",
+                  value: <p>{formData.clots ? "Present" : "Absent"}</p>,
+                },
+              ]}
+            />
             <DialogClose asChild>
               <Button className="w-full" onClick={handleFinish}>
                 Done
