@@ -1,5 +1,6 @@
 "use client";
 import { comfortaa } from "@/app/fonts";
+import { blogPosts } from "@/lib/data/blogData";
 import {
   ArrowLeft,
   Link2Icon,
@@ -10,6 +11,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import BlogCard from "./BlogCard";
 
 interface BlogDetailsProps {
   post: {
@@ -39,7 +41,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
         />
 
         {/* Category Badge */}
-        <div className="absolute top-15 left-40 md:top-70 md:mb-3 mb-6 md:right-173">
+        <div className="absolute top-15 left-40 md:top-70 md:mb-3 mb-6 md:left-178">
           <span className="bg-[#229ECF]/80 text-white px-2 md:px-4 py-1 md:py-2 rounded-full text-[10px] md:text-sm font-medium shadow-lg">
             {post.category}
           </span>
@@ -221,6 +223,26 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
         </div>
 
         <div className="mt-4 h-[2px] w-full mx-auto bg-[#BAE1F0]" />
+      </div>
+
+      <div className="pt-12 md:pt-24">
+        <div className="flex items-center justify-between ">
+          <h2 className="text-xl md:text-[32px] font-bold text-[#229ECF]">
+            Related Articles
+          </h2>
+          <button
+            onClick={() => router.push("/blog")}
+            className="text-base md:text-lg text-[#229ECF] cursor-pointer hover:opacity-80"
+          >
+            See more
+          </button>
+        </div>
+        <div className="mt-4 mb-5 md:mb-10 h-[2px] w-full mx-auto bg-[#BAE1F0]" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
+          {blogPosts.slice(0, 3).map((post) => (
+            <BlogCard key={post.id} post={post} />
+          ))}
+        </div>
       </div>
     </div>
   );
