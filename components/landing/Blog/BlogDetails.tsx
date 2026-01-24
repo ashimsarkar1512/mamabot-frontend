@@ -73,6 +73,15 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
               ) : (
                 <div>
+                  <div className="hidden md:block transition-transform duration-300 hover:-translate-y-2 absolute -right-35 top-0 cursor-pointer hover:opacity-80 -translate-y-1/2 pr-10">
+                    <Image
+                      src="/images/mamabot.png"
+                      alt="MamaBot"
+                      width={80}
+                      height={80}
+                      className="drop-shadow-xl"
+                    />
+                  </div>
                   <div className="text-base md:text-lg ">
                     <p className="mb-5 md:mb-10">
                       Postpartum bleeding and cramping are natural parts of your
