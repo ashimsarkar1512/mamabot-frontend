@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import Image from "next/image"; // if using Next.js — otherwise use regular <img>
 import { beauRivage, comfortaa } from "@/app/fonts";
 
