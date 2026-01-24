@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 @custom-variant dark (&:is(.dark *));
 
 /* Light mode */
@@ -43,14 +42,13 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-
 /* Map variables to Tailwind classes via CSS custom properties */
 .bg-primary {
   background-color: var(--primary);
 }
 
 .bg-landing {
-  background-color: #F2F4F8;
+  background-color: #f2f4f8;
 }
 
 .bg-primary-foreground {
