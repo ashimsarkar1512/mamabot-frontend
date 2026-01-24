@@ -10,7 +10,7 @@ export default function UserDashboardLayout({
   children,
 }: UserDashboardLayoutProps) {
   return (
-    <div className="min-h-screen relative bg-[linear-gradient(to_bottom,rgba(216,36,121,0.1)_0px,rgba(216,36,121,0.1)_15%,rgba(233,245,250,0.1)_35%,rgba(233,245,250,0.1)_40%,white_65%,white_100%)]">
+    <div className="min-h-screen relative ">
       {/* Fixed Navbar */}
       <UserHomeNavbar />
       <ChatBot />
