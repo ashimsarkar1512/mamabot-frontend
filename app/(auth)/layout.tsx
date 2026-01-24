@@ -1,3 +1,4 @@
+import ReduxProvider from "@/redux/provider";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,5 +11,5 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return <ReduxProvider>{children}</ReduxProvider>;
 }

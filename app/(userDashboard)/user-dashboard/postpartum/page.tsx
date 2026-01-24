@@ -15,7 +15,7 @@ const PostpartumCard: React.FC = () => {
         
         {/* Description */}
         <p className="mb-10 text-gray-600">
-          Activate postpartum mode. You'll receive newborn-care tools and recovery insights.
+          Activate postpartum mode. You will receive newborn-care tools and recovery insights.
         </p>
         
         {/* Action Button */}
