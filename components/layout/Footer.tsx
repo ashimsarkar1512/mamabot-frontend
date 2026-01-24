@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <div className=" p-10 mb-10 rounded-xl bg-white shadow-xl  text-gray-900">
+    <div className=" p-10 mt-5 md:mt-14 mx-0 lg:mx-25 mb-10 rounded-xl bg-white shadow-xl  text-gray-900">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
         <div>
           <Link href="/" className="flex items-center  cursor-pointer">

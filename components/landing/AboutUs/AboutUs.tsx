@@ -83,7 +83,7 @@ const AboutUs = () => {
               </div>
 
               {/* Optional subtle background decoration */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/20 to-purple-200/20 rounded-3xl -rotate-2 scale-105 blur-sm hidden lg:block" />
+              {/* <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/20 to-purple-200/20 rounded-3xl -rotate-2 scale-105 blur-sm hidden lg:block" /> */}
             </div>
           </div>
         </div>
