@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, RotateCw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import StepControllButtons from "../StepControllButtons";
 import ModalHeadingOne from "../ModalHeadingOne";
@@ -112,7 +112,7 @@ export default function IncisionCheckModal() {
         return (
           <div className="text-center space-y-6 min-h-[350px] flex flex-col items-center justify-center">
             <div className="mx-auto w-15 h-15 rounded-full bg-[#229ECF]/10 border border-[#229ECF]/60! flex items-center justify-center text-[#229ECF] font-bold">
-              ✓
+              <RotateCw className="w-10 h-10 animate-pulse text-[#229ECF]" />
             </div>
             <h3 className="text-lg font-semibold">Track Your Recovery</h3>
             <p className="text-sm text-gray-500">
