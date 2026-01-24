@@ -8,17 +8,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle, RotateCw } from "lucide-react";
+import { AlertCircle, CheckCircle, RotateCw } from "lucide-react";
 import Button from "@/components/ui/Button";
 import StepControllButtons from "./reusable/StepControllButtons";
 import ModalHeadingOne from "./reusable/ModalHeadingOne";
 import TipsCard from "./reusable/TipsCard";
 import SummeryTable from "./reusable/SummeryTable";
+import LastModalHeader from "./reusable/LastModalHeader";
 
 type FormData = {
-  painLevel: number;
-  painTypes: string[];
-  energy: string;
+  feedingMethod: string;
+  leftSideDuration: number;
+  rightSideDuration: number;
+  latchQuality: string;
+  timeOfFeeding: string;
+  lastFeedingTime: number;
 };
 
 const babyFeelings = [
@@ -28,40 +32,26 @@ const babyFeelings = [
   "Mixed feeding",
 ];
 
-const energyLevels = [
-  "Difficulty walking",
-  "Pain when sitting",
-  "Hard to bend",
-  "Limited mobility",
-  "Normal movement",
-];
-
 export default function BabyFeedingModal() {
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
-    painLevel: 2,
-    painTypes: [],
-    energy: "Normal movement",
+    feedingMethod: "",
+    leftSideDuration: 0,
+    rightSideDuration: 0,
+    latchQuality: "",
+    timeOfFeeding: "",
+    lastFeedingTime: 0,
   });
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => s - 1);
 
-  const togglePainType = (value: string) => {
+  const updateField = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({
       ...prev,
-      painTypes: prev.painTypes.includes(value)
-        ? prev.painTypes.filter((v) => v !== value)
-        : [...prev.painTypes, value],
-    }));
-  };
-
-  const toggleEnergy = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      energy: prev.energy === value ? "Normal movement" : value,
+      [field]: value,
     }));
   };
 
@@ -79,9 +69,12 @@ export default function BabyFeedingModal() {
   const handleFinish = () => {
     setStep(0);
     setFormData({
-      painLevel: 2,
-      painTypes: [],
-      energy: "Normal movement",
+      feedingMethod: "",
+      leftSideDuration: 0,
+      rightSideDuration: 0,
+      latchQuality: "",
+      timeOfFeeding: "",
+      lastFeedingTime: 0,
     });
     close();
   };
@@ -122,13 +115,13 @@ export default function BabyFeedingModal() {
               {babyFeelings.map((v) => (
                 <label
                   key={v}
-                  className={`flex items-center gap-2 border border-[#229ECF]/40 p-2 rounded ${formData.energy === v ? "bg-[#229ECF]/10" : ""}`}
+                  className={`flex items-center gap-2 border border-[#229ECF]/40 p-2 rounded ${formData.feedingMethod === v ? "bg-[#229ECF]/10" : ""}`}
                 >
                   <input
                     type="radio"
-                    name="energy"
-                    checked={formData.energy === v}
-                    onChange={() => toggleEnergy(v)}
+                    name="feedingMethod"
+                    checked={formData.feedingMethod === v}
+                    onChange={() => updateField("feedingMethod", v)}
                   />
                   {v}
                 </label>
@@ -154,7 +147,10 @@ export default function BabyFeedingModal() {
               <input
                 type="number"
                 className="bg-[#229ECF]/10 border border-[#229ECF]/40 p-2 rounded"
-                defaultValue={0}
+                value={formData.leftSideDuration}
+                onChange={(e) =>
+                  updateField("leftSideDuration", Number(e.target.value))
+                }
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -164,7 +160,10 @@ export default function BabyFeedingModal() {
               <input
                 type="number"
                 className="bg-[#229ECF]/10 border border-[#229ECF]/40 p-2 rounded"
-                defaultValue={0}
+                value={formData.rightSideDuration}
+                onChange={(e) =>
+                  updateField("rightSideDuration", Number(e.target.value))
+                }
               />
             </div>
 
@@ -173,13 +172,13 @@ export default function BabyFeedingModal() {
               {["Good", "Difficult", "Painful"].map((v) => (
                 <label
                   key={v}
-                  className={`flex items-center gap-2 border border-[#229ECF]/40 p-2 rounded ${formData.energy === v ? "bg-[#229ECF]/10" : ""}`}
+                  className={`flex items-center gap-2 border border-[#229ECF]/40 p-2 rounded ${formData.latchQuality === v ? "bg-[#229ECF]/10" : ""}`}
                 >
                   <input
                     type="radio"
-                    name="energy"
-                    checked={formData.energy === v}
-                    onChange={() => toggleEnergy(v)}
+                    name="latchQuality"
+                    checked={formData.latchQuality === v}
+                    onChange={() => updateField("latchQuality", v)}
                   />
                   {v}
                 </label>
@@ -194,7 +193,8 @@ export default function BabyFeedingModal() {
               <input
                 type="time"
                 className="bg-[#229ECF]/10 border border-[#229ECF]/40 p-2 rounded"
-                defaultValue={new Date().toISOString().slice(0, 16)}
+                value={formData.timeOfFeeding}
+                onChange={(e) => updateField("timeOfFeeding", e.target.value)}
               />
             </div>
 
@@ -206,40 +206,53 @@ export default function BabyFeedingModal() {
       case 3:
         return (
           <div className="text-center space-y-6">
-            <div className="">
-              <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-2" />
-              <h3 className="text-md font-regular text-gray-900">
-                Feeding Logged
-              </h3>
-            </div>
+            <LastModalHeader title="Feeding Logged" />
 
             <SummeryTable
+              tableTitle="Today's Summery"
               items={[
                 {
-                  label: "Pain Intensity: ",
+                  label: "Feeding Method: ",
                   value: (
-                    <p className="text-[#229ECF]">{formData.painLevel}/10</p>
+                    <p className="text-[#229ECF]">{formData.feedingMethod}</p>
                   ),
                 },
                 {
-                  label: "Affected Areas: ",
+                  label: "Time: ",
+                  value: (
+                    <p className="text-[#229ECF]">{formData.timeOfFeeding}</p>
+                  ),
+                },
+                {
+                  label: "Left Side: ",
                   value: (
                     <p className="text-[#229ECF]">
-                      {formData.painTypes.join(", ")}
+                      {formData.leftSideDuration} min
                     </p>
                   ),
                 },
                 {
-                  label: "Mobility: ",
-                  value: <p className="text-[#229ECF]">{formData.energy}</p>,
+                  label: "Right Side: ",
+                  value: (
+                    <p className="text-[#229ECF]">
+                      {formData.rightSideDuration} min
+                    </p>
+                  ),
+                },
+                {
+                  label: "Latch Quality: ",
+                  value: (
+                    <p className="text-[#229ECF]">{formData.latchQuality}</p>
+                  ),
                 },
               ]}
             />
-            <TipsCard
-              tips={
-                "Gentle stretching, Warm compress, Check posture while feeding, Take frequent breaks, Avoid strenuous activity"
-              }
-            />
+            <div className="flex  items-center gap-2 py-3 px-6 bg-[#229ECF]/10 rounded">
+              <AlertCircle className="w-6 h-6 text-[#229ECF]" size={15} />
+              <p className="text-gray-500 font-medium text-sm text-left">
+                Last feeding was {formData.lastFeedingTime}+ hours ago
+              </p>
+            </div>
             <DialogClose asChild>
               <Button className="w-full" onClick={handleFinish}>
                 Done
