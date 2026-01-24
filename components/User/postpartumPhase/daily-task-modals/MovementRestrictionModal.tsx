@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { CheckCircle, Play, RotateCw } from "lucide-react";
 import Button from "@/components/ui/Button";
-import StepControllButtons from "./StepControllButtons";
-import ModalHeadingOne from "./ModalHeadingOne";
+import StepControllButtons from "./reusable/StepControllButtons";
+import ModalHeadingOne from "./reusable/ModalHeadingOne";
+import TipsCard from "./reusable/TipsCard";
 
 type FormData = {
   streak: number;
@@ -143,12 +144,7 @@ export default function MovementRestrictionModal() {
                   {formData.time}
                 </p>
               </div>
-              <div className="flex justify-between items-center gap-2 py-3 px-6 bg-[#229ECF]/10 rounded">
-                <p className="text-gray-500">Tip: </p>
-                <p className="text-gray-500 font-medium text-md">
-                  {formData.tip}
-                </p>
-              </div>
+              <TipsCard tips={formData.tip} />
             </div>
             <DialogClose asChild>
               <Button className="w-full" onClick={handleFinish}>

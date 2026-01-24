@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { CheckCircle, RotateCw } from "lucide-react";
 import Button from "@/components/ui/Button";
-import StepControllButtons from "./StepControllButtons";
-import ModalHeadingOne from "./ModalHeadingOne";
+import StepControllButtons from "./reusable/StepControllButtons";
+import ModalHeadingOne from "./reusable/ModalHeadingOne";
+import TipsCard from "./reusable/TipsCard";
 
 type FormData = {
   painLevel: number;
@@ -221,11 +222,16 @@ export default function PainMovementModal() {
                   {formData.painTypes.join(", ")}
                 </p>
               </div>
-              <div className="flex justify-between items-center border-b border-[#229ECF]/40! p-2">
+              <div className="flex justify-between items-center  p-2">
                 <p className="text-gray-500">Mobility: </p>
                 <p className="text-[#229ECF]">{formData.energy}</p>
               </div>
             </div>
+            <TipsCard
+              tips={
+                "Gentle stretching, Warm compress, Check posture while feeding, Take frequent breaks, Avoid strenuous activity"
+              }
+            />
             <DialogClose asChild>
               <Button className="w-full" onClick={handleFinish}>
                 Done

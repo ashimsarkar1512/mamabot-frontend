@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { CheckCircle, RotateCw } from "lucide-react";
 import Button from "@/components/ui/Button";
-import StepControllButtons from "../StepControllButtons";
-import ModalHeadingOne from "../ModalHeadingOne";
+import StepControllButtons from "../reusable/StepControllButtons";
+import ModalHeadingOne from "../reusable/ModalHeadingOne";
 
 type FormData = {
   painLevel: number;
