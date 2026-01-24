@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import Image from "next/image"; // if using Next.js — otherwise use regular <img>
 import { beauRivage, comfortaa } from "@/app/fonts";
 
@@ -83,7 +83,7 @@ const AboutUs = () => {
               </div>
 
               {/* Optional subtle background decoration */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/20 to-purple-200/20 rounded-3xl -rotate-2 scale-105 blur-sm hidden lg:block" />
+              {/* <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/20 to-purple-200/20 rounded-3xl -rotate-2 scale-105 blur-sm hidden lg:block" /> */}
             </div>
           </div>
         </div>

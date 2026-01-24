@@ -1,12 +1,13 @@
 "use client";
 
-import ContactBanner from "@/components/landing/Contact/ContactBanner";
+import BlogContent from "@/components/landing/Blog/BlogContent";
+import BlogCover from "@/components/landing/Blog/BlogCover";
 import Image from "next/image";
 
 const Page = () => {
   return (
     <div className="pt-12 space-y-7 md:space-y-24">
-      <div className="hidden lg:block transition-transform duration-300 hover:-translate-y-2 absolute right-0 top-210 cursor-pointer hover:opacity-80 -translate-y-1/2 pr-10">
+      <div className="hidden lg:block transition-transform duration-300 hover:-translate-y-2 absolute -right-10 top-200 cursor-pointer hover:opacity-80 -translate-y-1/2 pr-10">
         <Image
           src="/images/mamabot.png"
           alt="MamaBot"
@@ -15,7 +16,8 @@ const Page = () => {
           className="drop-shadow-xl"
         />
       </div>
-      <ContactBanner/>
+      <BlogCover />
+      <BlogContent/>
     </div>
   );
 };

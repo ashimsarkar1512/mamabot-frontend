@@ -65,15 +65,17 @@ export default function Navbar() {
 
         {/* Desktop & Tablet Menu */}
         <div className="hidden sm:flex items-center gap-8">
-          {["Home", "About", "Blog", "Community", "Newsletter"].map((item) => (
-            <Link
-              key={item}
-              href={`/${item === "Home" ? "" : item.toLowerCase()}`}
-              className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
-            >
-              {item}
-            </Link>
-          ))}
+          {["Home", "About", "Blog", "Community", "Newsletter", "Contact"].map(
+            (item) => (
+              <Link
+                key={item}
+                href={`/${item === "Home" ? "" : item.toLowerCase()}`}
+                className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
+              >
+                {item}
+              </Link>
+            ),
+          )}
         </div>
 
         {/* Right Actions */}
@@ -157,18 +159,23 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="sm:hidden bg-white shadow-md border-t">
           <div className="flex flex-col px-4 py-4 gap-3">
-            {["Home", "About", "Blog", "Community", "Newsletter"].map(
-              (item) => (
-                <Link
-                  key={item}
-                  href={`/${item === "Home" ? "" : item.toLowerCase()}`}
-                  onClick={toggleMenu}
-                  className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
-                >
-                  {item}
-                </Link>
-              ),
-            )}
+            {[
+              "Home",
+              "About",
+              "Blog",
+              "Community",
+              "Newsletter",
+              "Contact",
+            ].map((item) => (
+              <Link
+                key={item}
+                href={`/${item === "Home" ? "" : item.toLowerCase()}`}
+                onClick={toggleMenu}
+                className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
+              >
+                {item}
+              </Link>
+            ))}
 
             <ThemeToggle />
 
