@@ -12,10 +12,6 @@ import {
   BabySleepModal,
   IncisionHealingModal,
   MovementRestrictionsModal,
-  PainAndMovementLogDialog,
-  BabyFeelingAnotherModal,
-  DiaperModal,
-  BabySleepTrackerModal,
 } from "@/components/User/postpartumPhase/daily-task-modals";
 
 export default function DailyTaskGrid({
@@ -130,7 +126,7 @@ export default function DailyTaskGrid({
               icon="🤕"
               actionLabel="View Log"
               status="done"
-              modal={<PainAndMovementLogDialog />}
+              modal={<PainMovementModal />}
             />
 
             <DailyTaskCard
@@ -139,7 +135,7 @@ export default function DailyTaskGrid({
               icon="🍼"
               actionLabel="View Log"
               status="done"
-              modal={<BabyFeelingAnotherModal />}
+              modal={<BabyFeedingModal />}
             />
 
             <DailyTaskCard
@@ -148,7 +144,7 @@ export default function DailyTaskGrid({
               icon="👶"
               actionLabel="Add Reminder"
               status="done"
-              modal={<DiaperModal />}
+              modal={<DiaperLogModal />}
             />
 
             <DailyTaskCard
@@ -157,7 +153,7 @@ export default function DailyTaskGrid({
               icon="😴"
               actionLabel="Track"
               status="info"
-              modal={<BabySleepTrackerModal />}
+              modal={<BabySleepModal />}
             />
           </div>
         </div>
