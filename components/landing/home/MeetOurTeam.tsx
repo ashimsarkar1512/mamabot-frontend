@@ -6,7 +6,7 @@ import { teamMembers } from "@/lib/data/meetoutteamdata";
 
 const MeetOurTeam = () => {
   return (
-    <section className="bg-[#ffffff]/25 px-5 py-12 shadow-xl rounded-xl md:px-10 md:py-24">
+    <section className="bg-[#ffffff]/25 px-5 py-12 border-2 !border-white rounded-xl md:px-10 md:py-24">
       <div className="text-center">
         <h2 className="text-2xl mb-4 md:text-[40px]">
           Let's Meet <span className="text-primary">Our Team</span>

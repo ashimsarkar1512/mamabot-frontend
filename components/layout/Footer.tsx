@@ -10,11 +10,11 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <div className=" p-10 mb-10 rounded-xl bg-white shadow-xl  text-gray-900">
+    <div className=" p-10 mt-5 md:mt-14 mx-0 lg:mx-25 mb-10 rounded-xl bg-white shadow-xl  text-gray-900">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
         <div>
-          <Link href="/" className="flex items-center  cursor-pointer">
-            <div className="w-14 h-14 md:w-20 md:h-20 flex items-center justify-center">
+          <Link href="/" className="flex items-center mb-2 cursor-pointer">
+            <div className="w-10 h-10 md:w-20 md:h-20 flex items-center justify-center">
               <Image
                 src="/images/icon.png"
                 alt="Cliste"
@@ -23,11 +23,11 @@ export function Footer() {
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-4xl font-semibold text-primary text-foreground">
+            <span className="text-2xl md:text-4xl font-semibold text-primary">
               Mamabot.de
             </span>
           </Link>
-          <p className=" text-lg md:text-2xl text-muted-foreground">
+          <p className=" text-base sm:text-lg md:text-2xl text-muted-foreground">
             A modern Next.js 16 template with TypeScript and Tailwind CSS.
           </p>
         </div>
@@ -37,7 +37,7 @@ export function Footer() {
             <h4 className="font-semibold text-primary mb-4 uppercase text-xl tracking-wider">
               Legal
             </h4>
-            <ul className="space-y-2 text-lg text-gray-600">
+            <ul className="space-y-2 text-base md:text-lg text-gray-600">
               <li>
                 <a href="#" className="hover:text-pink-600 transition-colors">
                   Privacy Policy
@@ -75,7 +75,7 @@ export function Footer() {
             <h4 className="font-semibold text-primary mb-4 uppercase text-xl tracking-wider">
               Support
             </h4>
-            <ul className="space-y-3 text-lg text-gray-600 mb-6">
+            <ul className="space-y-3 text-base md:text-lg text-gray-600 mb-6">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-pink-600" />
                 <a
