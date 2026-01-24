@@ -9,17 +9,20 @@ interface SummeryTableProps {
   items: SummeryItem[];
   className?: string;
   children?: React.ReactNode;
+  tableTitle?: string;
 }
 
 const SummeryTable: React.FC<SummeryTableProps> = ({
   items,
   className = "",
   children,
+  tableTitle,
 }) => {
   return (
     <div
       className={`text-sm text-left border border-[#229ECF]/40! rounded p-4 space-y-2 ${className}`}
     >
+      {tableTitle && <div className="text-md font-medium">{tableTitle}</div>}
       {items.map((item, index) => (
         <div
           key={index}

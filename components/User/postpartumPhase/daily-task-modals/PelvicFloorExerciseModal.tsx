@@ -14,6 +14,7 @@ import StepControllButtons from "./reusable/StepControllButtons";
 import ModalHeadingOne from "./reusable/ModalHeadingOne";
 import TipsCard from "./reusable/TipsCard";
 import SummeryTable from "./reusable/SummeryTable";
+import FirstStep from "./reusable/FirstStep";
 
 type FormData = {
   streak: number;
@@ -61,25 +62,13 @@ export default function MovementRestrictionModal() {
       // STEP 0 — INTRO
       case 0:
         return (
-          <div className="text-center space-y-6 min-h-[350px] flex flex-col items-center justify-center">
-            <div className="mx-auto w-15 h-15 rounded-full bg-[#229ECF]/10 border border-[#229ECF]/60! flex items-center justify-center text-[#229ECF] font-bold">
-              <RotateCw className="w-10 h-10 animate-pulse text-[#229ECF]" />
-            </div>
-            <h3 className="text-lg font-semibold">Pelvic Floor Exercise</h3>
-            <p className="text-sm text-gray-500">
-              Strengthen your pelvic floor with quick Kegel exercises.
-            </p>
-            <p className="text-sm text-gray-500">
-              This helps with bladder control and overall postpartum recovery.
-            </p>
-            <Button
-              variant="primary"
-              className="px-8 mx-auto rounded-xl bg-[#229ECF]! hover:bg-[#229ECF]/80"
-              onClick={next}
-            >
-              Start Exercise
-            </Button>
-          </div>
+          <FirstStep
+            Icon={RotateCw}
+            title="Pelvic Floor Exercise"
+            description="Strengthen your pelvic floor with quick Kegel exercises. This helps with bladder control and overall postpartum recovery."
+            buttonText="Start Exercise"
+            onNext={next}
+          />
         );
 
       // STEP 1 — PAIN
