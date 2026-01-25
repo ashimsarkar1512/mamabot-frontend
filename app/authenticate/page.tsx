@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
+import { toast } from "sonner";
 
 export default function AuthenticatePage() {
   const [password, setPassword] = useState("");
@@ -23,7 +24,7 @@ export default function AuthenticatePage() {
     if (res.ok) {
       router.push("/");
     } else {
-      alert("Wrong access key");
+     toast.error("Wrong access key");
     }
   };
 
