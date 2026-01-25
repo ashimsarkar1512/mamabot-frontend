@@ -38,12 +38,12 @@ export default function HangingAlertCard() {
 
         {/* Main card */}
         <div
-          className="relative mt-6 w-full bg-gradient-to-b from-white to-gray-50 
+          className="relative mt-6 w-full bg-gradient-to-b from-yellow-50/60 to-yellow-100/20 
                      border border-yellow-300/40! rounded-2xl shadow-lg p-7 md:p-9 text-center
                      overflow-hidden"
         >
           {/* Depth layer */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/3 rounded-2xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-yellow-200/10 rounded-2xl pointer-events-none" />
 
           <div className="relative flex items-center justify-center gap-3 text-red-600 font-regular text-lg mb-5">
             <AlertTriangle className="w-5 h-5 animate-pulse" />

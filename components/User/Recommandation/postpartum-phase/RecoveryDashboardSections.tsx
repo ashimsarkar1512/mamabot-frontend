@@ -1,7 +1,9 @@
 "use client";
 
 import Button from "@/components/ui/Button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { HeartPulse, Sparkles, Apple, Baby, ChevronRight } from "lucide-react";
+import { PelvicFloorExcModal } from "./modals";
 
 export default function RecoveryDashboardSections() {
   return (
@@ -22,19 +24,24 @@ export default function RecoveryDashboardSections() {
 
               <div className="flex-1">
                 <p className="text-sm md:text-lg mb-1 font-regular">
-                  Pain Score Check-in
+                  Pelvic Floor Exercise
                 </p>
                 <p className="text-xs md:text-sm text-gray-500">
-                  Track how you&apos;re feeling with personalized daily check-in
+                  Short 5—10 minute Kegel routine recommended daily.
                 </p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              className="bg-white/60 w-fit border-2 border-white!  px-3 py-2.5 rounded-lg hover:bg-white hover:text-[#229ECF] transition"
-            >
-              <ChevronRight className="text-[#229ECF]" />
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-white/60 w-fit border-2 border-white!  px-3 py-2.5 rounded-lg hover:bg-white hover:text-[#229ECF] transition"
+                >
+                  <ChevronRight className="text-[#229ECF]" />
+                </Button>
+              </DialogTrigger>
+              <PelvicFloorExcModal />
+            </Dialog>
           </div>
 
           {/* Perineal Care Card */}
@@ -49,7 +56,7 @@ export default function RecoveryDashboardSections() {
                   Perineal Care
                 </p>
                 <p className="text-xs md:text-sm text-gray-500">
-                  Learn how to care during sensitive recovery stages
+                  Use warm water during urination to reduce stinging.
                 </p>
               </div>
             </div>
