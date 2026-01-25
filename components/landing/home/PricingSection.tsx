@@ -48,22 +48,23 @@ const plans = [
 ];
 
 export default function PricingPricing() {
-
-      const router = useRouter();
-      const handleBack = () => {
-        if (window.history.length > 1) {
-          router.back();
-        } else {
-          router.push("/"); 
-        }
-      };
+  const router = useRouter();
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
   return (
     <div className="py-20 px-4 bg-white/25 rounded-2xl border border-white shadow-lg my-10">
-  
       {/* Header */}
       <div className="max-w-6xl mx-auto  my-10">
         <span className="inline-flex items-center  gap-2 text-xs font-medium text-pink-600 bg-pink-100 px-4 py-2 rounded-full mb-4">
-         <span><CircleDollarSign size={20}/></span> Pricing
+          <span>
+            <CircleDollarSign size={20} />
+          </span>{" "}
+          Pricing
         </span>
 
         <h1 className="text-3xl md:text-4xl  text-gray-900 mb-4">
@@ -88,32 +89,31 @@ export default function PricingPricing() {
           >
             {/* Most Popular Badge + Arrow on First Plan */}
             {index === 0 && (
-              <div className="absolute -top-14 -right-16 flex items-center gap-2">
-             
-                <svg
-                  width="36"
-                  height="36"
-                  viewBox="0 0 36 36"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="text-pink-600"
-                >
-                  <path
-                    d="M30 6C18 6 14 18 6 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M10 24L6 24L6 20"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                   <span className="text-sm font-medium text-pink-600">
-                  Most popular!
-                </span>
+              <div className="">
+                <div className="absolute -top-10 right-15 flex items-center gap-2">
+                  <svg
+                    width="84"
+                    height="84"
+                    viewBox="0 0 36 36"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-pink-600"
+                  >
+                    <path
+                      d="M30 6C18 6 14 18 6 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M10 24L6 24L6 20"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+                <div className="absolute -top-10 -right-12 font-medium text-pink-600">Most popular!</div>
               </div>
             )}
 
@@ -142,7 +142,7 @@ export default function PricingPricing() {
             {/* <button className="w-full mt-auto bg-pink-600 text-white py-3 rounded-lg font-medium hover:bg-pink-700 transition">
               Get started
             </button> */}
-            <CommonButton className="w-full rounded-md" text="Get started"/>
+            <CommonButton className="w-full rounded-md" text="Get started" />
           </div>
         ))}
       </div>
