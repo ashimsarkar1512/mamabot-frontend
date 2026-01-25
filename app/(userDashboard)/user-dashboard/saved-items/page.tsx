@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -50,20 +49,18 @@ const Page = () => {
         </div>
       </div>
 
-      
-     {/* Sections */}
-{(activeTab === "All(24)" || activeTab === "Products") && (
-  <SavedRecommendation activeTab={activeTab} />
-)}
+      {/* Sections */}
+      {(activeTab === "All(24)" || activeTab === "Products") && (
+        <SavedRecommendation activeTab={activeTab} />
+      )}
 
-{(activeTab === "All(24)" || activeTab === "Community Posts") && (
-  <CommunityPosts activeTab={activeTab} />
-)}
+      {(activeTab === "All(24)" || activeTab === "Community Posts") && (
+        <CommunityPosts activeTab={activeTab} />
+      )}
 
-{(activeTab === "All(24)" || activeTab === "Articles") && (
-  <SavedArticles activeTab={activeTab} />
-)}
-
+      {(activeTab === "All(24)" || activeTab === "Articles") && (
+        <SavedArticles activeTab={activeTab} />
+      )}
     </div>
   );
 };

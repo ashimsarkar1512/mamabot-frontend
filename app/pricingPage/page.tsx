@@ -148,11 +148,7 @@ export default function Page() {
             {/* <button className="w-full mt-auto bg-pink-600 text-white py-3 rounded-lg font-medium hover:bg-pink-700 transition">
               Get started
             </button> */}
-            <CommonButton
-              className="w-full rounded-md"
-              text="Get started"
-              onClick={() => router.push("/user-dashboard/profile")}
-            />
+            <CommonButton className="w-full rounded-md" text="Get started" onClick={() => router.push("/user-dashboard")} />
           </div>
         ))}
       </div>
