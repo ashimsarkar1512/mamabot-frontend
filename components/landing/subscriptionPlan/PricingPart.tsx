@@ -47,7 +47,7 @@ const plans = [
   },
 ];
 
-export default function PricingPricing() {
+export default function PricingPart() {
   const router = useRouter();
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -57,26 +57,15 @@ export default function PricingPricing() {
     }
   };
   return (
-    <div className="py-20 px-4 bg-white/25 rounded-2xl border border-white shadow-lg my-10">
+    <div className="py-6 px-4">
       {/* Header */}
-      <div className="max-w-6xl mx-auto  my-10">
-        <span className="inline-flex items-center  gap-2 text-xs font-medium text-pink-600 bg-pink-100 px-4 py-2 rounded-full mb-4">
-          <span>
-            <CircleDollarSign size={20} />
-          </span>{" "}
-          Pricing
-        </span>
-
-        <h1 className="text-3xl md:text-4xl  text-gray-900 mb-4">
-          <span className="text-pink-600">Mamabot.de</span> — Pricing Plans
-        </h1>
-
-        <p className="max-w-2xl  text-gray-500">
-          Whether you’re expecting, a new mom, or exploring expert advice —
-          Mamabot grows with you. Start free, and upgrade anytime for unlimited
-          AI support and exclusive features.
-        </p>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-xl md:text-[32px] font-semibold ">
+          Choose the <span className="text-primary">Plan</span> That Fits Your
+          Journey
+        </h2>
       </div>
+      <div className="mb-5 md:mb-14 h-[2px] w-full mx-auto bg-[#BAE1F0] " />
 
       {/* Pricing Cards */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 ">

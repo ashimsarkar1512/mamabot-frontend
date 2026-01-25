@@ -3,11 +3,14 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Mamabot - User Dashboard",
-  description: "Your personalized AI assistant for pregnancy and parenting support.",
+  description:
+    "Your personalized AI assistant for pregnancy and parenting support.",
 };
 
 export default function UserDashboard() {
   return (
-   <UserHomeDashboard/>
+    <div className="bg-[#F2F4F8]">
+      <UserHomeDashboard />
+    </div>
   );
 }

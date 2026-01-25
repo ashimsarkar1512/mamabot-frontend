@@ -21,7 +21,7 @@ export default function UserHomeNavbar() {
     { label: "About Us", href: "/user-dashboard/about-us" },
     { label: "Blog", href: "/user-dashboard/blog" },
     { label: "Contact Us", href: "/user-dashboard/contact-us" },
-    { label: "Saved Items", href: "/user-dashboard/saved-items" },
+    // { label: "Saved Items", href: "/user-dashboard/saved-items" },
   ];
 
   // Mock state for demonstration (matching the image provided)
@@ -55,7 +55,7 @@ export default function UserHomeNavbar() {
     } catch (err) {
       console.error("Logout failed", err);
     } finally {
-      // 🔥 MUST CLEAR COOKIES
+      
       Cookies.remove("token");
       Cookies.remove("role");
 
@@ -165,7 +165,7 @@ export default function UserHomeNavbar() {
 
                           {/* Highlighted Item */}
                           <Link
-                            href="/saved"
+                            href="/user-dashboard/saved-items"
                             className="flex items-center gap-3 px-4 py-3 text-[15px] font-bold text-[#D82479] bg-white shadow-sm border border-pink-50 rounded-full"
                           >
                             <BookOpen size={18} fill="#D82479" />
@@ -173,7 +173,7 @@ export default function UserHomeNavbar() {
                           </Link>
 
                           <Link
-                            href="/subscription"
+                            href="/user-dashboard/subscription-plan"
                             className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
                           >
                             Subscription & Plan
