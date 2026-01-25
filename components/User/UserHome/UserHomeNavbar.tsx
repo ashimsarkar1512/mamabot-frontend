@@ -14,6 +14,9 @@ export default function UserHomeNavbar() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
+
+
+
     const [logout] = useLogOutMutation();
   const router = useRouter();
   const navItems = [
@@ -22,6 +25,14 @@ export default function UserHomeNavbar() {
     { label: "Blog", href: "/user-dashboard/blog" },
     { label: "Contact Us", href: "/user-dashboard/contact-us" },
     { label: "Saved Items", href: "/user-dashboard/saved-items" },
+  ];
+
+  
+  const links = [
+    { name: "profile", label: "My Profile", href: "/user-dashboard/profile" },
+    { name: "saved", label: "Saved Recommends", href: "/saved", icon: <BookOpen size={18} /> },
+    { name: "subscription", label: "Subscription & Plan", href: "/subscription" },
+    { name: "settings", label: "Settings", href: "/settings" },
   ];
 
   // Mock state for demonstration (matching the image provided)
@@ -135,67 +146,60 @@ export default function UserHomeNavbar() {
                   </button>
 
                   {/* Dropdown Menu with Framer Motion */}
-                  <AnimatePresence>
-                    {isAuthOpen && (
-                      <motion.div
-                        ref={authDropdownRef}
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute right-0 top-full mt-4 w-64 rounded-[2rem] bg-white/90 backdrop-blur-md p-3 shadow-2xl border border-pink-50 z-50 overflow-hidden"
-                      >
-                        {/* Decorative Flower Background */}
-                        <div className="absolute bottom-0 right-0 opacity-20 pointer-events-none">
-                          <Image
-                            src="/images/flowers-bg.png"
-                            alt="bg"
-                            width={100}
-                            height={100}
-                          />
-                        </div>
+                    <AnimatePresence>
+      {isAuthOpen && (
+        <motion.div
+          ref={authDropdownRef}
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="absolute right-0 top-full mt-4 w-64 rounded-[2rem] bg-white/90 backdrop-blur-md p-3 shadow-2xl border border-pink-50 z-50 overflow-hidden"
+        >
+          {/* Decorative Flower Background */}
+          <div className="absolute bottom-0 right-0 opacity-20 pointer-events-none">
+            <Image
+              src="/images/flowers-bg.png"
+              alt="bg"
+              width={100}
+              height={100}
+            />
+          </div>
 
-                        <div className="relative z-10 space-y-1">
-                          <Link
-                            href="/profile"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
-                          >
-                            My Profile
-                          </Link>
+          <div className="relative z-10 space-y-1">
+            {links.map((link) => {
+              const isActive = pathname === link.href;
 
-                          {/* Highlighted Item */}
-                          <Link
-                            href="/saved"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-bold text-[#D82479] bg-white shadow-sm border border-pink-50 rounded-full"
-                          >
-                            <BookOpen size={18} fill="#D82479" />
-                            Saved Recommends
-                          </Link>
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`flex items-center gap-3 px-4 py-3 text-[15px] transition-colors rounded-2xl
+                    ${isActive
+                      ? "font-bold text-[#D82479] bg-white shadow-sm border border-pink-50 rounded-full"
+                      : "font-medium text-gray-700 hover:bg-pink-50/50"}
+                  `}
+                >
+                  {link.icon && (
+                    <span className={isActive ? "text-[#D82479]" : "text-gray-700"}>
+                      {link.icon}
+                    </span>
+                  )}
+                  {link.label}
+                </Link>
+              );
+            })}
 
-                          <Link
-                            href="/subscription"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
-                          >
-                            Subscription & Plan
-                          </Link>
-
-                          <Link
-                            href="/settings"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
-                          >
-                            Settings
-                          </Link>
-
-                          <button 
-                          
-                          onClick={handleLogout}
-                          className="flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2">
-                            Logout
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+            <button
+              onClick={handleLogout}
+              className="flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
+            >
+              Logout
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
                 </div>
 
                 {/* Notification Bell */}
