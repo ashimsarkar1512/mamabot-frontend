@@ -3,7 +3,7 @@
 import Button from "@/components/ui/Button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { HeartPulse, Sparkles, Apple, Baby, ChevronRight } from "lucide-react";
-import { PelvicFloorExcModal } from "./modals";
+import { ParinealCareModal, PelvicFloorExcModal } from "./modals";
 
 export default function RecoveryDashboardSections() {
   return (
@@ -61,12 +61,17 @@ export default function RecoveryDashboardSections() {
               </div>
             </div>
             {/* arrow button to go another page  */}
-            <Button
-              variant="outline"
-              className="bg-white/60 w-fit border-2 border-white!  px-3 py-2.5 rounded-lg hover:bg-white hover:text-[#229ECF] transition"
-            >
-              <ChevronRight className="text-[#229ECF]" />
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-white/60 w-fit border-2 border-white!  px-3 py-2.5 rounded-lg hover:bg-white hover:text-[#229ECF] transition"
+                >
+                  <ChevronRight className="text-[#229ECF]" />
+                </Button>
+              </DialogTrigger>
+              <ParinealCareModal />
+            </Dialog>
           </div>
         </div>
       </div>
