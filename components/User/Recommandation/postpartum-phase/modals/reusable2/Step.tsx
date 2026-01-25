@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 
 interface StepProps {
   title: string;
-  description: string;
+  description?: string;
   icon?: React.ReactNode;
   buttonText?: string;
   stepNumber?: number;
@@ -30,7 +30,9 @@ const Step = ({
             <h1 className="text-lg font-semibold text-[#229ECF]">
               {step.title}
             </h1>
-            <p className="text-sm text-gray-500 mt-2">{step.description}</p>
+            {step.description && (
+              <p className="text-sm text-gray-500 mt-2">{step.description}</p>
+            )}
           </div>
           {step.buttonText && (
             <Button

@@ -15,6 +15,11 @@ import FirstStep from "../../../postpartumPhase/daily-task-modals/reusable/First
 import Step from "./reusable2/Step";
 import TextShowInList from "./reusable2/TextShowInList";
 import StepControllButtons from "@/components/User/postpartumPhase/daily-task-modals/reusable/StepControllButtons";
+import {
+  BabyFeedingModal,
+  BabySleepModal,
+  DiaperLogModal,
+} from "@/components/User/postpartumPhase/daily-task-modals";
 
 type FormData = {
   streak: number;
@@ -35,21 +40,39 @@ const STEPS = [
     description: "Understand new born sleep cycles and frequent waking",
     icon: <Apple className="text-blue-300" />,
     buttonText: "View",
-    stepNumber: 7,
+    stepNumber: 4,
   },
   {
     title: "Diaper Expectations",
     description: "What's normal for wet and dirty diapers.",
     icon: <Apple className="text-blue-300" />,
     buttonText: "View",
-    stepNumber: 11,
+    stepNumber: 6,
   },
   {
     title: "Crying & Baby Cues",
     description: "Learn why babies cry and how to respond.",
     icon: <Apple className="text-blue-300" />,
     buttonText: "View",
-    stepNumber: 15,
+    stepNumber: 8,
+  },
+];
+const cuesSTEPS = [
+  {
+    title: "Hold baby close",
+    icon: <Apple className="text-blue-300" />,
+  },
+  {
+    title: "Gentle rocking",
+    icon: <Apple className="text-blue-300" />,
+  },
+  {
+    title: "Soft talking or humming",
+    icon: <Apple className="text-blue-300" />,
+  },
+  {
+    title: "Check diaper and feeding needs",
+    icon: <Apple className="text-blue-300" />,
   },
 ];
 const babyFeedingBasicsData: {
@@ -73,6 +96,80 @@ const babyFeedingBasicsData: {
       "Regular wet diapers",
       "Calm after feeding",
       "Steady weight gain",
+    ],
+  },
+];
+const babySleepPatternsData: {
+  icon: React.ReactNode;
+  title: string;
+  description: string[];
+}[] = [
+  {
+    icon: <Apple size={15} className="text-blue-300" />,
+    title: "What to Expect",
+    description: [
+      "Babies sleep 14—17 hours per day",
+      "Sleep happens in short stretches",
+      "Night waking is normal",
+    ],
+  },
+  {
+    icon: <Apple size={15} className="text-blue-300" />,
+    title: "Safe Sleep Reminder",
+    description: [
+      "Always place baby on their back",
+      "Use a firm mattress",
+      "Avoid loose bedding",
+    ],
+  },
+];
+const babyDiaperExpectationsData: {
+  icon: React.ReactNode;
+  title: string;
+  description: string[];
+}[] = [
+  {
+    icon: <Apple size={15} className="text-blue-300" />,
+    title: "Wet Diapers",
+    description: ["6—8 wet diapers per day is normal"],
+  },
+  {
+    icon: <Apple size={15} className="text-blue-300" />,
+    title: "Dirty Diapers",
+    description: [
+      "Color and consistency may change",
+      "Frequency varies between babies",
+    ],
+  },
+  {
+    icon: <Apple size={15} className="text-blue-300" />,
+    title: "Dirty Diapers",
+    description: [
+      "Very few wet diapers",
+      "Hard stools or blood",
+      "Severe rash",
+    ],
+  },
+];
+const babyCuesData: {
+  icon: React.ReactNode;
+  title: string;
+  description: string[];
+}[] = [
+  {
+    icon: <Apple size={15} className="text-blue-300" />,
+    title: "Common Reasons Babies Cry",
+    description: ["Hunger", "Sleepiness", "Discomfort", "Need to closeness"],
+  },
+  {
+    icon: <Apple size={15} className="text-blue-300" />,
+    title: "Common Baby Cues",
+    description: [
+      "Rooting -> Hungry",
+      "Rubbing eyes -> Tired",
+      "Clenching fists -> Need closeness",
+      "Fussing -> Need comfort",
+      "Arching back -> Discomfort",
     ],
   },
 ];
@@ -151,16 +248,93 @@ export default function BabyCareModal() {
           </div>
         );
 
-      // STEP 3 — INTRO
+      // STEP 3
       case 3:
         return (
-          <FirstStep
-            Icon={RotateCw}
-            title="Baby Feeding Log"
-            description="Record today's breastfeeding or bottle-feeding details."
-            buttonText="Add Feeding"
-            onNext={next}
-          />
+          <>
+            <BabyFeedingModal />;
+            <DialogClose />
+          </>
+        );
+      case 4:
+        return (
+          <div className="space-y-2 min-h-[550px] flex flex-col justify-between">
+            <TextShowInList
+              list={babySleepPatternsData}
+              title="New Born Sleep Patterns"
+            />
+            <TipsCard
+              title=""
+              tips="Frequent waking does not mean something is wrong."
+            />
+            <StepControllButtons
+              next={next}
+              back={back}
+              backBtnName="Back to Baby Care"
+              forwardBtnName="Track Baby Sleep"
+            />
+          </div>
+        );
+      case 5:
+        return (
+          <>
+            <BabySleepModal />
+            <DialogClose />
+          </>
+        );
+      case 6:
+        return (
+          <div className="space-y-2 min-h-[550px] flex flex-col justify-between">
+            <TextShowInList
+              list={babyDiaperExpectationsData}
+              title="Diaper Patterns & What's Normal"
+            />
+            <StepControllButtons
+              next={next}
+              back={back}
+              backBtnName="Back to Baby Care"
+              forwardBtnName="Log Diaper Change"
+            />
+          </div>
+        );
+      case 7:
+        return (
+          <>
+            <DiaperLogModal />
+            <DialogClose />
+          </>
+        );
+      case 8:
+        return (
+          <div className="space-y-2 min-h-[550px] flex flex-col justify-between">
+            <TextShowInList
+              list={babyCuesData}
+              title="Understanding Baby Cues"
+            />
+            <StepControllButtons
+              next={next}
+              back={back}
+              backBtnName="Back to Baby Care"
+              forwardBtnName="Try Comfort Tips"
+            />
+          </div>
+        );
+      case 9:
+        return (
+          <div className="space-y-6 min-h-[550px] flex flex-col justify-center">
+            <h1 className="text-lg font-semibold t">Soothing Your Baby</h1>
+
+            <Step steps={cuesSTEPS} />
+            <DialogClose asChild>
+              <Button
+                variant="primary"
+                className="w-full text-md bg-[#229ECF]! mx-auto text-white py-2 rounded-lg hover:bg-[#1b8ab6]"
+                onClick={handleFinish}
+              >
+                Done
+              </Button>
+            </DialogClose>
+          </div>
         );
     }
   }
