@@ -2,6 +2,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@keyframes gentleHangSway {
+  0%, 100% {
+    transform: rotate(-9.2deg) translateY(1px);
+  }
+  25% {
+    transform: rotate(9.8deg) translateY(2px);
+  }
+  50% {
+    transform: rotate(-9deg) translateY(1px);
+  }
+  75% {
+    transform: rotate(9.4deg) translateY(9px);
+  }
+}
+
+/* Optional: make it pause on hover/focus for better readability */
+.hanging-alert:hover {
+  animation-play-state: paused;
+}
+
+
 /* Light mode */
 :root {
   --footer-bg: #f5f5f5;
@@ -221,4 +242,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+html {
+  scroll-behavior: smooth;
 }

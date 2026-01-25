@@ -14,6 +14,7 @@ import StepControllButtons from "./reusable/StepControllButtons";
 import ModalHeadingOne from "./reusable/ModalHeadingOne";
 import TipsCard from "./reusable/TipsCard";
 import SummeryTable from "./reusable/SummeryTable";
+import FirstStep from "./reusable/FirstStep";
 
 type FormData = {
   painLevel: number;
@@ -93,23 +94,13 @@ export default function PainMovementModal() {
       // STEP 0 — INTRO
       case 0:
         return (
-          <div className="text-center space-y-6 min-h-[350px] flex flex-col items-center justify-center">
-            <div className="mx-auto w-15 h-15 rounded-full bg-[#229ECF]/10 border border-[#229ECF]/60! flex items-center justify-center text-[#229ECF] font-bold">
-              <RotateCw className="w-10 h-10 animate-pulse text-[#229ECF]" />
-            </div>
-            <h3 className="text-lg font-semibold">Pain & Movement Log</h3>
-            <p className="text-sm text-gray-500">
-              Log today&apos;s pain and movement comfort to track healing
-              progress.
-            </p>
-            <Button
-              variant="primary"
-              className="px-8 mx-auto rounded-2xl bg-[#229ECF]! hover:bg-[#229ECF]/80"
-              onClick={next}
-            >
-              Start Log
-            </Button>
-          </div>
+          <FirstStep
+            Icon={RotateCw}
+            title="Pain & Movement Log"
+            description="Log today's pain and movement comfort to track healing progress."
+            buttonText="Start Log"
+            onNext={next}
+          />
         );
 
       // STEP 1 — PAIN

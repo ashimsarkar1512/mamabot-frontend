@@ -11,14 +11,17 @@ import {
   Users,
   Plus,
   UserPlus,
+  BookmarkIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const PostCard = ({ post }: { post: any }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.stats.likes);
   const [comment, setComment] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -29,14 +32,30 @@ const PostCard = ({ post }: { post: any }) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num;
   };
 
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   return (
     <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
       {/* Group Header Line */}
       <div className="flex justify-between items-center pb-3">
         <h3 className="font-medium text-gray-700 text-lg">{post.groupName}</h3>
-        <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
-          <Plus className="w-4 h-4 mr-1" /> Join Group
-        </button>
+        {isSaved ? (
+          <BookmarkIcon className="w-5 h-5 text-[#229ECF] fill-[#229ECF]" />
+        ) : (
+          <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
+            <Plus className="w-4 h-4 mr-1" /> Join Group
+          </button>
+        )}
       </div>
 
       {/* User Info Row */}
@@ -64,9 +83,37 @@ const PostCard = ({ post }: { post: any }) => {
             <span className="text-xs text-gray-400">{post.timeAgo}</span>
           </div>
         </div>
-        <button className="text-gray-400 hover:text-gray-600">
-          <MoreVertical className="w-5 h-5" />
-        </button>
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <MoreVertical className="w-5 h-5" />
+          </button>
+
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden">
+              <button
+                onClick={() => {
+                  setIsSaved((prev) => !prev);
+                  setMenuOpen(false);
+                }}
+                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition"
+              >
+                {isSaved ? "Unsave Post" : "Save Post"}
+              </button>
+
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                }}
+                className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition"
+              >
+                Hide Post
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Content */}

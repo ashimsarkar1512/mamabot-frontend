@@ -46,7 +46,10 @@ const GreetingHeader = () => {
 
             {/* Recovery Tips with Floating Chat Bubble */}
             <div className="relative">
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-700 hover:bg-cyan-100 transition-colors cursor-pointer">
+              <Link
+                href="/user-dashboard/recommandation/postpartum-phase"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-700 hover:bg-cyan-100 transition-colors cursor-pointer"
+              >
                 <div className="p-1 bg-cyan-100 rounded-md shadow-sm">
                   <MessageSquare
                     size={18}
@@ -54,7 +57,7 @@ const GreetingHeader = () => {
                   />
                 </div>
                 <span className="font-medium text-sm">Recovery Tips</span>
-              </button>
+              </Link>
               {/* Floating Chat Bubble Decor */}
               <span className="absolute -top-3 -right-2 text-sky-300">
                 <MessageSquare size={20} className="fill-sky-100" />

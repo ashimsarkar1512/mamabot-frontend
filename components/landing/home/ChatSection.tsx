@@ -16,17 +16,24 @@ import {
   Crown,
   Mic,
 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 const Loading = () => null;
 
-export default function ChatSection() {
+export default  function ChatSection(){
+
+  return <Suspense > 
+  InnerChatSection
+  </Suspense>
+}
+
+ function InnerChatSection() {
   const [command, setCommand] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
   return (
     <Suspense fallback={<Loading />}>

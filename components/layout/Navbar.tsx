@@ -15,6 +15,7 @@ import Image from "next/image";
 import Button from "../ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import CommonButton from "../ui/Reusable/CommonButton";
+import { usePathname } from "next/navigation";
 
 type UserType = {
   name?: string;
@@ -25,12 +26,14 @@ type UserType = {
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [activeHash, setActiveHash] = useState("");
 
   // TEMP auth state (replace later with real auth)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<UserType | null>(null);
 
   const authDropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -39,6 +42,23 @@ export default function Navbar() {
     setUser(null);
     setIsAuthOpen(false);
   };
+const menuItems = [
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Blog", href: "#blog" },
+  { label: "Community", href: "#community" },
+  { label: "Service", href: "#service" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Newsletter", href: "#newsletter" },
+];
+
+useEffect(() => {
+  const updateHash = () => {
+    setActiveHash(window.location.hash || "#home");
+  };
+  window.addEventListener("hashchange", updateHash);
+  return () => window.removeEventListener("hashchange", updateHash);
+}, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -63,19 +83,25 @@ export default function Navbar() {
           <span className="text-lg font-semibold text-[#D82479]">Mamabot</span>
         </Link>
 
-        {/* Desktop & Tablet Menu */}
         <div className="hidden sm:flex items-center gap-8">
-          {["Home", "About", "Blog", "Community", "Newsletter", "Contact"].map(
-            (item) => (
-              <Link
-                key={item}
-                href={`/${item === "Home" ? "" : item.toLowerCase()}`}
-                className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
-              >
-                {item}
-              </Link>
-            ),
-          )}
+          {menuItems.map((item) => {
+           
+            return (
+            <Link
+  key={item.label}
+  href={item.href}
+  onClick={() => setActiveHash(item.href)} // <-- set active on click
+  className={`font-medium transition-colors ${
+    activeHash === item.href
+      ? "text-[#D82479] font-semibold"
+      : "text-gray-800 hover:text-[#D82479]"
+  }`}
+>
+  {item.label}
+</Link>
+
+            );
+          })}
         </div>
 
         {/* Right Actions */}
@@ -139,12 +165,6 @@ export default function Navbar() {
                   icon={<CircleUserRound size={20} />}
                 />
               </Link>
-              {/* <Button text="Log in" href="/login" variant="outline" /> */}
-              {/* <Button
-                text="Get Started"
-                href="/register"
-                icon={<ChevronRight size={16} />}
-              /> */}
             </div>
           )}
         </div>
@@ -159,23 +179,26 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="sm:hidden bg-white shadow-md border-t">
           <div className="flex flex-col px-4 py-4 gap-3">
-            {[
-              "Home",
-              "About",
-              "Blog",
-              "Community",
-              "Newsletter",
-              "Contact",
-            ].map((item) => (
-              <Link
-                key={item}
-                href={`/${item === "Home" ? "" : item.toLowerCase()}`}
-                onClick={toggleMenu}
-                className="font-medium text-gray-800 hover:text-[#D82479] transition-colors"
-              >
-                {item}
-              </Link>
-            ))}
+            {menuItems.map((item) => {
+              const isActive =
+                pathname === "/" && item.href === `/${activeHash}`;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={toggleMenu}
+                  className={`font-medium transition-colors
+        ${
+          isActive
+            ? "text-[#D82479] font-semibold"
+            : "text-gray-800 hover:text-[#D82479]"
+        }
+      `}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
 
             <ThemeToggle />
 

@@ -1,160 +1,69 @@
 "use client";
 
+import { useState } from "react";
+import { comfortaa } from "@/app/fonts";
 
-export default function UserSettingsPage() {
+import { Settings2 } from "lucide-react";
+
+import { settingsTabs } from "@/lib/data/SettingsData";
+import Personalization from "@/components/landing/Settings/Personalization";
+
+const Page = () => {
+  const [activeTab, setActiveTab] = useState("All(24)");
+  // const filteredItems =
+  //   activeTab === "All(24)"
+  //     ? items
+  //     : items.filter((item) => item.type === activeTab);
+
   return (
- 
-      <div className="max-w-full">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Account Settings</h1>
-          <p className="text-gray-600">
-            Manage your account preferences and settings.
+    <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-24`}>
+      <div className="flex items-center mb-5 md:mb-10 gap-3 md:gap-6">
+        <div className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center">
+          <Settings2 size={24} />
+        </div>
+        <div>
+          <h1 className="text-3xl mb-1">Settings</h1>
+          <p className="text-lg text-[#4A5565]">
+            Fine-tune your Mamabot experience — your comfort, your control.
           </p>
         </div>
-
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-800">
-              General Settings
-            </h2>
-          </div>
-
-          <div className="p-6">
-            <div className="mb-8">
-              <h3 className="text-md font-medium text-gray-800 mb-4">
-                Profile Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="John"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="Doe"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="john.doe@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="+1 (555) 123-4567"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-md font-medium text-gray-800 mb-4">
-                Security Settings
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Two-factor authentication
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Add extra security to your account
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    Enable
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Password
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Change your password
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    Change
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-md font-medium text-gray-800 mb-4">
-                Notification Preferences
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Email Notifications
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Receive notifications via email
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      defaultChecked
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Push Notifications
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Receive notifications on your device
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end">
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Save Changes
-              </button>
-            </div>
-          </div>
+      </div>
+      {/* Tabs */}
+      <div className="">
+        <div className="mb-8 md:mb-16 grid grid-cols-6 overflow-hidden border-2 !border-white bg-white/25">
+          {settingsTabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`py-3 text-sm cursor-pointer border-r-2 !border-r-white font-medium transition
+                ${
+                  activeTab === tab
+                    ? "bg-[#229ECF] text-white"
+                    : "text-gray-600 hover:bg-gray-50"
+                }
+              `}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
-   
+
+      {/* Sections */}
+
+      {/* {(activeTab === "Personalization" || activeTab === "Personalization") && (
+        <Personalization activeTab={activeTab} />
+      )} */}
+{/* 
+      {(activeTab === "All(24)" || activeTab === "Community Posts") && (
+        <CommunityPosts activeTab={activeTab} />
+      )}
+
+      {(activeTab === "All(24)" || activeTab === "Articles") && (
+        <SavedArticles activeTab={activeTab} />
+      )} */}
+    </div>
   );
-}
+};
+
+export default Page;

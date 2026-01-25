@@ -1,6 +1,6 @@
 "use client";
 
-import { comfortaa } from "@/app/fonts";
+import { beauRivage, comfortaa } from "@/app/fonts";
 import { BookOpenIcon } from "lucide-react";
 import Image from "next/image";
 
@@ -10,7 +10,7 @@ const BlogCover = () => {
       className={`relative ${comfortaa.className} w-full py-5 md:py-10 overflow-hidden `}
     >
       <div className="mb-10">
-        <span className="text-sm font-medium text-[#229ECF] underline">
+        <span className={`text-2xl md:text-[26px] ${beauRivage.className} font-medium text-[#229ECF] underline`}>
           Blog
         </span>
 

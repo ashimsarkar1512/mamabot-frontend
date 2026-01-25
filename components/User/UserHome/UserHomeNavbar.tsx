@@ -5,18 +5,40 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
+import Cookies from "js-cookie";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
+
+  const [logout] = useLogOutMutation();
+  const router = useRouter();
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
-    { label: "About Us", href: "/about-us" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact Us", href: "/contact-us" },
+    { label: "About Us", href: "/user-dashboard/about-us" },
+    { label: "Blog", href: "/user-dashboard/blog" },
+    { label: "Contact Us", href: "/user-dashboard/contact-us" },
+    // { label: "Saved Items", href: "/user-dashboard/saved-items" },
+  ];
+
+  const links = [
+    { name: "profile", label: "My Profile", href: "/user-dashboard/profile" },
+    {
+      name: "saved",
+      label: "Saved Recommends",
+      href: "/user-dashboard/saved-items",
+      icon: <BookOpen size={18} />,
+    },
+    {
+      name: "subscription",
+      label: "Subscription & Plan",
+      href: "/user-dashboard/subscription-plan",
+    },
+    { name: "settings", label: "Settings", href: "/user-dashboard/settings" },
   ];
 
   // Mock state for demonstration (matching the image provided)
@@ -42,6 +64,19 @@ export default function UserHomeNavbar() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch (err) {
+      console.error("Logout failed", err);
+    } finally {
+      Cookies.remove("token");
+      Cookies.remove("role");
+
+      router.push("/login");
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-6 ">
@@ -73,8 +108,8 @@ export default function UserHomeNavbar() {
                   className={`font-medium transition-colors
           ${
             isActive
-              ? "text-[#0ea5e9]" // active
-              : "text-gray-500 hover:text-[#D82479]"
+              ? "text-[#229ECF]" // active
+              : "text-gray-500 hover:text-[#229ECF]"
           }
         `}
                 >
@@ -136,37 +171,41 @@ export default function UserHomeNavbar() {
                         </div>
 
                         <div className="relative z-10 space-y-1">
-                          <Link
-                            href="/profile"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
-                          >
-                            My Profile
-                          </Link>
+                          {links.map((link) => {
+                            const isActive = pathname === link.href;
 
-                          {/* Highlighted Item */}
-                          <Link
-                            href="/saved"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-bold text-[#D82479] bg-white shadow-sm border border-pink-50 rounded-full"
-                          >
-                            <BookOpen size={18} fill="#D82479" />
-                            Saved Recommends
-                          </Link>
+                            return (
+                              <Link
+                                key={link.name}
+                                href={link.href}
+                                className={`flex items-center gap-3 px-4 py-3 text-[15px] transition-colors rounded-2xl
+                    ${
+                      isActive
+                        ? "font-bold text-[#D82479] bg-white shadow-sm border border-pink-50 rounded-full"
+                        : "font-medium text-gray-700 hover:bg-pink-50/50"
+                    }
+                  `}
+                              >
+                                {link.icon && (
+                                  <span
+                                    className={
+                                      isActive
+                                        ? "text-[#D82479]"
+                                        : "text-gray-700"
+                                    }
+                                  >
+                                    {link.icon}
+                                  </span>
+                                )}
+                                {link.label}
+                              </Link>
+                            );
+                          })}
 
-                          <Link
-                            href="/subscription"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
+                          <button
+                            onClick={handleLogout}
+                            className="cursor-pointer flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
                           >
-                            Subscription & Plan
-                          </Link>
-
-                          <Link
-                            href="/settings"
-                            className="flex items-center gap-3 px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-pink-50/50 rounded-2xl transition-colors"
-                          >
-                            Settings
-                          </Link>
-
-                          <button className="flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2">
                             Logout
                           </button>
                         </div>

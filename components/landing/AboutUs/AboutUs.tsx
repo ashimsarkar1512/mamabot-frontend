@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image"; // if using Next.js — otherwise use regular <img>
+import Image from "next/image";
 import { beauRivage, comfortaa } from "@/app/fonts";
 
 const AboutUs = () => {
@@ -43,14 +43,6 @@ const AboutUs = () => {
               >
                 Read More →
               </a>
-
-              {/* Optional second button if you want to keep both */}
-              {/* <a
-                href="#"
-                className="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-pink-600 border-2 border-pink-600 hover:bg-pink-50 rounded-full transition-colors duration-300"
-              >
-                About More →
-              </a> */}
             </div>
           </div>
 
@@ -81,9 +73,6 @@ const AboutUs = () => {
                   />
                 </div>
               </div>
-
-              {/* Optional subtle background decoration */}
-              {/* <div className="absolute inset-0 bg-gradient-to-tr from-pink-200/20 to-purple-200/20 rounded-3xl -rotate-2 scale-105 blur-sm hidden lg:block" /> */}
             </div>
           </div>
         </div>

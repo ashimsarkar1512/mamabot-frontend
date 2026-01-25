@@ -15,7 +15,7 @@ export default function MothersWellnessEnergy() {
   const [selected, setSelected] = useState<EnergyLevel>("good");
 
   return (
-    <div className="w-full  mx-auto bg-white rounded-2xl overflow-hidden">
+    <div className="w-full  mx-auto  rounded-2xl overflow-hidden">
       {/* Header */}
       <div className="py-4 ">
         <div className="flex items-center gap-3">
@@ -36,8 +36,8 @@ export default function MothersWellnessEnergy() {
               key={item.value}
               onClick={() => setSelected(item.value)}
               className={`
-                relative flex flex-col items-center justify-center p-6 rounded-xl transition-all duration-200
-                border-2 border-white! shadow-sm
+                relative flex flex-col items-center justify-center px-6 py-18 rounded-xl transition-all duration-200
+                border-3 border-white! shadow-sm
                 ${
                   selected === item.value
                     ? "border-cyan-500 bg-cyan-50/60 shadow-md"
@@ -63,7 +63,7 @@ export default function MothersWellnessEnergy() {
       </div>
 
       {/* Bottom Radio-style selector */}
-      <div className="px-6 py-5 rounded-3xl bg-gray-50">
+      <div className="px-6 py-5 rounded-3xl bg-gray-50 border-2 border-white!">
         <div className="flex items-center  gap-10">
           <span className="text-sm font-medium text-gray-700">
             Energy level
