@@ -47,7 +47,7 @@ export default function Navbar() {
     { label: "Blog", href: "/blog" },
     { label: "Community", href: "/community" },
     { label: "Newsletter", href: "/newsletter" },
-    { label: "Contact", href: "/contact" },
+    { label: "Service", href: "/service" },
   ];
 
   // Close dropdown on outside click
