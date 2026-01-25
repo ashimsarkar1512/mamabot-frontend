@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
 import {
@@ -40,7 +40,7 @@ const STEPS = [
 ];
 
 // in this modal there will be 3 steps
-export default function PelvicFloorExcModal() {
+export default function NutritionModal() {
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -73,9 +73,9 @@ export default function PelvicFloorExcModal() {
         return (
           <FirstStep
             Icon={RotateCw}
-            title="Pelvic Floor Exercise"
-            description="After vaginal delivery, pelvic muscles may feel weak or strained. Gentle daily exercises help restore strength and bladder control."
-            buttonText="Start Exercise"
+            title="Perineal Care After Vaginal Birth"
+            description="Soreness, swelling, or stitches in the perineal area are common after delivery. Proper care helps prevent infection and discomfort."
+            buttonText="View Care Step"
             onNext={next}
           />
         );

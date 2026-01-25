@@ -3,7 +3,13 @@
 import Button from "@/components/ui/Button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { HeartPulse, Sparkles, Apple, Baby, ChevronRight } from "lucide-react";
-import { ParinealCareModal, PelvicFloorExcModal } from "./modals";
+import {
+  BabyCareModal,
+  NutritionModal,
+  ParinealCareModal,
+  PelvicFloorExcModal,
+} from "./modals";
+import MentalHealthModal from "./modals/MentalHealthModal";
 
 export default function RecoveryDashboardSections() {
   return (
@@ -96,9 +102,14 @@ export default function RecoveryDashboardSections() {
               </p>
             </div>
 
-            <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
-              Check Mood
-            </button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
+                  Check Mood
+                </button>
+              </DialogTrigger>
+              <MentalHealthModal />
+            </Dialog>
           </div>
 
           {/* Nutrition */}
@@ -114,9 +125,14 @@ export default function RecoveryDashboardSections() {
               </p>
             </div>
 
-            <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
-              See Nutrition Guide
-            </button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
+                  See Nutrition Guide
+                </button>
+              </DialogTrigger>
+              <NutritionModal />
+            </Dialog>
           </div>
 
           {/* Baby Care */}
@@ -132,9 +148,14 @@ export default function RecoveryDashboardSections() {
               </p>
             </div>
 
-            <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
-              Open Baby Care
-            </button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
+                  Open Baby Care
+                </button>
+              </DialogTrigger>
+              <BabyCareModal />
+            </Dialog>
           </div>
         </div>
       </div>
