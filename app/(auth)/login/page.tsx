@@ -1,5 +1,5 @@
 "use client";
- 
+
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -40,17 +40,13 @@ export default function Home() {
       const res = await login(formData).unwrap();
       handleSuccess(res.message || "Login successful");
 
-      console.log(res,"response")
+      console.log(res, "response");
 
-       Cookies.set("token", res.data.token, { path: "/" }); // Optional: for API calls
-    Cookies.set("role", res.data.user.role, { path: "/" }); // "Admin" or "User"
+      Cookies.set("token", res.data.token, { path: "/" }); // Optional: for API calls
+      Cookies.set("role", res.data.user.role, { path: "/" }); // "Admin" or "User"
 
-    // 🔹 Redirect based on role
-    if (res.data.user.role === "Admin") {
-      router.push("/admin-dashboard");
-    } else {
-      router.push("/user-dashboard");
-    }
+      // 🔹 Redirect based on role
+      router.push("/pricingPage");
     } catch (error) {
       handleError(error, "Login failed");
     }
@@ -67,7 +63,12 @@ export default function Home() {
       <div className="w-full max-w-xl">
         <div className="flex flex-col items-center mb-10">
           <Link href="/" className="flex items-center gap-2 mb-6">
-            <Image src="/images/icon.png" alt="Mamabot" width={48} height={48} />
+            <Image
+              src="/images/icon.png"
+              alt="Mamabot"
+              width={48}
+              height={48}
+            />
           </Link>
           <h1 className="text-2xl font-semibold text-gray-800">
             Login to Momabot
@@ -117,18 +118,17 @@ export default function Home() {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-               <div className="flex justify-end ">
+              <div className="flex justify-end ">
                 <Link href="/forgot-password">
-                 <button
-                  type="button"
-                   className="text-sm  hover:text-gray-700 transition-colors cursor-pointer underline text-blue-500"
-                 >
-                   Forgot Password?
-                 </button>
+                  <button
+                    type="button"
+                    className="text-sm  hover:text-gray-700 transition-colors cursor-pointer underline text-blue-500"
+                  >
+                    Forgot Password?
+                  </button>
                 </Link>
               </div>
             </div>
-            
 
             <CommonButton
               className="w-full"
