@@ -51,9 +51,19 @@ const Page = () => {
       </div>
 
       
-      <SavedRecommendation activeTab={activeTab} />
-      <CommunityPosts activeTab={activeTab} />
-      <SavedArticles activeTab={activeTab} />
+     {/* Sections */}
+{(activeTab === "All(24)" || activeTab === "Products") && (
+  <SavedRecommendation activeTab={activeTab} />
+)}
+
+{(activeTab === "All(24)" || activeTab === "Community Posts") && (
+  <CommunityPosts activeTab={activeTab} />
+)}
+
+{(activeTab === "All(24)" || activeTab === "Articles") && (
+  <SavedArticles activeTab={activeTab} />
+)}
+
     </div>
   );
 };

@@ -24,7 +24,7 @@ export default function UserHomeNavbar() {
     { label: "About Us", href: "/user-dashboard/about-us" },
     { label: "Blog", href: "/user-dashboard/blog" },
     { label: "Contact Us", href: "/user-dashboard/contact-us" },
-    { label: "Saved Items", href: "/user-dashboard/saved-items" },
+    // { label: "Saved Items", href: "/user-dashboard/saved-items" },
   ];
 
   
@@ -66,7 +66,7 @@ export default function UserHomeNavbar() {
     } catch (err) {
       console.error("Logout failed", err);
     } finally {
-      // 🔥 MUST CLEAR COOKIES
+      
       Cookies.remove("token");
       Cookies.remove("role");
 
