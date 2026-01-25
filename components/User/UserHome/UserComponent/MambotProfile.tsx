@@ -2,10 +2,8 @@
 import React, { useState, useRef, ChangeEvent } from "react";
 import {
   Camera,
-  Globe,
   Upload,
   Save,
-  Edit3,
   Trash2,
   X,
   ChevronDown,
@@ -13,6 +11,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import Image from "next/image";
+import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
 type ToggleState = {
   kickReminders: boolean;
   hydrationGoals: boolean;
@@ -29,6 +28,9 @@ const MamabotProfile: React.FC = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [password, setPassword] = useState("");
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+
+  const{data}=useGetMyProfileQuery(undefined)
+  console.log(data,"user profile ")
 
   const [toggles, setToggles] = useState<ToggleState>({
     kickReminders: true,
@@ -240,7 +242,7 @@ const MamabotProfile: React.FC = () => {
               value={formData.pregnancyStatus}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Pregnancy Phase", "Pre-conception"]}
+              options={["pregnancy", "postpartum"]}
             />
             <Input
               label="Due Date"
@@ -256,7 +258,7 @@ const MamabotProfile: React.FC = () => {
               value={formData.currentWeek}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Week 1", "Week 2", "Week 3"]}
+               options={Array.from({ length: 45 }, (_, i) => `Week ${i + 1}`)}
             />
             <Input
               label="Baby Nickname (Optional)"
