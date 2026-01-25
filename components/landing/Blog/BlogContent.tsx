@@ -28,7 +28,7 @@ const BlogContent: React.FC = () => {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2.5 text-sm font-medium transition-all cursor-pointer
+              className={`px-18.5 py-2.5 text-sm font-medium transition-all cursor-pointer
                 ${
                   activeCategory === cat
                     ? "bg-primary text-white"
