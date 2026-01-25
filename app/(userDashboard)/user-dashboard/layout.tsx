@@ -1,16 +1,11 @@
 // app/(userDashboard)/user-dashboard/layout.tsx
 
-"use client"
+"use client";
 import ChatBot from "@/features/ChatBot";
 import UserHomeNavbar from "./userNavbar/page";
 import { Footer } from "@/components/layout/Footer";
-<<<<<<< HEAD
-import ReduxProvider from "@/redux/provider";
-=======
 import { Provider } from "react-redux";
 import { store } from "@/redux/provider";
-
->>>>>>> origin/development
 
 type UserDashboardLayoutProps = {
   children: React.ReactNode;
@@ -20,8 +15,7 @@ export default function UserDashboardLayout({
   children,
 }: UserDashboardLayoutProps) {
   return (
-<<<<<<< HEAD
-    <ReduxProvider>
+    <Provider store={store}>
       <div className="min-h-screen relative ">
         {/* Fixed Navbar */}
         <UserHomeNavbar />
@@ -34,22 +28,6 @@ export default function UserDashboardLayout({
         </main>
         <Footer />
       </div>
-    </ReduxProvider>
-=======
- <Provider store={store}>
-     <div className="min-h-screen relative ">
-      {/* Fixed Navbar */}
-      <UserHomeNavbar />
-      <ChatBot />
-
-      {/* Main content with padding to avoid overlap with fixed navbar */}
-      <main className="mt-26 px-6 flex flex-col items-center">
-        {/* pt-[104px] = navbar height (adjust if your navbar height changes) */}
-        <div className="w-full container mx-auto ">{children}</div>
-      </main>
-      <Footer />
-    </div>
- </Provider>
->>>>>>> origin/development
+    </Provider>
   );
 }
