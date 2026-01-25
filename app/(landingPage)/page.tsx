@@ -10,6 +10,7 @@ import PricingPricing from "@/components/landing/home/PricingSection";
 import SupportSection from "@/components/landing/home/SupportSection";
 import YoureNotAlone from "@/components/landing/home/YoureNotAlone";
 import type { Metadata } from "next";
+import { comfortaa } from "../fonts";
 
 export const metadata: Metadata = {
   title: "Mamabot",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main>
+    <main className={`${comfortaa.className}`}>
       <section id="home" className="scroll-mt-28">
         <HeroSection />
       </section>
