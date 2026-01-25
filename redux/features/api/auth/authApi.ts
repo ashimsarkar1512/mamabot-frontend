@@ -78,8 +78,6 @@ import { baseApi } from "../baseApi";
 
 // export const { useLoginMutation, useRegisterMutation } = authApi;
 
-
-
 export interface IUser {
   id: string;
   first_name: string;
@@ -142,7 +140,6 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-
     verifyOtp: builder.mutation({
       query: (body) => ({
         url: "/verify-otp",
@@ -150,7 +147,6 @@ const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
-
 
     forgotPassword: builder.mutation({
       query: (body) => ({
@@ -168,16 +164,30 @@ const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-     getCurrentUser: builder.query({
+    getCurrentUser: builder.query({
       query: () => ({
         url: "/user/me",
         method: "GET",
       }),
-      
     }),
 
+   logOut: builder.mutation<void, void>({
+  query: () => ({
+    url: "/logout",
+    method: "POST",
+  }),
+}),
   }),
 });
 
-export const { useSignupMutation, useVerifyEmailMutation, useLoginMutation,useVerifyOtpMutation,useForgotPasswordMutation,useResetPasswordMutation,useGetCurrentUserQuery } = authApi;
+export const {
+  useSignupMutation,
+  useVerifyEmailMutation,
+  useLoginMutation,
+  useVerifyOtpMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useGetCurrentUserQuery,
+  useLogOutMutation,
+} = authApi;
 export default authApi;

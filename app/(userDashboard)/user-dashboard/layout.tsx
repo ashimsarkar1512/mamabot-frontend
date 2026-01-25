@@ -1,7 +1,12 @@
 // app/(userDashboard)/user-dashboard/layout.tsx
+
+"use client"
 import ChatBot from "@/features/ChatBot";
 import UserHomeNavbar from "./userNavbar/page";
 import { Footer } from "@/components/layout/Footer";
+import { Provider } from "react-redux";
+import { store } from "@/redux/provider";
+
 
 type UserDashboardLayoutProps = {
   children: React.ReactNode;
@@ -11,7 +16,8 @@ export default function UserDashboardLayout({
   children,
 }: UserDashboardLayoutProps) {
   return (
-    <div className="min-h-screen relative ">
+ <Provider store={store}>
+     <div className="min-h-screen relative ">
       {/* Fixed Navbar */}
       <UserHomeNavbar />
       <ChatBot />
@@ -23,5 +29,6 @@ export default function UserDashboardLayout({
       </main>
       <Footer />
     </div>
+ </Provider>
   );
 }

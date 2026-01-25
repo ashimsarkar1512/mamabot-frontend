@@ -5,13 +5,17 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
+import Cookies from "js-cookie";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
+    const [logout] = useLogOutMutation();
+  const router = useRouter();
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
     { label: "About Us", href: "/user-dashboard/about-us" },
@@ -43,6 +47,21 @@ export default function UserHomeNavbar() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+
+   const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch (err) {
+      console.error("Logout failed", err);
+    } finally {
+      // 🔥 MUST CLEAR COOKIES
+      Cookies.remove("token");
+      Cookies.remove("role");
+
+      router.push("/login");
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-6 ">
@@ -167,7 +186,10 @@ export default function UserHomeNavbar() {
                             Settings
                           </Link>
 
-                          <button className="flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2">
+                          <button 
+                          
+                          onClick={handleLogout}
+                          className="flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2">
                             Logout
                           </button>
                         </div>
