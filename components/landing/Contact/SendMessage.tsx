@@ -4,10 +4,10 @@ import React from "react";
 
 export default function SendMessage() {
   return (
-    <div className="w-full  px-4 py-12 md:py-16">
+    <div className="w-full  py-12 md:py-16">
       {/* Heading Section */}
       <div className="text-center mb-10 md:mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3">
           Send us a message
         </h2>
         <p className="text-gray-600 text-base md:text-lg">
@@ -118,7 +118,7 @@ export default function SendMessage() {
           <div className="text-center">
             <button
               type="submit"
-              className="inline-flex items-center px-10 py-4 bg-primary text-white font-medium rounded-xl hover:opacity-80 cursor-pointer focus:ring-4 focus:ring-pink-300 transition shadow-md text-lg"
+              className="inline-flex items-center  px-5 md:px-10 py-2 md:py-4 bg-primary text-white font-medium rounded-xl hover:opacity-80 cursor-pointer focus:ring-4 focus:ring-pink-300 transition shadow-md text-base md:text-lg"
             >
               <Play className="w-5 h-5 mr-2" />
               <span className="mr-2">Send Message</span>
@@ -130,27 +130,27 @@ export default function SendMessage() {
       {/* Contact Info Footer */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 md:mt-24">
         {/* Headquarters */}
-        <div className="flex flex-col mb-10 items-start px-8 py-10 bg-slate-50 border-2 !border-white rounded-xl">
-          <div className="flex items-center justify-center gap-4 mb-5 md:mb-10">
+        <div className="flex flex-col mb-4 md:mb-10 items-start px-4 py-5 md:px-8 md:py-10 bg-slate-50 border-2 !border-white rounded-xl">
+          <div className="flex items-center justify-center gap-2 md:gap-4 mb-5 md:mb-10">
             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white mr-4">
               <MapPin width={24} height={24} />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 ">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 ">
               Our Headquarters
             </h3>
           </div>
           <div className="flex flex-col gap-4">
-            <p className="text-black font-semibold text-lg">
+            <p className="text-black font-semibold text-base md:text-lg">
               Mamabot Digital Care Ltd.
               <br />
-              <span className="text-base text-[#677381]">
+              <span className="text-sm md:text-base text-[#677381]">
                 Friedrichstraße 68, 10117 Berlin, Germany
               </span>
             </p>
-            <p className="text-black font-semibold text-lg">
+            <p className="text-black font-semibold text-base md:text-lg">
               Working Hours:
               <br />
-              <span className="text-base text-[#677381]">
+              <span className="text-sm md:text-base text-[#677381]">
                 Monday–Friday 9:00 AM - 6:00 PM CET
               </span>
             </p>
@@ -159,26 +159,28 @@ export default function SendMessage() {
         </div>
 
         {/* Contact Information */}
-        <div className="flex flex-col mb-10 items-start px-8 py-10 bg-slate-50 border-2 !border-white rounded-xl">
+        <div className="flex flex-col mb-10 items-start px-4 py-5 md:px-8 md:py-10 bg-slate-50 border-2 !border-white rounded-xl">
           <div className="flex items-center justify-center gap-4 mb-5 md:mb-10">
             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#229ECF] flex items-center justify-center text-white mr-4">
               <PhoneIcon width={24} height={24} />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 ">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 ">
               Contact Information
             </h3>
           </div>
 
           <div>
-            <p className="text-black font-semibold text-lg">
+            <p className="text-black font-semibold text-base md:text-lg">
               Phone Number:
               <br />
-              <span className="text-base text-[#677381]">+49 30-123-45678</span>
+              <span className="text-sm md:text-base text-[#677381]">
+                +49 30-123-45678
+              </span>
             </p>
-            <p className="text-black font-semibold text-lg">
+            <p className="text-black font-semibold text-base md:text-lg">
               Email Address:
               <br />
-              <span className="text-base text-[#677381]">
+              <span className="text-sm md:text-base text-[#677381]">
                 support@mamabot.com
               </span>
             </p>
