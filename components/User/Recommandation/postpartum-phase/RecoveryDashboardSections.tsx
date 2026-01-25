@@ -1,14 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
-import {
-  HeartPulse,
-  Sparkles,
-  Apple,
-  Baby,
-  ArrowRight,
-  ChevronRight,
-} from "lucide-react";
+import { HeartPulse, Sparkles, Apple, Baby, ChevronRight } from "lucide-react";
 
 export default function RecoveryDashboardSections() {
   return (
