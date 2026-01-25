@@ -20,6 +20,9 @@ import {
   BabySleepModal,
   DiaperLogModal,
 } from "@/components/User/postpartumPhase/daily-task-modals";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
+import { resetBabyCareStep } from "@/redux/features/slice/babyCareModalSlice";
 
 type FormData = {
   streak: number;
@@ -176,7 +179,11 @@ const babyCuesData: {
 
 // in this modal there will be 3 steps
 export default function BabyCareModal() {
-  const [step, setStep] = useState(0);
+  const babyCareStep = useSelector(
+    (state: RootState) => state.babyCareModal.step,
+  );
+  const dispatch = useDispatch();
+  const [step, setStep] = useState(babyCareStep);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
@@ -189,11 +196,8 @@ export default function BabyCareModal() {
   const customNext = (num: number) => setStep(num);
   const back = () => setStep((s) => s - 1);
 
-  {
-    /* i want when i click on done button the the whole modal will parmanently gone */
-  }
   const handleFinish = () => {
-    setStep(0);
+    dispatch(resetBabyCareStep());
     setFormData({
       streak: 0,
       time: 0,

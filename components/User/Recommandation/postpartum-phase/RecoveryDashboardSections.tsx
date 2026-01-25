@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { HeartPulse, Sparkles, Apple, Baby, ChevronRight } from "lucide-react";
@@ -10,8 +11,21 @@ import {
   PelvicFloorExcModal,
 } from "./modals";
 import MentalHealthModal from "./modals/MentalHealthModal";
+import { useDispatch } from "react-redux";
+import { resetBabyCareStep } from "@/redux/features/slice/babyCareModalSlice";
 
 export default function RecoveryDashboardSections() {
+  const dispatch = useDispatch();
+  const [isBabyCareOpen, setIsBabyCareOpen] = useState(false);
+
+  const handleBabyCareOpenChange = (open: boolean) => {
+    setIsBabyCareOpen(open);
+    if (!open) {
+      // Reset step to 0 when modal is closed
+      dispatch(resetBabyCareStep());
+    }
+  };
+
   return (
     <div className="space-y-8 mb-8">
       {/*   RECOVERY & HEALING   */}
@@ -148,7 +162,10 @@ export default function RecoveryDashboardSections() {
               </p>
             </div>
 
-            <Dialog>
+            <Dialog
+              open={isBabyCareOpen}
+              onOpenChange={handleBabyCareOpenChange}
+            >
               <DialogTrigger asChild>
                 <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
                   Open Baby Care
