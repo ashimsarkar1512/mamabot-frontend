@@ -1,12 +1,9 @@
-import React from "react";
-import { Heart } from "lucide-react";
 import Image from "next/image";
-import { comfortaa } from "@/app/fonts";
 
 const ContactBanner = () => {
   return (
     <div
-      className={`w-full bg-white/25 border-2 !border-white shadow-sm relative ${comfortaa.className} overflow-hidden  rounded-3xl`}
+      className={`w-full bg-white/25 border-2 !border-white shadow-sm relative  overflow-hidden  rounded-3xl`}
     >
       <div>
         <div className="px-[30px] md:px-[100px] py-5 md:py-16">

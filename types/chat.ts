@@ -1,41 +1,25 @@
-// export interface Message {
-//     id: string;
-//     role: 'user' | 'assistant';
-//     content: string;
-//     timestamp: Date;
-// }
-
-// export interface Chat {
-//     id: string;
-//     name: string;
-//     messages: Message[];
-//     createdAt: Date;
-//     updatedAt: Date;
-// }
-
-// export interface HistoryItem {
-//     id: string;
-//     title: string;
-//     excerpt: string;
-//     date: string;
-// }
-
 export type Role = "user" | "ai";
 
 export interface Message {
   id: string;
   role: Role;
-  text: string;
-  createdAt: number;
+  text: string;        // <-- was "content"
+  createdAt: number;   // <-- was Date
 }
 
 export interface Chat {
   id: string;
-  title: string;
+  title: string;       // <-- was "name"
   messages: Message[];
-  createdAt: number;
+  createdAt: number;   // <-- was Date
 }
 
+export interface HistoryItem {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+}
 export interface Project {
   id: string;
   name: string;

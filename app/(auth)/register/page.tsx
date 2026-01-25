@@ -439,7 +439,7 @@ export default function SignUpPage() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    username: "",
+    phone: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -479,7 +479,7 @@ export default function SignUpPage() {
     const payload = {
       first_name: formData.firstName,
       last_name: formData.lastName,
-      phone: formData.username,
+      phone: formData.phone,
       email: formData.email,
       password: formData.password,
       password_confirmation: formData.confirmPassword,
@@ -586,9 +586,9 @@ export default function SignUpPage() {
               />
               <input
                 type="number"
-                name="username"
+                name="phone"
                 placeholder="Phone Number"
-                value={formData.username}
+                value={formData.phone}
                 onChange={handleInputChange}
                 className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
