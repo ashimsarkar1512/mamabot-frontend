@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { Bookmark } from "lucide-react";
-import { items, tabs } from "@/lib/data/savedData";
+import { items } from "@/lib/data/savedData";
+import BlogCard from "../Blog/BlogCard";
+import { blogPosts } from "@/lib/data/blogData";
 
 type Props = {
   activeTab: string;
@@ -28,7 +28,13 @@ export default function SavedArticles({ activeTab }: Props) {
       <div className="mb-5 md:mb-10 h-[2px] w-full mx-auto bg-[#BAE1F0] " />
 
       {/* Cards */}
-      <div className=""></div>
+      <div className="">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
+          {blogPosts.slice(0, 3).map((post) => (
+            <BlogCard key={post.id} post={post} />
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

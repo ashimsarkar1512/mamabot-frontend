@@ -456,7 +456,7 @@ export default function UserHomeDashboard() {
                 key={item}
                 className="hover:shadow-xl transition-shadow duration-300"
               >
-                <div className="flex flex-col sm:flex-row gap-4 px-4">
+                <div className="flex flex-col sm:flex-row gap-4 p-4">
                   {/* ================= Article Image ================= */}
                   <div className="relative w-full h-44 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-xl overflow-hidden bg-muted flex items-center justify-center">
                     <Image
