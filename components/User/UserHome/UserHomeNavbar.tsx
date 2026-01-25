@@ -30,15 +30,15 @@ export default function UserHomeNavbar() {
     {
       name: "saved",
       label: "Saved Recommends",
-      href: "/saved",
+      href: "/user-dashboard/saved-items",
       icon: <BookOpen size={18} />,
     },
     {
       name: "subscription",
       label: "Subscription & Plan",
-      href: "/subscription",
+      href: "/user-dashboard/subscription-plan",
     },
-    { name: "settings", label: "Settings", href: "/settings" },
+    { name: "settings", label: "Settings", href: "/user-dashboard/settings" },
   ];
 
   // Mock state for demonstration (matching the image provided)
