@@ -3,6 +3,7 @@
 import { comfortaa } from "@/app/fonts";
 import ContactBanner from "@/components/landing/Contact/ContactBanner";
 import SendMessage from "@/components/landing/Contact/SendMessage";
+import SupportCards from "@/components/landing/Contact/SupportCards";
 import Image from "next/image";
 
 const Page = () => {
@@ -19,6 +20,7 @@ const Page = () => {
       </div>
       <ContactBanner/>
       <SendMessage/>
+      <SupportCards/>
     </div>
   );
 };

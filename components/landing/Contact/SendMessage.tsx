@@ -4,7 +4,7 @@ import React from "react";
 
 export default function SendMessage() {
   return (
-    <div className="w-full  py-12 md:py-16">
+    <div className="w-full pt-12 md:pt-16">
       {/* Heading Section */}
       <div className="text-center mb-10 md:mb-12">
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3">
