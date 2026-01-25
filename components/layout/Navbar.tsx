@@ -15,6 +15,7 @@ import Image from "next/image";
 import Button from "../ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import CommonButton from "../ui/Reusable/CommonButton";
+import { usePathname } from "next/navigation";
 
 type UserType = {
   name?: string;
@@ -31,6 +32,7 @@ export default function Navbar() {
   const [user, setUser] = useState<UserType | null>(null);
 
   const authDropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -39,6 +41,14 @@ export default function Navbar() {
     setUser(null);
     setIsAuthOpen(false);
   };
+  const menuItems = [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Blog", href: "/blog" },
+    { label: "Community", href: "/community" },
+    { label: "Newsletter", href: "/newsletter" },
+    { label: "Contact", href: "/contact" },
+  ];
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -64,7 +74,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop & Tablet Menu */}
-        <div className="hidden sm:flex items-center gap-8">
+        {/* <div className="hidden sm:flex items-center gap-8">
           {["Home", "About", "Blog", "Community", "Newsletter", "Contact"].map(
             (item) => (
               <Link
@@ -76,6 +86,30 @@ export default function Navbar() {
               </Link>
             ),
           )}
+        </div> */}
+        <div className="hidden sm:flex items-center gap-8">
+          {menuItems.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`font-medium transition-colors
+          ${
+            isActive
+              ? "text-[#D82479] font-semibold"
+              : "text-gray-800 hover:text-[#D82479]"
+          }
+        `}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Right Actions */}
@@ -159,7 +193,7 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="sm:hidden bg-white shadow-md border-t">
           <div className="flex flex-col px-4 py-4 gap-3">
-            {[
+            {/* {[
               "Home",
               "About",
               "Blog",
@@ -175,7 +209,30 @@ export default function Navbar() {
               >
                 {item}
               </Link>
-            ))}
+            ))} */}
+            {menuItems.map((item) => {
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
+
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={toggleMenu}
+                  className={`font-medium transition-colors
+        ${
+          isActive
+            ? "text-[#D82479] font-semibold"
+            : "text-gray-800 hover:text-[#D82479]"
+        }
+      `}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
 
             <ThemeToggle />
 
