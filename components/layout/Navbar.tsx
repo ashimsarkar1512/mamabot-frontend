@@ -42,25 +42,23 @@ export default function Navbar() {
     setUser(null);
     setIsAuthOpen(false);
   };
-  const menuItems = [
-    { label: "Home", href: "/#home" },
-    { label: "About", href: "/#about" },
-    { label: "Blog", href: "/#blog" },
-    { label: "Community", href: "/#community" },
-    { label: "Service", href: "/#service" },
-    { label: "Pricing", href: "/#pricing" },
-    { label: "Newsletter", href: "/#newsletter" },
-  ];
-  useEffect(() => {
-    const updateHash = () => {
-      setActiveHash(window.location.hash || "#home");
-    };
+const menuItems = [
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Blog", href: "#blog" },
+  { label: "Community", href: "#community" },
+  { label: "Service", href: "#service" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Newsletter", href: "#newsletter" },
+];
 
-    updateHash(); // initial load
-    window.addEventListener("hashchange", updateHash);
-
-    return () => window.removeEventListener("hashchange", updateHash);
-  }, []);
+useEffect(() => {
+  const updateHash = () => {
+    setActiveHash(window.location.hash || "#home");
+  };
+  window.addEventListener("hashchange", updateHash);
+  return () => window.removeEventListener("hashchange", updateHash);
+}, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -87,21 +85,21 @@ export default function Navbar() {
 
         <div className="hidden sm:flex items-center gap-8">
           {menuItems.map((item) => {
-            const isActive = pathname === "/" && item.href === `/${activeHash}`;
+           
             return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`font-medium transition-colors
-          ${
-            isActive
-              ? "text-[#D82479] font-semibold"
-              : "text-gray-800 hover:text-[#D82479]"
-          }
-        `}
-              >
-                {item.label}
-              </Link>
+            <Link
+  key={item.label}
+  href={item.href}
+  onClick={() => setActiveHash(item.href)} // <-- set active on click
+  className={`font-medium transition-colors ${
+    activeHash === item.href
+      ? "text-[#D82479] font-semibold"
+      : "text-gray-800 hover:text-[#D82479]"
+  }`}
+>
+  {item.label}
+</Link>
+
             );
           })}
         </div>
