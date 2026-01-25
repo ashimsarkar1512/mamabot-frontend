@@ -150,6 +150,18 @@ export default function BabyCareModal() {
             />
           </div>
         );
+
+      // STEP 3 — INTRO
+      case 3:
+        return (
+          <FirstStep
+            Icon={RotateCw}
+            title="Baby Feeding Log"
+            description="Record today's breastfeeding or bottle-feeding details."
+            buttonText="Add Feeding"
+            onNext={next}
+          />
+        );
     }
   }
 
