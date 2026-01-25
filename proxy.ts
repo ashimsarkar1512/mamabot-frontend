@@ -61,7 +61,9 @@ export function proxy(req: NextRequest) {
     pathname.startsWith("/reset-password") ||
     pathname.startsWith("/emailVerification") ||
     pathname.startsWith("/reset-password") ||
-    pathname.startsWith("/verification")
+    pathname.startsWith("/verification") ||
+    pathname.startsWith("/authenticate") ||
+     pathname.startsWith("/api")
   ) {
     return NextResponse.next();
   }

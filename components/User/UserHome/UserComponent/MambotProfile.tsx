@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, ChangeEvent } from "react";
+import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import {
   Camera,
   Upload,
@@ -9,9 +9,16 @@ import {
   ChevronDown,
   SquarePen,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
-import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
+import { 
+  IUpdateProfilePayload,
+  useGetMyProfileQuery, 
+  usePostMyProfileMutation 
+} from "@/redux/features/api/user/profile";
+import { toast } from "sonner"; // Assuming you use sonner or similar for feedback
+
 type ToggleState = {
   kickReminders: boolean;
   hydrationGoals: boolean;
@@ -21,48 +28,82 @@ type ToggleState = {
 
 const MamabotProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileImage, setProfileImage] = useState(
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
-  );
+  const [profileImage, setProfileImage] = useState("/images/avatar.png");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
-  const [password, setPassword] = useState("");
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
-  const{data}=useGetMyProfileQuery(undefined)
-  console.log(data,"user profile ")
+  // RTK Query Hooks
+  const { data: profileResponse, isLoading } = useGetMyProfileQuery(undefined);
+  const [updateProfile, { isLoading: isUpdating }] = usePostMyProfileMutation();
 
   const [toggles, setToggles] = useState<ToggleState>({
     kickReminders: true,
     hydrationGoals: true,
     weightTracking: false,
-    twoFactor: true,
+    twoFactor: false,
   });
 
   const [formData, setFormData] = useState({
-    firstName: "Sarah",
-    lastName: "Collins",
-    email: "sarah@mamabot.com",
-    phone: "+49 123 456 789",
-    address: "1240 Raintree Boulevard, Blaine, Minnesota.",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
     language: "English",
-    pregnancyStatus: "Pregnancy Phase",
-    dueDate: "24-10-25",
+    pregnancyStatus: "pregnancy",
+    dueDate: "",
     currentWeek: "Week 1",
-    babyNickname: "James",
+    babyNickname: "",
     doctor: "",
     clinic: "",
     toneOfAI: "Empathetic",
     supportType: "Balanced",
     productInterest: "Eco-Friendly",
     dietaryPreferences: "No Restriction",
+    deliveryType: "vaginal_delivery",
+    postpartumDay: 0,
   });
+
+  // Sync state with API data
+  useEffect(() => {
+    if (profileResponse?.success && profileResponse.data) {
+      const d = profileResponse.data;
+      const u = d.user;
+
+      setFormData({
+        firstName: u.first_name || "",
+        lastName: u.last_name || "",
+        email: u.email || "",
+        phone: u.phone || "",
+        address: d.address || "",
+        language: d.language || "English",
+        pregnancyStatus: d.pregnancy_status || "pregnancy",
+        dueDate: d.due_date || "",
+        currentWeek: `Week ${d.current_week || 1}`,
+        babyNickname: d.baby_nickname || "",
+        doctor: d.doctor_name || "",
+        clinic: d.hospital_name || "",
+        toneOfAI: d.AI_tone || "Empathetic",
+        supportType: d.support_type || "Balanced",
+        productInterest: d.product_interest || "Eco-Friendly",
+        dietaryPreferences: d.dietary_preferences || "No Restriction",
+        deliveryType: d.delivery_type || "vaginal_delivery",
+        postpartumDay: d.postpartum_day || 0,
+      });
+
+      setToggles({
+        kickReminders: d.isKickRemind ?? true,
+        hydrationGoals: d.isHydrationGoal ?? true,
+        weightTracking: d.isWeightTrack ?? false,
+        twoFactor: d.two_factor_auth ?? false,
+      });
+    }
+  }, [profileResponse]);
 
   const profileRef = useRef<HTMLInputElement | null>(null);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
   };
@@ -80,15 +121,55 @@ const MamabotProfile: React.FC = () => {
     setToggles((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleDeleteAccount = () => {
-    // Logic for actual deletion would go here
-    setIsDeleteModalOpen(false);
-    setIsDeleted(true);
-  };
+  // --- SAVE LOGIC ---
+ const handleSave = async () => {
+  try {
+    // 1. Clean the week string "Week 5" -> 5
+    const weekNumber = parseInt(formData.currentWeek.replace("Week ", ""), 10);
+
+    // 2. Build the payload carefully
+    const payload: IUpdateProfilePayload = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      phone: formData.phone || undefined, // Send undefined instead of ""
+      address: formData.address,
+      language: formData.language,
+      pregnancy_status: formData.pregnancyStatus,
+      // Ensure date is in YYYY-MM-DD format for the server
+      due_date: formData.dueDate ? new Date(formData.dueDate).toISOString() : undefined,
+      current_week: isNaN(weekNumber) ? 1 : weekNumber,
+      baby_nickname: formData.babyNickname,
+      doctor_name: formData.doctor,
+      hospital_name: formData.clinic,
+      AI_tone: formData.toneOfAI,
+      support_type: formData.supportType,
+      product_interest: formData.productInterest,
+      dietary_preferences: formData.dietaryPreferences,
+      delivery_type: formData.deliveryType as any,
+      postpartum_day: Number(formData.postpartumDay) || 0,
+      isKickRemind: toggles.kickReminders,
+      isHydrationGoal: toggles.hydrationGoals,
+      isWeightTrack: toggles.weightTracking,
+      two_factor_auth: toggles.twoFactor,
+    };
+
+    console.log("Sending Payload:", payload); // Debug this!
+
+    await updateProfile(payload).unwrap();
+    setIsEditing(false);
+    toast.success("Profile updated!");
+  } catch (error: any) {
+    // This will help you see the server's specific error message
+    const errorMsg = error?.data?.message || "Internal Server Error";
+    toast.error(`Update Failed: ${errorMsg}`);
+    console.error("Server Error Detail:", error);
+  }
+};
+  if (isLoading) return <div className="p-10 text-center">Loading Profile...</div>;
 
   if (isDeleted) {
     return (
-      <div className="min-h-screen  flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="bg-white/25 rounded-xl p-10 md:p-16 max-w-3xl w-full shadow-sm border border-gray-100 text-center relative">
           <button
             onClick={() => window.location.reload()}
@@ -96,38 +177,33 @@ const MamabotProfile: React.FC = () => {
           >
             <ArrowLeft size={20} /> Back to Home
           </button>
-
           <div className="w-24 h-24 bg-[#E91E63] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
             <X size={48} className="text-white stroke-[3px]" />
           </div>
-
           <h1 className="text-[#E91E63] text-2xl md:text-3xl font-bold mb-2">
             Your Profile Is Permanently Deleted
           </h1>
-          <p className="text-gray-400 font-semibold text-lg">
-            No Longer Available
-          </p>
+          <p className="text-gray-400 font-semibold text-lg">No Longer Available</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className=" py-10  text-gray-700">
+    <div className="py-10 text-gray-700">
       <div className="container mx-auto space-y-6">
         {/* HEADER SECTION */}
         <div className="bg-white/25 rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-5">
             <div className="relative">
               <Image
-                src="/images/avatar.png"
+                src={profileImage}
                 alt="profile"
                 width={96}
                 height={96}
-                className="rounded-full object-cover shadow-sm"
+                className="rounded-full h-24 w-24 object-cover shadow-sm"
                 priority
               />
-
               {isEditing && (
                 <button
                   onClick={() => profileRef.current?.click()}
@@ -146,22 +222,25 @@ const MamabotProfile: React.FC = () => {
             </div>
             <div className="text-center md:text-left">
               <h1 className="text-2xl font-bold text-gray-800 leading-tight">
-                Sarah Collins
+                {formData.firstName} {formData.lastName}
               </h1>
               <p className="text-[#E91E63] font-semibold text-sm">
-                Week 3 of Pregnancy
+                {formData.currentWeek} of Pregnancy
               </p>
               <p className="text-gray-400 text-xs mt-1">
-                Due Date: July 15, 2026
+                Due Date: {formData.dueDate}
               </p>
             </div>
           </div>
 
           <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl border border-pink-100 bg-[#FFF5F8] text-gray-700 font-semibold  text-sm cursor-pointer"
+            disabled={isUpdating}
+            onClick={isEditing ? handleSave : () => setIsEditing(true)}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl border border-pink-100 bg-[#FFF5F8] text-gray-700 font-semibold text-sm cursor-pointer disabled:opacity-50"
           >
-            {isEditing ? (
+            {isUpdating ? (
+              <Loader2 size={18} className="animate-spin text-pink-500" />
+            ) : isEditing ? (
               <>
                 <Save size={18} className="text-pink-500" /> Save Changes
               </>
@@ -183,7 +262,6 @@ const MamabotProfile: React.FC = () => {
               onChange={handleChange}
               disabled={!isEditing}
             />
-
             <Input
               label="Last Name"
               name="lastName"
@@ -191,20 +269,17 @@ const MamabotProfile: React.FC = () => {
               onChange={handleChange}
               disabled={!isEditing}
             />
-
             <div className="relative">
               <Input
                 label="Email Address"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
                 disabled
               />
               <span className="absolute right-3 bottom-2.5 bg-[#00A651] text-white text-[10px] px-2 py-0.5 rounded-md font-bold uppercase">
                 Verified
               </span>
             </div>
-
             <Input
               label="Phone number (optional)"
               name="phone"
@@ -212,8 +287,6 @@ const MamabotProfile: React.FC = () => {
               onChange={handleChange}
               disabled={!isEditing}
             />
-
-            {/* Address + Language same row */}
             <Input
               label="Address Line"
               name="address"
@@ -221,14 +294,13 @@ const MamabotProfile: React.FC = () => {
               onChange={handleChange}
               disabled={!isEditing}
             />
-
             <Select
               label="Language"
               name="language"
               value={formData.language}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["English", "Spanish", "German"]}
+              options={["English", "Bengali", "Spanish", "German"]}
             />
           </div>
         </Section>
@@ -247,19 +319,41 @@ const MamabotProfile: React.FC = () => {
             <Input
               label="Due Date"
               name="dueDate"
+              type="date"
               value={formData.dueDate}
               onChange={handleChange}
               disabled={!isEditing}
-              placeholder="DD-MM-YY"
             />
-            <Select
-              label="Current Week"
-              name="currentWeek"
-              value={formData.currentWeek}
-              onChange={handleChange}
-              disabled={!isEditing}
-               options={Array.from({ length: 45 }, (_, i) => `Week ${i + 1}`)}
-            />
+            {formData.pregnancyStatus === "pregnancy" && (
+              <Select
+                label="Current Week"
+                name="currentWeek"
+                value={formData.currentWeek}
+                onChange={handleChange}
+                disabled={!isEditing}
+                options={Array.from({ length: 45 }, (_, i) => `Week ${i + 1}`)}
+              />
+            )}
+            {formData.pregnancyStatus === "postpartum" && (
+              <>
+                <Select
+                  label="Delivery Type"
+                  name="deliveryType"
+                  value={formData.deliveryType}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                  options={["vaginal_delivery", "cesarean_delivery"]}
+                />
+                <Input
+                  label="Postpartum Day"
+                  name="postpartumDay"
+                  type="number"
+                  value={formData.postpartumDay}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                />
+              </>
+            )}
             <Input
               label="Baby Nickname (Optional)"
               name="babyNickname"
@@ -294,25 +388,24 @@ const MamabotProfile: React.FC = () => {
           <p className="text-gray-400 text-xs -mt-3 mb-5">
             Customize your health tracking experience
           </p>
-
           <div className="space-y-3 mb-8">
             <Toggle
               label="Enable Daily Kick Reminders"
               subLabel="Get notified to track baby movements"
               active={toggles.kickReminders}
-              onClick={() => toggleSwitch("kickReminders")}
+              onClick={() => isEditing && toggleSwitch("kickReminders")}
             />
             <Toggle
               label="Enable Hydration Goals"
               subLabel="Track daily water intake"
               active={toggles.hydrationGoals}
-              onClick={() => toggleSwitch("hydrationGoals")}
+              onClick={() => isEditing && toggleSwitch("hydrationGoals")}
             />
             <Toggle
               label="Enable Weight Tracking"
               subLabel="Monitor healthy weight gain"
               active={toggles.weightTracking}
-              onClick={() => toggleSwitch("weightTracking")}
+              onClick={() => isEditing && toggleSwitch("weightTracking")}
             />
           </div>
 
@@ -320,10 +413,8 @@ const MamabotProfile: React.FC = () => {
             AI Preferences
           </h3>
           <p className="text-gray-400 text-xs -mt-3 mb-5">
-            Customize how Mamabot AI interacts with you - this improves
-            recommendations
+            Customize how Mamabot AI interacts with you
           </p>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
             <Select
               label="Tone of AI"
@@ -331,7 +422,7 @@ const MamabotProfile: React.FC = () => {
               value={formData.toneOfAI}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Empathetic", "Professional"]}
+              options={["Friendly Mama", "Empathetic", "Clinical", "Motivational", "Calm & Reassuring", "Spiritual & Mindful"]}
             />
             <Select
               label="Support Type"
@@ -339,7 +430,7 @@ const MamabotProfile: React.FC = () => {
               value={formData.supportType}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Balanced", "Direct"]}
+              options={["Medical Focused", "Balanced", "Emotional Support", "Lifestyle-Focused", "Holistic/Wellness", "Natural Remedies First"]}
             />
             <Select
               label="Product Interest"
@@ -347,7 +438,7 @@ const MamabotProfile: React.FC = () => {
               value={formData.productInterest}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Eco-Friendly", "Premium"]}
+              options={["Eco-Friendly", "Budget-Friendly", "Premium & Luxury Brands", "Doctor-Recommended", "Organic / Chemical-Free", "Vegan", "Minimalist Essentials"]}
             />
             <Select
               label="Dietary Preferences"
@@ -355,7 +446,7 @@ const MamabotProfile: React.FC = () => {
               value={formData.dietaryPreferences}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["No Restriction", "Vegan", "Gluten-Free"]}
+              options={["No Restriction", "Vegetarian", "Vegan", "Pescatarian", "Gluten-Free", "Lactose-Free", "Halal", "Kosher", "Low-Sodium", "Show All", "Gestational"]}
             />
           </div>
         </Section>
@@ -380,132 +471,14 @@ const MamabotProfile: React.FC = () => {
             label="Two-Factor Authentication"
             subLabel="Add an extra layer of security"
             active={toggles.twoFactor}
-            onClick={() => toggleSwitch("twoFactor")}
+            onClick={() => isEditing && toggleSwitch("twoFactor")}
           />
         </Section>
-        {isDeleteModalOpen && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-[32px] p-10 max-w-3xl w-full shadow-2xl border border-white/20">
-              <h2 className="text-[#E91E63] text-3xl font-bold text-center mb-6">
-                Are you absolutely sure?
-              </h2>
-
-              <p className="text-gray-600 text-sm mb-6 leading-relaxed">
-                This action cannot be undone. This will permanently delete your
-                account and remove all your data from our servers, including:
-              </p>
-
-              <ul className="space-y-3 mb-8 text-gray-500 text-sm font-medium">
-                <li className="flex items-center gap-2">
-                  • Your pregnancy journey records
-                </li>
-                <li className="flex items-center gap-2">
-                  • Baby movement tracking history
-                </li>
-                <li className="flex items-center gap-2">
-                  • AI chat conversations
-                </li>
-                <li className="flex items-center gap-2">
-                  • Saved recommendations
-                </li>
-                <li className="flex items-center gap-2">
-                  • Community posts and comments
-                </li>
-              </ul>
-
-              <div className="mb-8">
-                <label className="text-gray-700 text-sm font-bold block mb-2">
-                  Enter Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="************"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setIsDeleteModalOpen(false)}
-                  className="flex-1 py-3.5 rounded-xl bg-white text-gray-800 font-bold border border-gray-100 shadow-sm hover:bg-gray-50 cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDeleteAccount}
-                  className="flex-1 py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 cursor-pointer"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* CHANGE PASSWORD MODAL */}
-        {isPasswordModalOpen && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-[32px] p-10 max-w-3xl w-full shadow-2xl border border-white/20">
-              <h2 className="text-[#E91E63] text-3xl font-bold text-center mb-6">
-                Change Your Password
-              </h2>
-
-              <div className="space-y-4 mb-8">
-                <div>
-                  <label className="text-gray-700 text-sm font-bold block mb-2">
-                    Current Password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="************"
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="text-gray-700 text-sm font-bold block mb-2">
-                    New Password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="************"
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="text-gray-700 text-sm font-bold block mb-2">
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="************"
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-blue-100 outline-none focus:ring-2 focus:ring-pink-200 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setIsPasswordModalOpen(false)}
-                  className="flex-1 py-3.5 rounded-xl bg-white text-gray-800 font-bold border border-gray-100 shadow-sm hover:bg-gray-50 cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => setIsPasswordModalOpen(false)} // Add your update logic here
-                  className="flex-1 py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 cursor-pointer"
-                >
-                  Save & Exit
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
 };
+
 /* ===== REUSABLE UI SUB-COMPONENTS ===== */
 const Section = ({ title, children, hasUpload }: any) => (
   <div className="bg-white/25 rounded-[32px] p-8 shadow-sm border border-gray-100">
@@ -566,11 +539,12 @@ const Toggle = ({ label, subLabel, active, onClick }: any) => (
       <span className="text-gray-400 text-xs mt-0.5">{subLabel}</span>
     </div>
     <button
+      type="button"
       onClick={onClick}
       className={`w-12 h-6 rounded-full relative transition-colors duration-300 ease-in-out cursor-pointer ${active ? "bg-[#3EB1E4]" : "bg-gray-300"}`}
     >
       <div
-        className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 cursor-pointery ${active ? "translate-x-7" : "translate-x-1"}`}
+        className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${active ? "translate-x-7" : "translate-x-1"}`}
       />
     </button>
   </div>
