@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useLoginMutation } from "@/redux/features/api/auth/authApi";
 import { handleError, handleSuccess } from "@/lib/data/handdleError";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +40,17 @@ export default function Home() {
       const res = await login(formData).unwrap();
       handleSuccess(res.message || "Login successful");
 
+      console.log(res,"response")
+
+       Cookies.set("token", res.data.token, { path: "/" }); // Optional: for API calls
+    Cookies.set("role", res.data.user.role, { path: "/" }); // "Admin" or "User"
+
+    // 🔹 Redirect based on role
+    if (res.data.user.role === "Admin") {
+      router.push("/admin-dashboard");
+    } else {
       router.push("/user-dashboard");
+    }
     } catch (error) {
       handleError(error, "Login failed");
     }
