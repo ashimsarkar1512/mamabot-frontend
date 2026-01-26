@@ -9,17 +9,15 @@ import {
   Leaf,
   BrainCircuit,
   FileText,
-  Baby,
-  Droplets,
-  Settings,
-  Sparkles,
-  Star,
+  Bookmark,
+  AlertCircleIcon,
+  X,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button"; // Adjust your path
-import { Card } from "@/components/ui/card"; // Adjust your path
-import Image from "next/image";
+import { Button } from "@/components/ui/Button";
 
-// ====================== Category Data ======================
+import Image from "next/image";
+import { items } from "@/lib/data/savedData";
+
 interface Category {
   id: string;
   label: string;
@@ -35,7 +33,6 @@ const categories: Category[] = [
   { id: "articles", label: "Articles", icon: <FileText size={28} /> },
 ];
 
-// ====================== Products Data ======================
 interface Product {
   id: string;
   name: string;
@@ -77,7 +74,6 @@ const products: Product[] = [
   },
 ];
 
-// ====================== Food Items Data ======================
 interface FoodItem {
   id: string;
   icon: string;
@@ -138,82 +134,154 @@ const foodItems: FoodItem[] = [
   },
 ];
 
-// ====================== Component ======================
 export default function ProductAndFoodRecommendationsPage() {
   const [active, setActive] = useState("all");
+  const [showDisclosure, setShowDisclosure] = useState(false);
 
   return (
     <div className="flex flex-col gap-12 min-h-screen">
-      {/* ====================== Product Recommendations ====================== */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <h2 className="text-2xl font-bold text-gray-900">
               Product Recommendations
             </h2>
-            <span className="bg-cyan-200 text-cyan-700 text-xs px-3 py-1 rounded-full font-semibold">
+            <span className="bg-[#BAE1F0] text-[#229ECF] text-xs px-3 py-1 rounded-full font-semibold">
               of {products.length} Products
             </span>
           </div>
-          <p className="text-sm text-gray-500">
-            Affiliate Link. We earn a small commission if you buy these.{" "}
-            <span className="text-cyan-600 cursor-pointer hover:underline">
-              Learn more
+          <p className="text-sm flex gap-2 items-start px-4 py-2 bg-white max-w-md rounded-full text-gray-500">
+            <AlertCircleIcon className="text-[#229ECF]" />
+            <span>
+              Affiliate Link: We earn a small commission if you buy through this
+              link. No extra cost for you.
+              <span
+                onClick={() => setShowDisclosure(true)}
+                className="text-[#229ECF] cursor-pointer hover:underline"
+              >
+                {" "}
+                Learn more
+              </span>
             </span>
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <Card
-              key={product.id}
-              className="overflow-hidden bg-white border border-gray-100 hover:shadow-lg transition-shadow rounded-xl"
+          {items.map((item) => (
+            <div
+              key={item.id}
+              className="group rounded-2xl border bg-white shadow-sm hover:shadow-md transition overflow-hidden"
             >
-              {/* Image Container */}
-              <div className="relative w-full h-56 md:h-64 bg-gray-200 overflow-hidden rounded-t-xl">
+              <div className="relative h-34 md:h-68 w-full">
                 <Image
-                  src="/images/blog/blog1.png"
-                  alt={product.name}
+                  src={item.image}
+                  alt={item.title}
                   fill
-                  className="object-cover transition-transform duration-300 hover:scale-105"
+                  className="object-cover transition-transform duration-500 ease-out hover:scale-105"
                 />
               </div>
 
-              {/* Card Content */}
-              <div className="p-4 flex flex-col justify-between h-55">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2 text-lg md:text-xl">
-                    {product.name}
+              <div className="p-5 flex flex-col">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-semibold text-[#229ECF] text-lg">
+                    {item.title}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-semibold text-gray-900">
-                        {product.rating}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-500">
-                      ({product.reviews.toLocaleString()} reviews)
-                    </span>
-                  </div>
+                  <Bookmark
+                    className="text-[#229ECF] fill-[#229ECF]"
+                    size={18}
+                  />
                 </div>
 
-                <div className="flex items-center justify-between mt-auto">
-                  <span className="text-2xl font-bold text-gray-900">
-                    ${product.price}
+                <p className="text-sm text-gray-500 mb-3">{item.desc}</p>
+
+                <div className="flex items-center gap-2 text-sm mb-4">
+                  <span className="px-2 py-1 rounded-full bg-green-100 text-green-600 text-xs">
+                    Eco-friendly
                   </span>
-                  <Button className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md text-sm md:text-base">
-                    View to Shop
-                  </Button>
+                  <span className="text-yellow-500">★ {item.rating}</span>
+                  <span className="text-gray-400">({item.reviews})</span>
+                </div>
+
+                {/* New Price & Button Section */}
+                <div className="mt-auto flex items-center justify-between">
+                  <span className="text-lg font-semibold text-[#229ECF]">
+                    {item.price}
+                  </span>
+                  <button className="rounded-lg border-2 cursor-pointer border-[#229ECF] px-4 py-2 text-sm text-[#229ECF] hover:text-white hover:border-white bg-[#DEF0F8] hover:bg-[#229ECF] transition">
+                    View In Shop
+                  </button>
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
+
+        {showDisclosure && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* Backdrop */}
+            <div
+              onClick={() => setShowDisclosure(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+
+            {/* Modal */}
+            <div className="relative bg-white max-w-xl mx-2 md:mx-0 md:max-w-2xl lg:max-w-3xl rounded-2xl p-4 md:p-10 shadow-xl animate-fadeIn">
+              {/* Close */}
+              <button
+                onClick={() => setShowDisclosure(false)}
+                className="absolute cursor-pointer top-4 right-4 text-gray-400 hover:text-gray-700"
+              >
+                <X size={20} />
+              </button>
+
+              <h3 className="text-lg md:text-2xl font-bold pt-5 sm:pt-0 mb-4">
+                Transparency About Our Product Recommendations
+              </h3>
+
+              <div className="text-sm md:text-lg text-[#666666] space-y-2 md:space-y-4 leading-relaxed">
+                <p>
+                  Mamabot is part of various affiliate marketing programs,
+                  including Amazon Associates and Awin. This means: if you visit
+                  a shop through one of our links and make a purchase, we
+                  receive a small commission from the merchant.
+                </p>
+
+                <p>
+                  This does <strong>NOT</strong> result in additional costs for
+                  you. Prices remain the same whether you visit directly or
+                  through our link.
+                </p>
+
+                <div>
+                  <p>
+                    Our product recommendations are based on objective
+                    criteria:{" "}
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>User reviews and test results</li>
+                    <li>Safety standards for babies</li>
+                    <li>Relevance to your personal situation</li>
+                    <li>Value for money</li>
+                  </ul>
+                </div>
+
+                <p>
+                  The amount of commission does <strong>NOT</strong> influence
+                  which products we recommend.
+                </p>
+                <p>
+                  Product recommendations are non-binding. You are not obligated
+                  to purchase these products.
+                </p>
+
+                <p >
+                  If uncertain, please consult an expert (midwife,
+                  paediatrician).
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
       {/* ====================== Today's Recommended Foods ====================== */}
       <section>
