@@ -45,7 +45,7 @@ export default function RecommendationBannerPage() {
           className="absolute inset-0 z-1 opacity-40 bg-cover bg-bottom bg-no-repeat pointer-events-none"
           style={{
             backgroundImage:
-              "url('/images/recommandation/bg-recommandation.png')",
+              "url('/images/recommandation/recommendation-Img.png')",
           }}
         />
 
