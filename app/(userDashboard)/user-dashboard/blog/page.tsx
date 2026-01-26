@@ -11,7 +11,7 @@ const Page = () => {
       
       <BlogCover />
       <BlogContent/>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 };

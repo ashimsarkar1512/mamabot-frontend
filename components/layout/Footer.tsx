@@ -28,7 +28,7 @@ export function Footer() {
             </span>
           </Link>
           <p className=" text-base sm:text-lg md:text-2xl text-muted-foreground">
-            AI-powered advice for expecting and new parents
+            AI-powered advice for expecting and new parents. 
           </p>
         </div>
 
