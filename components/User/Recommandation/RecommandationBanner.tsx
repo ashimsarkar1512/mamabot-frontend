@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -14,22 +14,43 @@ import {
   Settings,
   Sparkles,
 } from "lucide-react";
+import Image from "next/image";
 
 // Interface
 interface Category {
   id: string;
   label: string;
-  icon: React.ReactNode;
+  image?: string;
 }
 
 // Category Data
 const categories: Category[] = [
-  { id: "all", label: "All", icon: <LayoutGrid size={28} /> },
-  { id: "products", label: "Products", icon: <ShoppingBag size={28} /> },
-  { id: "nutrition", label: "Nutrition", icon: <Apple size={28} /> },
-  { id: "wellness", label: "Wellness", icon: <Leaf size={28} /> },
-  { id: "mental", label: "Mental Health", icon: <BrainCircuit size={28} /> },
-  { id: "articles", label: "Articles", icon: <FileText size={28} /> },
+  { id: "all", label: "All", image: "/images/recommandation/all.png" },
+  {
+    id: "products",
+    label: "Products",
+    image: "/images/recommandation/products.png",
+  },
+  {
+    id: "nutrition",
+    label: "Nutrition",
+    image: "/images/recommandation/nutrition.png",
+  },
+  {
+    id: "wellness",
+    label: "Wellness",
+    image: "/images/recommandation/wellness.png",
+  },
+  {
+    id: "mental",
+    label: "Mental Health",
+    image: "/images/recommandation/mental-health.png",
+  },
+  {
+    id: "articles",
+    label: "Articles",
+    image: "/images/recommandation/articles.png",
+  },
 ];
 
 export default function RecommendationBannerPage() {
@@ -85,7 +106,12 @@ export default function RecommendationBannerPage() {
                   <div
                     className={`${active === cat.id ? "text-[#4CA7D0]" : "text-gray-400"}`}
                   >
-                    {cat.icon}
+                    <Image
+                      src={cat.image!}
+                      alt={cat.label}
+                      width={24}
+                      height={24}
+                    />
                   </div>
                 </div>
                 <span
