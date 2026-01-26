@@ -60,3 +60,47 @@ export const notificationSettings: NotificationSetting[] = [
     defaultEnabled: true,
   },
 ];
+
+export interface PrivacySetting {
+  id: string;
+  title: string;
+  description: string;
+  actionLabel?: string;
+  icon?: string;
+  isToggle?: boolean;
+  defaultEnabled?: boolean;
+  variant?: "button" | "toggle" | "checkbox";
+}
+
+export const privacySettings: PrivacySetting[] = [
+  {
+    id: "download-data",
+    title: "Download My Data",
+    description: "Export a copy of your pregnancy or postpartum logs",
+
+    actionLabel: "Export Data",
+    variant: "button",
+  },
+  {
+    id: "analytics-cookies",
+    title: "Analytics & Cookies",
+    description: "Enable/disable anonymous usage tracking",
+    isToggle: true,
+    defaultEnabled: true,
+    variant: "toggle",
+  },
+  {
+    id: "connected-apps",
+    title: "Connected Apps",
+    description: "Review health data sharing permissions",
+    actionLabel: "Manage Connections",
+    variant: "button",
+  },
+  {
+    id: "two-factor-auth",
+    title: "Two-Factor Authentication",
+    description: "Add extra login protection",
+    actionLabel: "Enable",
+    variant: "button",
+  },
+];

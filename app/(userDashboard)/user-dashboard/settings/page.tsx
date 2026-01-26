@@ -8,6 +8,7 @@ import { Settings2 } from "lucide-react";
 import { settingsTabs } from "@/lib/data/SettingsData";
 import Personalization from "@/components/landing/Settings/Personalization";
 import Notifications from "@/components/landing/Settings/Notifications";
+import PrivacyData from "@/components/landing/Settings/PrivacyData";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState(settingsTabs[0]);
@@ -56,6 +57,7 @@ const Page = () => {
         <Personalization activeTab={activeTab} />
       )}
       {activeTab === "Notifications" && <Notifications activeTab={activeTab} />}
+      {activeTab === "Privacy & Data" && <PrivacyData activeTab={activeTab} />}
       {/* 
       {(activeTab === "All(24)" || activeTab === "Community Posts") && (
         <CommunityPosts activeTab={activeTab} />
