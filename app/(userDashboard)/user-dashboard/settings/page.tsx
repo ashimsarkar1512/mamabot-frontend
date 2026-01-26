@@ -51,9 +51,9 @@ const Page = () => {
 
       {/* Sections */}
 
-      {/* {(activeTab === "Personalization" || activeTab === "Personalization") && (
+      {(activeTab === "Personalization" || activeTab === "Personalization") && (
         <Personalization activeTab={activeTab} />
-      )} */}
+      )}
 {/* 
       {(activeTab === "All(24)" || activeTab === "Community Posts") && (
         <CommunityPosts activeTab={activeTab} />
