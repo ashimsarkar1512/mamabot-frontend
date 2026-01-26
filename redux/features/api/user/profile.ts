@@ -58,6 +58,20 @@ export interface IUpdateProfilePayload {
   delivery_type?: "vaginal_delivery" | "cesarean_delivery";
 }
 
+interface IUserDashboardResponse {
+  success: boolean;
+  data: {
+    first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string | null;
+    totalExaminees: number;
+    totalCompletedQuizzes: number;
+    upcomingAppointments?: string[];
+    recentActivities?: string[];
+  };
+}
+
 export const profileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUserResponse, void>({
@@ -77,8 +91,16 @@ export const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
+
+    getUserDashboard: builder.query<IUserDashboardResponse, void>({
+      query: () => ({
+        url: "/user-dashboard",
+        method: "GET",
+      }),
+      providesTags: ["Dashboard"],
+    }),
   }),
   overrideExisting: true, // Set to true to avoid the HMR warnings in your logs
 });
-export const { useGetMyProfileQuery, usePostMyProfileMutation } = profileApi;
+export const { useGetMyProfileQuery, usePostMyProfileMutation,useGetUserDashboardQuery  } = profileApi;
 export default profileApi;

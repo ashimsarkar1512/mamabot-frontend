@@ -17,26 +17,17 @@ import {
   Mic,
 } from "lucide-react";
 
-import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const Loading = () => null;
-
 export default  function ChatSection(){
 
-  return <Suspense > 
-  InnerChatSection
-  </Suspense>
-}
-
- function InnerChatSection() {
   const [command, setCommand] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // const searchParams = useSearchParams();
 
   return (
-    <Suspense fallback={<Loading />}>
+   
       <div className="flex h-screen rounded-2xl border border-white/50 bg-white/50 backdrop-blur-md flex-col lg:flex-row pl-4 py-4">
         {/* Mobile Menu Button */}
         <button
@@ -307,6 +298,6 @@ export default  function ChatSection(){
           </div>
         </div>
       </div>
-    </Suspense>
+   
   );
 }

@@ -15,9 +15,11 @@ import Image from "next/image";
 import { 
   IUpdateProfilePayload,
   useGetMyProfileQuery, 
+  useGetUserDashboardQuery, 
   usePostMyProfileMutation 
 } from "@/redux/features/api/user/profile";
 import { toast } from "sonner"; // Assuming you use sonner or similar for feedback
+import Loading from "@/components/Loading";
 
 type ToggleState = {
   kickReminders: boolean;
@@ -33,10 +35,10 @@ const MamabotProfile: React.FC = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
+  const {data:userProfile}=useGetUserDashboardQuery(undefined)
   // RTK Query Hooks
-  const { data: profileResponse, isLoading } = useGetMyProfileQuery(undefined);
+  const { data: profileResponse, isLoading,refetch } = useGetMyProfileQuery(undefined);
   const [updateProfile, { isLoading: isUpdating }] = usePostMyProfileMutation();
-
   const [toggles, setToggles] = useState<ToggleState>({
     kickReminders: true,
     hydrationGoals: true,
@@ -64,42 +66,70 @@ const MamabotProfile: React.FC = () => {
     deliveryType: "vaginal_delivery",
     postpartumDay: 0,
   });
+  useEffect(() => {
+  if (userProfile?.data) {
+    const u = userProfile.data;
+    setFormData(prev => ({
+      ...prev,
+      firstName: u.first_name || "",
+      lastName: u.last_name || "",
+      email: u.email || "",
+      phone: u.phone || "",
+    }));
+  }
+}, [userProfile]);
+
 
   // Sync state with API data
-  useEffect(() => {
-    if (profileResponse?.success && profileResponse.data) {
-      const d = profileResponse.data;
-      const u = d.user;
+useEffect(() => {
+  if (profileResponse?.success && profileResponse.data) {
+    const d = profileResponse.data;
+    const u = d.user;
+    if (!u) return;
 
-      setFormData({
-        firstName: u.first_name || "",
-        lastName: u.last_name || "",
-        email: u.email || "",
-        phone: u.phone || "",
-        address: d.address || "",
-        language: d.language || "English",
-        pregnancyStatus: d.pregnancy_status || "pregnancy",
-        dueDate: d.due_date || "",
-        currentWeek: `Week ${d.current_week || 1}`,
-        babyNickname: d.baby_nickname || "",
-        doctor: d.doctor_name || "",
-        clinic: d.hospital_name || "",
-        toneOfAI: d.AI_tone || "Empathetic",
-        supportType: d.support_type || "Balanced",
-        productInterest: d.product_interest || "Eco-Friendly",
-        dietaryPreferences: d.dietary_preferences || "No Restriction",
-        deliveryType: d.delivery_type || "vaginal_delivery",
-        postpartumDay: d.postpartum_day || 0,
-      });
+    setFormData(prev => ({
+      ...prev,
+      firstName: u.first_name || prev.firstName,
+      lastName: u.last_name || prev.lastName,
+      email: u.email || prev.email,
+      phone: u.phone || prev.phone,
+      address: d.address || prev.address,
+      language: d.language || prev.language,
+      pregnancyStatus: d.pregnancy_status || prev.pregnancyStatus,
+      dueDate: d.due_date || prev.dueDate,
+      currentWeek: `Week ${d.current_week || 1}`,
+      babyNickname: d.baby_nickname || prev.babyNickname,
+      doctor: d.doctor_name || prev.doctor,
+      clinic: d.hospital_name || prev.clinic,
+      toneOfAI: d.AI_tone || prev.toneOfAI,
+      supportType: d.support_type || prev.supportType,
+      productInterest: d.product_interest || prev.productInterest,
+      dietaryPreferences: d.dietary_preferences || prev.dietaryPreferences,
+      deliveryType: d.delivery_type || prev.deliveryType,
+      postpartumDay: d.postpartum_day || prev.postpartumDay,
+    }));
 
-      setToggles({
-        kickReminders: d.isKickRemind ?? true,
-        hydrationGoals: d.isHydrationGoal ?? true,
-        weightTracking: d.isWeightTrack ?? false,
-        twoFactor: d.two_factor_auth ?? false,
-      });
-    }
-  }, [profileResponse]);
+    setToggles({
+      kickReminders: d.isKickRemind ?? true,
+      hydrationGoals: d.isHydrationGoal ?? true,
+      weightTracking: d.isWeightTrack ?? false,
+      twoFactor: d.two_factor_auth ?? false,
+    });
+
+    setProfileImage("/images/avatar.png"); // Replace if real profile image exists
+  }
+}, [profileResponse]);
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
 
   const profileRef = useRef<HTMLInputElement | null>(null);
 
@@ -158,6 +188,7 @@ const MamabotProfile: React.FC = () => {
     await updateProfile(payload).unwrap();
     setIsEditing(false);
     toast.success("Profile updated!");
+    refetch()
   } catch (error: any) {
     // This will help you see the server's specific error message
     const errorMsg = error?.data?.message || "Internal Server Error";
@@ -165,7 +196,7 @@ const MamabotProfile: React.FC = () => {
     console.error("Server Error Detail:", error);
   }
 };
-  if (isLoading) return <div className="p-10 text-center">Loading Profile...</div>;
+  if (isLoading) return <Loading/>;
 
   if (isDeleted) {
     return (
@@ -228,7 +259,7 @@ const MamabotProfile: React.FC = () => {
                 {formData.currentWeek} of Pregnancy
               </p>
               <p className="text-gray-400 text-xs mt-1">
-                Due Date: {formData.dueDate}
+               Due Date: {formatDate(formData.dueDate)}
               </p>
             </div>
           </div>

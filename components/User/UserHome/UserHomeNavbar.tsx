@@ -6,8 +6,9 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
+import {  useLogOutMutation } from "@/redux/features/api/auth/authApi";
 import Cookies from "js-cookie";
+import { useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +18,9 @@ export default function UserHomeNavbar() {
 
   const [logout] = useLogOutMutation();
   const router = useRouter();
+  const {data}=useGetUserDashboardQuery(undefined)
+  const profile =data?.data
+  console.log(data,"user")
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
     { label: "About Us", href: "/user-dashboard/about-us" },
@@ -128,9 +132,10 @@ export default function UserHomeNavbar() {
                   {/* User Info Text */}
                   <div className="text-right hidden sm:block">
                     <p className="text-sm font-semibold text-[#0ea5e9] leading-tight">
-                      {user.name}
+                     {`${profile?.first_name} ${profile?.last_name}`}
+
                     </p>
-                    <p className="text-[11px] text-gray-400">{user.email}</p>
+                    <p className="text-[11px] text-gray-400">{profile?.email}</p>
                   </div>
 
                   {/* Profile Button */}
