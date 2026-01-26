@@ -7,17 +7,18 @@ import { Settings2 } from "lucide-react";
 
 import { settingsTabs } from "@/lib/data/SettingsData";
 import Personalization from "@/components/landing/Settings/Personalization";
+import Notifications from "@/components/landing/Settings/Notifications";
 
 const Page = () => {
-  const [activeTab, setActiveTab] = useState("All(24)");
+  const [activeTab, setActiveTab] = useState(settingsTabs[0]);
   // const filteredItems =
   //   activeTab === "All(24)"
   //     ? items
   //     : items.filter((item) => item.type === activeTab);
 
   return (
-    <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-24`}>
-      <div className="flex items-center mb-5 md:mb-10 gap-3 md:gap-6">
+    <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-16`}>
+      <div className="flex items-center gap-3 ">
         <div className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center">
           <Settings2 size={24} />
         </div>
@@ -51,10 +52,11 @@ const Page = () => {
 
       {/* Sections */}
 
-      {(activeTab === "Personalization" || activeTab === "Personalization") && (
+      {activeTab === "Personalization" && (
         <Personalization activeTab={activeTab} />
       )}
-{/* 
+      {activeTab === "Notifications" && <Notifications activeTab={activeTab} />}
+      {/* 
       {(activeTab === "All(24)" || activeTab === "Community Posts") && (
         <CommunityPosts activeTab={activeTab} />
       )}
