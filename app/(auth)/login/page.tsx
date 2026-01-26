@@ -44,12 +44,18 @@ export default function Home() {
 
       Cookies.set("token", res.data.token, { path: "/" }); // Optional: for API calls
       Cookies.set("role", res.data.user.role, { path: "/" }); // "Admin" or "User"
+    
 
-      // 🔹 Redirect based on role
+   if (res.data.user.role === "Admin") {
+      router.push("/admin-dashboard");
+    } else if (res.data.user.role === "User") {
       router.push("/pricingPage");
-    } catch (error) {
-      handleError(error, "Login failed");
+    } else {
+      router.push("/"); 
     }
+  } catch (error) {
+    handleError(error, "Login failed");
+  }
   };
 
   return (
