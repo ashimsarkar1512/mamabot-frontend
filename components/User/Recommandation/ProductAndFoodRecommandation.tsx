@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+
 import {
   LayoutGrid,
   ShoppingBag,
@@ -42,37 +42,6 @@ interface Product {
   reviews: number;
   price: number;
 }
-
-const products: Product[] = [
-  {
-    id: "p1",
-    name: "Prenatal Vitamin Gummies",
-    image: "https://cdn-icons-png.flaticon.com/512/2913/2913141.png",
-    description:
-      "Daily vitamins to support pregnancy health and baby's development.",
-    rating: 4.8,
-    reviews: 1523,
-    price: 19.99,
-  },
-  {
-    id: "p2",
-    name: "Organic Almond Milk",
-    image: "https://cdn-icons-png.flaticon.com/512/590/590685.png",
-    description: "Rich in calcium and vitamins for expecting mothers.",
-    rating: 4.6,
-    reviews: 874,
-    price: 7.99,
-  },
-  {
-    id: "p3",
-    name: "Maternity Pillow",
-    image: "https://cdn-icons-png.flaticon.com/512/2906/2906496.png",
-    description: "Provides comfort and support during sleep.",
-    rating: 4.9,
-    reviews: 430,
-    price: 34.99,
-  },
-];
 
 interface FoodItem {
   id: string;
@@ -147,7 +116,7 @@ export default function ProductAndFoodRecommendationsPage() {
               Product Recommendations
             </h2>
             <span className="bg-[#BAE1F0] text-[#229ECF] text-xs px-3 py-1 rounded-full font-semibold">
-              of {products.length} Products
+              of {items.length} Products
             </span>
           </div>
           <p className="text-sm flex gap-2 items-start px-4 py-2 bg-white max-w-md rounded-full text-gray-500">
@@ -274,7 +243,7 @@ export default function ProductAndFoodRecommendationsPage() {
                   to purchase these products.
                 </p>
 
-                <p >
+                <p>
                   If uncertain, please consult an expert (midwife,
                   paediatrician).
                 </p>
@@ -284,8 +253,8 @@ export default function ProductAndFoodRecommendationsPage() {
         )}
       </section>
       {/* ====================== Today's Recommended Foods ====================== */}
-      <section>
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+      <section className="">
+        <div className="flex items-center justify-between p-6 bg-[#ffffff] mb-6 flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🥗</span>
             <h2 className="text-2xl font-bold text-pink-600">
@@ -296,7 +265,7 @@ export default function ProductAndFoodRecommendationsPage() {
             {foodItems.length} Food
           </span>
         </div>
-
+        {/* 32px  padding foods er baire, gap-y-2, proti food er card e p-4 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-150">
