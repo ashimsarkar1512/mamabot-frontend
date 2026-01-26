@@ -59,7 +59,7 @@ const Subscription = ({ activeTab }: Props) => {
         </div>
 
         <div className="">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5">
             {subscriptionItems.map((item, idx) => {
               // Determine icon inside button
               let buttonIcon: JSX.Element | null = null;
@@ -83,7 +83,13 @@ const Subscription = ({ activeTab }: Props) => {
             `;
 
               return (
-                <div key={item.id} className={`p-5 rounded-xl  bg-white/30  `}>
+                <div
+                  key={item.id}
+                  className={`
+    px-3 md:px-6 py-5 md:py-10 bg-white/30
+    ${idx < subscriptionItems.length - 2 ? "border-b-2 !border-b-[#DEF0F8]" : ""}
+  `}
+                >
                   <div className="flex justify-between items-start">
                     <div>
                       <h4 className="font-bold text-base text-gray-800">
