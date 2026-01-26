@@ -166,3 +166,62 @@ export const smartPersonalizationSettings: SmartPersonalizationSetting[] = [
     type: "toggle",
   },
 ];
+
+export interface SubscriptionItem {
+  id: string;
+  title: string;
+  value?: string;
+  description?: string;
+  actionLabel?: string;
+  actionVariant?: "primary" | "secondary" | "danger" | "outline" | "text" | "upgrade";
+  icon?: string;
+  isHighlighted?: boolean;
+}
+
+export const subscriptionItems: SubscriptionItem[] = [
+  {
+    id: "current-plan",
+    title: "Current Plan",
+    value: "Free",
+    actionLabel: "Upgrade Plan",
+     actionVariant: "upgrade",
+    isHighlighted: true,
+  },
+  {
+    id: "cancel-subscription",
+    title: "Cancel Subscription",
+    description: "Stop premium plan",
+    actionLabel: "Cancel",
+    actionVariant: "danger",
+    icon: "AlertTriangle",
+  },
+  {
+    id: "payment-method",
+    title: "Payment Method",
+    value: "Visa****4213",
+    actionLabel: "Update",
+    actionVariant: "outline",
+  },
+  {
+    id: "device-management",
+    title: "Device Management",
+    description: "Manage logged-in devices",
+    actionLabel: "View Devices",
+    actionVariant: "outline",
+    icon: "MonitorSmartphone",
+  },
+
+  {
+    id: "billing-history",
+    title: "Billing History",
+    description: "View past payments",
+    actionLabel: "View Invoices",
+    actionVariant: "outline",
+    icon: "Download",
+  },
+  {
+    id: "app-version",
+    title: "App Version",
+    value: "1.2.3",
+  },
+];

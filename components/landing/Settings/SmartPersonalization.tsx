@@ -63,11 +63,11 @@ const SmartPersonalization = ({ activeTab }: Props) => {
                     className="flex items-center justify-between py-3 border-b border-[#DEF0F8] last:border-b-0"
                   >
                     <div>
-                      <p className="text-sm font-medium text-gray-800">
+                      <p className="text-base font-bold text-gray-800">
                         {item.title}
                       </p>
                       {item.description && (
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-sm text-[#6A7282] mt-0.5">
                           {item.description}
                         </p>
                       )}

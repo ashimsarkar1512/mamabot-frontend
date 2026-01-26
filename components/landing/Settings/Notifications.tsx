@@ -58,20 +58,18 @@ const Notifications = ({ activeTab }: Props) => {
               className="px-3 md:px-6 py-5 md:py-10 border-b-2 !border-b-[#DEF0F8] flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6"
             >
               <div>
-                <h3 className="text-base font-semibold text-gray-700">
-                  {category}
-                </h3>
+                <h3 className="text-base font-bold ">{category}</h3>
                 {items.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center justify-between py-3 border-b border-[#DEF0F8] last:border-b-0"
                   >
                     <div>
-                      <p className="text-sm font-medium text-gray-800">
+                      <p className="text-sm text-[#6A7282] font-medium ">
                         {item.title}
                       </p>
                       {item.description && (
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-sm text-[#6A7282] mt-0.5">
                           {item.description}
                         </p>
                       )}
