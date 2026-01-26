@@ -49,11 +49,11 @@ const SmartPersonalization = ({ activeTab }: Props) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gapx-x-6">
           {Object.entries(groupedSettings).map(([category, items]) => (
             <div
               key={category}
-              className="px-3 md:px-6 py-5 md:py-10 border-b-2 !border-b-[#DEF0F8] flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6"
+              className="px-3 md:px-6 py-5 md:py-10 border-b-2 !border-b-[#DEF0F8] flex flex-col md:flex-row items-center justify-between gap-x-3 md:gap-x-6"
             >
               {/* Left grid */}
               <div>

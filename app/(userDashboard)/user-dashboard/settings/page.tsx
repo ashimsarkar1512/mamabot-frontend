@@ -11,6 +11,7 @@ import Notifications from "@/components/landing/Settings/Notifications";
 import PrivacyData from "@/components/landing/Settings/PrivacyData";
 import SmartPersonalization from "@/components/landing/Settings/SmartPersonalization";
 import Subscription from "@/components/landing/Settings/Subscription";
+import HelpSupport from "@/components/landing/Settings/HelpSupport";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState(settingsTabs[0]);
@@ -64,14 +65,7 @@ const Page = () => {
         <SmartPersonalization activeTab={activeTab} />
       )}
       {activeTab === "Subscription" && <Subscription activeTab={activeTab} />}
-      {/* 
-      {(activeTab === "All(24)" || activeTab === "Community Posts") && (
-        <CommunityPosts activeTab={activeTab} />
-      )}
-
-      {(activeTab === "All(24)" || activeTab === "Articles") && (
-        <SavedArticles activeTab={activeTab} />
-      )} */}
+      {activeTab === "Help & Support" && <HelpSupport activeTab={activeTab} />}
     </div>
   );
 };
