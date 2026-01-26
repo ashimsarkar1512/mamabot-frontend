@@ -4,17 +4,17 @@ import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { HeartPulse, Sparkles, Apple, Baby, ChevronRight } from "lucide-react";
-import {
-  BabyCareModal,
-  NutritionModal,
-  ParinealCareModal,
-  PelvicFloorExcModal,
-} from "./modals";
-import MentalHealthModal from "./modals/MentalHealthModal";
 import { useDispatch } from "react-redux";
 import { resetBabyCareStep } from "@/redux/features/slice/babyCareModalSlice";
+import {
+  NutritionModal,
+  BabyCareModal,
+  MentalHealthModal,
+} from "../postpartum-phase/modals";
+import IncisionHealingCheckModal from "./IncisionHealingCheckModal";
+import MovementMobilityGuide from "./MovementMobilityGuide";
 
-export default function RecoveryDashboardSections() {
+export default function RecoveryDashboardTwo() {
   const dispatch = useDispatch();
   const [isBabyCareOpen, setIsBabyCareOpen] = useState(false);
 
@@ -44,10 +44,10 @@ export default function RecoveryDashboardSections() {
 
               <div className="flex-1">
                 <p className="text-sm md:text-lg mb-1 font-regular">
-                  Pelvic Floor Exercise
+                  Incision Care
                 </p>
                 <p className="text-xs md:text-sm text-gray-500">
-                  Short 5—10 minute Kegel routine recommended daily.
+                  Keep incision dry and avoid tight clothing.
                 </p>
               </div>
             </div>
@@ -60,7 +60,7 @@ export default function RecoveryDashboardSections() {
                   <ChevronRight className="text-[#229ECF]" />
                 </Button>
               </DialogTrigger>
-              <PelvicFloorExcModal />
+              <IncisionHealingCheckModal />
             </Dialog>
           </div>
 
@@ -73,10 +73,10 @@ export default function RecoveryDashboardSections() {
 
               <div className="flex-1">
                 <p className="text-sm md:text-lg mb-1 font-regular">
-                  Perineal Care
+                  Movement Tips
                 </p>
                 <p className="text-xs md:text-sm text-gray-500">
-                  Use warm water during urination to reduce stinging.
+                  Avoid lifting more than 5kg. Support abdomen when standing.
                 </p>
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function RecoveryDashboardSections() {
                   <ChevronRight className="text-[#229ECF]" />
                 </Button>
               </DialogTrigger>
-              <ParinealCareModal />
+              <MovementMobilityGuide />
             </Dialog>
           </div>
         </div>

@@ -62,7 +62,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
         </h1>
 
         {/* Content Section */}
-        <div className=" mx-auto mt-6 md:mt-12 relative z-10">
+        <div className=" mx-auto mt-6 md:mt-12  z-10">
           {/* Article Content */}
           <div className=" rounded-2xl mb-12">
             <h2 className="text-xl md:text-[32px] text-[#229ECF] font-bold py-3 md:py-6">
@@ -75,7 +75,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
                   <div dangerouslySetInnerHTML={{ __html: post.content }} />
                 ) : (
                   <div>
-                    <div className="hidden md:block transition-transform duration-300 hover:-translate-y-2 absolute -right-35 top-0 cursor-pointer hover:opacity-80 -translate-y-1/2 pr-10">
+                    {/* <div className="hidden md:block transition-transform duration-300 hover:-translate-y-2 absolute -right-35 top-0 cursor-pointer hover:opacity-80 -translate-y-1/2 pr-10">
                       <Image
                         src="/images/mamabot.png"
                         alt="MamaBot"
@@ -83,7 +83,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
                         height={80}
                         className="drop-shadow-xl"
                       />
-                    </div>
+                    </div> */}
                     <div className="text-base md:text-lg ">
                       <p className="mb-5 md:mb-10">
                         Postpartum bleeding and cramping are natural parts of
@@ -259,7 +259,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };
