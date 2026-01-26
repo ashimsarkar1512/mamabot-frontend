@@ -66,12 +66,12 @@ export default function UserHomeDashboard() {
 
             {/* Recommendations with Floating Icon */}
             <div className="relative">
-              <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer">
+              <Link href="/user-dashboard/recommandation" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer">
                 <div className="p-1 bg-white rounded-md shadow-sm">
                   <Star size={18} className="text-pink-300 fill-pink-300" />
                 </div>
                 <span className="font-medium text-sm">Recommendations</span>
-              </button>
+              </Link>
               {/* Floating Chat Bubble Decor */}
               <span className="absolute -top-3 -right-2 text-sky-300">
                 <MessageSquare size={20} className="fill-sky-100" />

@@ -27,7 +27,7 @@ import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticl
 const ARTICLES_DATA = [
   {
     id: 1,
-    title: "How to Speed Up Vaginal Delivery Recovery",
+    title: "How to Speed Up Vaginal Delivery Recovery", 
     description: "Expert tips for faster healing after natural birth...",
     category: "Recovery",
     image:
