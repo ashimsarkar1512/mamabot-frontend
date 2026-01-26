@@ -13,7 +13,7 @@ const Page = () => {
       <ContactBanner />
       <SendMessage />
       <SupportCards />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

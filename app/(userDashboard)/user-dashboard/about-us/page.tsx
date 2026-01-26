@@ -17,7 +17,7 @@ const Page = () => {
       <StoryBehind />
       <SupportSection />
       <MeetOurTeam />
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 };

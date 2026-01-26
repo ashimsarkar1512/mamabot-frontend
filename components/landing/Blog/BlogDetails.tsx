@@ -259,7 +259,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ post }) => {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };
