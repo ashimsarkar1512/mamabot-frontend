@@ -104,3 +104,65 @@ export const privacySettings: PrivacySetting[] = [
     variant: "button",
   },
 ];
+
+export interface SmartPersonalizationSetting {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+  defaultEnabled?: boolean;
+  type?: "toggle" | "radio";
+  options?: string[];
+}
+
+export const smartPersonalizationSettings: SmartPersonalizationSetting[] = [
+  {
+    id: "pregnancy-motherhood",
+    category: "Context Awareness",
+    title: "Pregnancy / Motherhood Context",
+    description: "Auto-detect stage for smarter replies",
+    defaultEnabled: true,
+    type: "toggle",
+  },
+  {
+    id: "activity-awareness",
+    category: "Activity Tracking",
+    title: "Activity Awareness",
+    description: "Use logged health data to refine recommendations",
+    defaultEnabled: true,
+    type: "toggle",
+  },
+  {
+    id: "personalized-nutrition",
+    category: "Nutrition",
+    title: "Personalized Nutrition",
+    description: "Allow AI to suggest meals based on logs",
+    defaultEnabled: true,
+    type: "toggle",
+  },
+  {
+    id: "reminder-style",
+    category: "Notifications",
+    title: "Reminder Style",
+    description: "Choose your notification tone",
+    defaultEnabled: true,
+    type: "radio",
+    options: ["Normal", "Calm"],
+  },
+  {
+    id: "mood-emotional",
+    category: "Mental Health",
+    title: "Mood & Emotional Tracking",
+    description: "Enable AI to track and reflect your moods",
+    defaultEnabled: true,
+    type: "toggle",
+  },
+  {
+    id: "voice-feedback",
+    category: "Voice Features",
+    title: "Voice Feedback",
+    description: "Enable soft spoken voice replies (future support)",
+    defaultEnabled: true,
+    type: "toggle",
+  },
+];

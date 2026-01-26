@@ -9,6 +9,7 @@ import { settingsTabs } from "@/lib/data/SettingsData";
 import Personalization from "@/components/landing/Settings/Personalization";
 import Notifications from "@/components/landing/Settings/Notifications";
 import PrivacyData from "@/components/landing/Settings/PrivacyData";
+import SmartPersonalization from "@/components/landing/Settings/SmartPersonalization";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState(settingsTabs[0]);
@@ -58,6 +59,9 @@ const Page = () => {
       )}
       {activeTab === "Notifications" && <Notifications activeTab={activeTab} />}
       {activeTab === "Privacy & Data" && <PrivacyData activeTab={activeTab} />}
+      {activeTab === "Smart Personalization" && (
+        <SmartPersonalization activeTab={activeTab} />
+      )}
       {/* 
       {(activeTab === "All(24)" || activeTab === "Community Posts") && (
         <CommunityPosts activeTab={activeTab} />
