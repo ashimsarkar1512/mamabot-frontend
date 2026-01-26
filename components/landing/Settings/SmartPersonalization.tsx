@@ -59,7 +59,7 @@ const SmartPersonalization = ({ activeTab }: Props) => {
               <div>
                 {items.map((item) => (
                   <div
-                    key={item.id}
+                    key={`left-${item.id}`}
                     className="flex items-center justify-between py-3 border-b border-[#DEF0F8] last:border-b-0"
                   >
                     <div>
@@ -83,7 +83,10 @@ const SmartPersonalization = ({ activeTab }: Props) => {
                   // index 3: Background Sound style
                   if (item.id === indexText) {
                     return (
-                      <div key={item.id} className="flex gap-2 w-2/3">
+                      <div
+                        key={`right-style-${item.id}`}
+                        className="flex gap-2 w-2/3"
+                      >
                         {["Normal", "Calm"].map((option) => {
                           const isActive = backgroundSound === option;
                           return (
@@ -114,7 +117,7 @@ const SmartPersonalization = ({ activeTab }: Props) => {
                   // Normal toggle for others
                   return (
                     <label
-                      key={item.id}
+                      key={`right-toggle-${item.id}`}
                       className="relative inline-flex items-center cursor-pointer"
                     >
                       <input
