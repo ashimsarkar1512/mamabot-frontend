@@ -2,7 +2,11 @@ import { Users, MessageSquare, UserStar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const GreetingHeader = () => {
+const GreetingHeader = ({
+  deliveryType,
+}: {
+  deliveryType?: "Vaginal Delivery" | "C-Section";
+}) => {
   return (
     <>
       <div className="mx-auto container py-6 px-4">
@@ -37,12 +41,16 @@ const GreetingHeader = () => {
           {/* Right Section: Action Buttons */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Pregnancy Period */}
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-pink-100 text-pink-700 hover:bg-pink-200 transition-colors cursor-pointer">
+            <Link
+              // href="/user-dashboard/recommandation/postpartum-phase"
+              href={`/user-dashboard/recommandation/${deliveryType === "Vaginal Delivery" ? "postpartum-phase" : "cesarean-delivery"}`}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-pink-200 text-pink-700 hover:bg-pink-300 transition-colors cursor-pointer border border-pink-200"
+            >
               <div className="p-1 bg-pink-200 rounded-md shadow-sm">
                 <UserStar size={18} className="text-pink-500 fill-pink-500" />
               </div>
               <span className="font-medium text-sm">Pregnancy Period</span>
-            </button>
+            </Link>
 
             {/* Recovery Tips with Floating Chat Bubble */}
             <div className="relative">

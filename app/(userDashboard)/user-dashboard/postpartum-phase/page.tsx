@@ -1,33 +1,24 @@
 "use client";
 
-import {
-  Heart,
-  MessageCircle,
-  Activity,
-  UserCircle,
-  ChevronDown,
-} from "lucide-react";
+import { Heart, MessageCircle, UserCircle, ChevronDown } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import HydrationModal from "@/components/User/UserHome/Modal/HydrationModal";
 import BabyMovementModal from "@/components/User/UserHome/Modal/BabyMovementModal";
 import GreetingHeader from "@/components/User/postpartumPhase/GreetingHeader";
 import Button from "@/components/ui/Button";
 import TodaysInsight from "@/components/User/postpartumPhase/TodaysInsight";
-import DailyTaskCard from "@/components/User/postpartumPhase/DailyTaskCard";
 import DailyTaskGrid from "@/components/User/postpartumPhase/DailyTaskGrid";
 import MothersWellnessEnergy from "@/components/User/postpartumPhase/MothersWellnessEnergy";
-import TopArticlesVaginalDelivery from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
 import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
 
 // mock data for articles
 const ARTICLES_DATA = [
   {
     id: 1,
-    title: "How to Speed Up Vaginal Delivery Recovery", 
+    title: "How to Speed Up Vaginal Delivery Recovery",
     description: "Expert tips for faster healing after natural birth...",
     category: "Recovery",
     image:
@@ -122,12 +113,12 @@ export default function UserHomeDashboard() {
 
   return (
     <div className="min-h-screen mt-8">
-      <GreetingHeader />
+      <GreetingHeader deliveryType={deliveryType} />
 
-      {/* ================= Main Content ================= */}
+      {/*   Main Content   */}
       <main className="mx-auto container py-6 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* ========== Left Column ========== */}
+          {/*    Left Column    */}
           {deliveryType === "Vaginal Delivery" ? (
             <div className="col-span-1 lg:col-span-2 space-y-6">
               {/* Insight */}
@@ -175,7 +166,7 @@ export default function UserHomeDashboard() {
               <DailyTaskGrid deliveryType={deliveryType} />
             </div>
           )}
-          {/* ========== Right Column - Updated to match screenshot style ========== */}
+          {/*    Right Column - Updated to match screenshot style    */}
           <div className="space-y-5 lg:space-y-6 ">
             {/* Delivery Type Selector */}
             <Card className="p-5 shadow-sm border-2 border-white! bg-sky-50/50 flex flex-row justify-between items-center">

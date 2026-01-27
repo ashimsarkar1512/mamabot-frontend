@@ -1,5 +1,3 @@
-
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -29,7 +27,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
         {/* Full viewport wrapper with background */}
-        <div className="min-h-screen w-full bg-[linear-gradient(to_bottom,rgba(216,36,121,0.1)_0px,rgba(216,36,121,0.1)_5%,rgba(233,245,250,0.6)_15%,rgba(233,245,250,0.5)_60%,white_85%,white_100%)] px-5 md:px-20 flex flex-col">
+        <div className="min-h-screen w-full bg-[linear-gradient(to_bottom,rgba(216,36,121,0.1)_0px,rgba(216,36,121,0.1)_5%,rgba(233,245,250,0.6)_15%,rgba(233,245,250,0.5)_60%,white_85%,white_100%)] flex flex-col">
           {children}
           <Toaster position="top-right" />
         </div>

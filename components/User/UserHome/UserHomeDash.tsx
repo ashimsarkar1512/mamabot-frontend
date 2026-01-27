@@ -21,7 +21,7 @@ import BabyMovementModal from "./Modal/BabyMovementModal";
 
 export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
+  const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
   return (
     <div className="min-h-screen mt-8">
       {/* ================= Header ================= */}
@@ -57,16 +57,22 @@ export default function UserHomeDashboard() {
           {/* Right Section: Action Buttons */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Postpartum Mode */}
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100 text-cyan-600 hover:bg-cyan-100 transition-colors cursor-pointer">
+            <Link
+              href="/user-dashboard/postpartum-phase"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100 text-cyan-600 hover:bg-cyan-100 transition-colors cursor-pointer"
+            >
               <div className="p-1 bg-white rounded-md shadow-sm">
                 <MessageSquare size={18} className="text-cyan-400" />
               </div>
               <span className="font-medium text-sm">Postpartum Mode</span>
-            </button>
+            </Link>
 
             {/* Recommendations with Floating Icon */}
             <div className="relative">
-              <Link href="/user-dashboard/recommandation" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer">
+              <Link
+                href="/user-dashboard/recommandation"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
                 <div className="p-1 bg-white rounded-md shadow-sm">
                   <Star size={18} className="text-pink-300 fill-pink-300" />
                 </div>
@@ -246,7 +252,7 @@ export default function UserHomeDashboard() {
                     </div>
                   </div>
                   <Button
-                   onClick={() => setIsMovementModalOpen(true)}
+                    onClick={() => setIsMovementModalOpen(true)}
                     variant="outline"
                     className="py-2 px-4 rounded-md text-primary   border-primary"
                   >
@@ -505,11 +511,11 @@ export default function UserHomeDashboard() {
         onClose={() => setIsModalOpen(false)}
         currentGlasses={8}
       />
-       <BabyMovementModal 
-    isOpen={isMovementModalOpen} 
-    onClose={() => setIsMovementModalOpen(false)}
-    pregnancyWeek={22}
-  />
+      <BabyMovementModal
+        isOpen={isMovementModalOpen}
+        onClose={() => setIsMovementModalOpen(false)}
+        pregnancyWeek={22}
+      />
     </div>
   );
 }
