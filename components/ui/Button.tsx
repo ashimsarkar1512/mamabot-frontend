@@ -2,80 +2,93 @@
 
 import React from "react";
 import Link from "next/link";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-// Define the possible variants
-const variantStyles = {
-  primary: "bg-primary hover:bg-primary/50 text-primary-foreground",
-  secondary: "bg-secondary hover:bg-secondary/90 text-secondary-foreground",
-  outline:
-    "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-  ghost: "hover:bg-accent hover:text-accent-foreground",
-  common: "bg-gray-200 hover:bg-gray-300 text-gray-800",
-};
+const buttonVariants = cva(
+  "relative rounded-full flex items-center transition-all duration-300",
+  {
+    variants: {
+      variant: {
+        primary: "bg-primary hover:bg-primary/50 text-primary-foreground",
+        secondary:
+          "bg-secondary hover:bg-secondary/90 text-secondary-foreground",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        common: "bg-gray-200 hover:bg-gray-300 text-gray-800",
+      },
+      size: {
+        sm: "h-9 px-3 text-sm",
+        md: "h-10 p-6",
+        lg: "h-11 px-10 text-lg",
+        icon: "h-10 w-10",
+        default: "h-10 px-4 py-2",
+      },
+      disabled: {
+        true: "cursor-not-allowed opacity-50",
+        false:
+          "cursor-pointer group transform font-medium justify-center hover:scale-105 active:scale-90",
+      },
+      isOpen: {
+        true: "animate-mobile-menu-item",
+        false: "",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+      disabled: false,
+      isOpen: false,
+    },
+  },
+);
 
-// Define the possible sizes
-const sizeStyles = {
-  sm: "h-9 px-3 text-sm",
-  md: "h-10 p-6",
-  lg: "h-11 px-10 text-lg",
-  icon: "h-10 w-10",
-};
-
-// Define the possible icon positions
 type IconPosition = "left" | "right";
 
-interface BaseButtonProps {
+interface BaseButtonProps extends VariantProps<typeof buttonVariants> {
   text?: string;
   icon?: React.ReactNode;
   iconPosition?: IconPosition;
-  variant?: keyof typeof variantStyles;
-  size?: keyof typeof sizeStyles;
-  className?: string;
   isOpen?: boolean;
   animationIndex?: number;
-  children?: React.ReactNode;
+  href?: string;
+  className?: string;
   disabled?: boolean;
+  children?: React.ReactNode;
 }
 
-interface LinkButtonProps extends BaseButtonProps {
+// Separate interface for when it's used as a Link
+interface LinkButtonProps
+  extends BaseButtonProps, React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
-interface ClickableButtonProps extends BaseButtonProps {
+interface ClickableButtonProps
+  extends BaseButtonProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
   href?: never;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  type?: "button" | "submit" | "reset";
 }
 
-// Union the two interfaces to ensure either href or onClick is provided, but not both
 type ButtonProps = LinkButtonProps | ClickableButtonProps;
 
 function Button({
   text,
   icon,
   iconPosition = "right",
-  variant = "primary",
-  size = "md",
-  className = "",
+  variant,
+  size,
+  className,
   isOpen = false,
   animationIndex = 0,
   href,
   onClick,
   children,
   disabled = false,
+  ...props
 }: ButtonProps) {
-  // Determine the base styles
-  const baseStyles = `relative rounded-full flex items-center transition-all duration-300 
-    ${
-      disabled
-        ? "cursor-not-allowed opacity-50"
-        : "cursor-pointer group transform font-medium justify-center hover:scale-105 active:scale-90"
-    }
-    ${variantStyles[variant]}
-    ${sizeStyles[size]}
-    ${isOpen ? "animate-mobile-menu-item" : ""}
-    ${className}`;
-
   // Determine icon spacing based on position
   const iconSpacing =
     size === "icon" ? "" : iconPosition === "left" ? "mr-2" : "ml-2";
@@ -101,6 +114,10 @@ function Button({
     </>
   );
 
+  const buttonClass = cn(
+    buttonVariants({ variant, size, disabled, isOpen, className }),
+  );
+
   // If href is provided, render as Link, otherwise as button
   if (href) {
     return (
@@ -110,13 +127,14 @@ function Button({
           disabled
             ? (e) => e.preventDefault()
             : onClick
-            ? (onClick as React.MouseEventHandler<HTMLAnchorElement>)
-            : undefined
+              ? (onClick as React.MouseEventHandler<HTMLAnchorElement>)
+              : undefined
         }
-        className={baseStyles}
+        className={buttonClass}
         style={{
           animationDelay: isOpen ? `${animationIndex * 80 + 150}ms` : "0ms",
         }}
+        {...(props as any)}
       >
         {content}
       </Link>
@@ -130,16 +148,17 @@ function Button({
           ? undefined
           : (onClick as React.MouseEventHandler<HTMLButtonElement>)
       }
-      className={baseStyles}
+      className={buttonClass}
       disabled={disabled}
       style={{
         animationDelay: isOpen ? `${animationIndex * 80 + 150}ms` : "0ms",
       }}
+      {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {content}
     </button>
   );
 }
 
+export { Button, buttonVariants };
 export default Button;
-export { Button };

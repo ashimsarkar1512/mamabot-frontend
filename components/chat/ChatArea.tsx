@@ -1,10 +1,18 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef } from "react";
-import { Paperclip, Camera, Mic, ArrowUp, ChessQueen } from "lucide-react";
+import {
+  Paperclip,
+  Camera,
+  Mic,
+  ArrowUp,
+  ChessQueen,
+  Loader2,
+} from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import ChatBotIcon from "@/public/images/icon.png";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export default function ChatArea({ store }: any) {
   const chat = store.activeChat;
@@ -20,11 +28,35 @@ export default function ChatArea({ store }: any) {
         {chat.messages.map((m: any) => (
           <MessageBubble key={m.id} msg={m} />
         ))}
+
+        {/* Loading indicator */}
+        {store.isLoading && (
+          <div className="flex w-full justify-start items-end gap-2.5 my-2">
+            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm">
+              <Image
+                src={ChatBotIcon}
+                alt="Bot"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
+            </div>
+            <div className="max-w-[70%] p-4 bg-gray-100 text-gray-800 rounded-[20px] rounded-bl-sm shadow-sm">
+              <div className="flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm text-gray-600">Typing...</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Input Area (Pinned Bottom) */}
       <div className="p-4 bg-white border-t border-gray-100!">
-        <ActiveChatInput onSend={(text) => store.sendMessage(text)} />
+        <ActiveChatInput
+          onSend={(text, files) => store.sendMessage(text, files)}
+          isLoading={store.isLoading}
+        />
       </div>
     </div>
   );
@@ -32,16 +64,31 @@ export default function ChatArea({ store }: any) {
 
 function LandingPage({ store, chat }: any) {
   const [inputValue, setInputValue] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
+
+    const files: any = {};
+    if (selectedImage) files.image = selectedImage;
+    if (selectedFile) files.file = selectedFile;
+
     if (!chat) {
       store.createChat(null);
-      setTimeout(() => store.sendMessage(inputValue), 50);
+      setTimeout(() => {
+        store.sendMessage(inputValue, files);
+        setInputValue("");
+        setSelectedImage(null);
+        setSelectedFile(null);
+      }, 50);
     } else {
-      store.sendMessage(inputValue);
+      store.sendMessage(inputValue, files);
+      setInputValue("");
+      setSelectedImage(null);
+      setSelectedFile(null);
     }
   };
 
@@ -55,7 +102,16 @@ function LandingPage({ store, chat }: any) {
   const handleFileChange = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
-      setInputValue((prev) => prev + `[Attached: ${file.name}] `);
+      setSelectedFile(file);
+      toast.success(`File attached: ${file.name}`);
+    }
+  };
+
+  const handleImageChange = (e: any) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      toast.success(`Image attached: ${file.name}`);
     }
   };
 
@@ -74,7 +130,7 @@ function LandingPage({ store, chat }: any) {
         accept="image/*"
         capture="environment" // Forces camera on mobile
         className="hidden"
-        onChange={handleFileChange}
+        onChange={handleImageChange}
       />
 
       {/* Top Disclaimer */}
@@ -113,6 +169,36 @@ function LandingPage({ store, chat }: any) {
             className="w-full min-h-[50px] max-h-[120px] resize-none outline-none text-gray-700 p-3 bg-transparent"
           />
 
+          {/* File attachments preview */}
+          {(selectedImage || selectedFile) && (
+            <div className="px-3 pb-2 flex gap-2 flex-wrap">
+              {selectedImage && (
+                <div className="bg-pink-50 text-pink-600 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                  <Camera className="w-3 h-3" />
+                  {selectedImage.name}
+                  <button
+                    onClick={() => setSelectedImage(null)}
+                    className="ml-1 hover:text-pink-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              {selectedFile && (
+                <div className="bg-blue-50 text-blue-600 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                  <Paperclip className="w-3 h-3" />
+                  {selectedFile.name}
+                  <button
+                    onClick={() => setSelectedFile(null)}
+                    className="ml-1 hover:text-blue-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center justify-between px-2 pb-1">
             <div className="flex gap-2">
               <button
@@ -134,7 +220,7 @@ function LandingPage({ store, chat }: any) {
             <div className="flex gap-2 items-center">
               <button
                 onClick={() =>
-                  alert("Listening... (Microphone access not implemented)")
+                  toast("Listening... (Microphone access not implemented)")
                 }
                 className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
                 title="Voice Input"
@@ -143,9 +229,17 @@ function LandingPage({ store, chat }: any) {
               </button>
               <button
                 onClick={handleSend}
-                className={`bg-pink-300  text-white px-6 py-2 rounded-full font-semibold transition-colors flex items-center gap-2 ${inputValue.trim() ? "bg-pink-400 hover:bg-pink-400 cursor-pointer" : "cursor-not-allowed"}`}
+                disabled={store.isLoading}
+                className={`bg-pink-300  text-white px-6 py-2 rounded-full font-semibold transition-colors flex items-center gap-2 ${inputValue.trim() && !store.isLoading ? "bg-pink-400 hover:bg-pink-400 cursor-pointer" : "cursor-not-allowed opacity-50"}`}
               >
-                Generate
+                {store.isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  "Generate"
+                )}
               </button>
             </div>
           </div>
@@ -198,13 +292,109 @@ function LandingPage({ store, chat }: any) {
   );
 }
 
-function ActiveChatInput({ onSend }: { onSend: (t: string) => void }) {
+function ActiveChatInput({
+  onSend,
+  isLoading,
+}: {
+  onSend: (t: string, files?: any) => void;
+  isLoading: boolean;
+}) {
   const [text, setText] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const handleSend = () => {
+    if (!text.trim() || isLoading) return;
+
+    const files: any = {};
+    if (selectedImage) files.image = selectedImage;
+    if (selectedFile) files.file = selectedFile;
+
+    onSend(text, files);
+    setText("");
+    setSelectedImage(null);
+    setSelectedFile(null);
+  };
+
+  const handleFileChange = (e: any) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      toast.success(`File attached: ${file.name}`);
+    }
+  };
+
+  const handleImageChange = (e: any) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      toast.success(`Image attached: ${file.name}`);
+    }
+  };
+
   return (
     <div className="max-w-3xl mx-auto w-full relative">
+      {/* Hidden file inputs */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        onChange={handleFileChange}
+      />
+      <input
+        type="file"
+        ref={imageInputRef}
+        accept="image/*"
+        className="hidden"
+        onChange={handleImageChange}
+      />
+
+      {/* File attachments preview */}
+      {(selectedImage || selectedFile) && (
+        <div className="mb-2 flex gap-2 flex-wrap">
+          {selectedImage && (
+            <div className="bg-pink-50 text-pink-600 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+              <Camera className="w-3 h-3" />
+              {selectedImage.name}
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="ml-1 hover:text-pink-800"
+              >
+                ×
+              </button>
+            </div>
+          )}
+          {selectedFile && (
+            <div className="bg-blue-50 text-blue-600 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+              <Paperclip className="w-3 h-3" />
+              {selectedFile.name}
+              <button
+                onClick={() => setSelectedFile(null)}
+                className="ml-1 hover:text-blue-800"
+              >
+                ×
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="flex gap-2 items-center bg-white border rounded-full px-2 py-2 shadow-sm">
-        <button className="p-2 text-gray-400 hover:text-gray-600">
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="p-2 text-gray-400 hover:text-gray-600"
+          disabled={isLoading}
+        >
           <Paperclip className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => imageInputRef.current?.click()}
+          className="p-2 text-gray-400 hover:text-gray-600"
+          disabled={isLoading}
+        >
+          <Camera className="w-4 h-4" />
         </button>
         <input
           className="flex-1 outline-none text-sm px-2"
@@ -212,22 +402,25 @@ function ActiveChatInput({ onSend }: { onSend: (t: string) => void }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              onSend(text);
-              setText("");
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
             }
           }}
+          disabled={isLoading}
         />
         <button
-          className="bg-pink-500 text-white p-2 rounded-full hover:bg-pink-600"
-          onClick={() => {
-            if (text.trim()) {
-              onSend(text);
-              setText("");
-            }
-          }}
+          className={`bg-pink-500 text-white p-2 rounded-full transition-colors ${
+            isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-600"
+          }`}
+          onClick={handleSend}
+          disabled={isLoading}
         >
-          <ArrowUp className="w-4 h-4" />
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <ArrowUp className="w-4 h-4" />
+          )}
         </button>
       </div>
     </div>
