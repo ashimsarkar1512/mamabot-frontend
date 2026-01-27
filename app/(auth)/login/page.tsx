@@ -44,15 +44,22 @@ export default function Home() {
 
       Cookies.set("token", res.data.token, { path: "/" }); // Optional: for API calls
       Cookies.set("role", res.data.user.role, { path: "/" }); // "Admin" or "User"
+
+      console.log(res,"res")
     
 
-   if (res.data.user.role === "Admin") {
-      router.push("/admin-dashboard");
-    } else if (res.data.user.role === "User") {
-      router.push("/pricing");
-    } else {
-      router.push("/"); 
-    }
+  if (res.data.user.role === "Admin") {
+  router.push("/admin-dashboard");
+} else if (res.data.user.role === "User") {
+  if (res.data.user.subscriptionPlan) {
+    router.push("/user-dashboard");
+  } else {
+    router.push("/pricing");
+  }
+} else {
+  router.push("/");
+}
+
   } catch (error) {
     handleError(error, "Login failed");
   }

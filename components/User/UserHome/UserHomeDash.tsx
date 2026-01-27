@@ -20,10 +20,36 @@ import { useState } from "react";
 import HydrationModal from "./Modal/HydrationModal";
 import BabyMovementModal from "./Modal/BabyMovementModal";
 import { motion } from "framer-motion";
+import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
+import { useGetHydrationLogsQuery } from "@/redux/features/api/user/hydration";
+import { useRouter } from "next/navigation";
 
 export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
+
+const{data:profile}=useGetMyProfileQuery(undefined)
+console.log(profile,"profile ")
+
+const{data:user}=useGetUserDashboardQuery(undefined)
+console.log(user,"user")
+const {data:hydration}=useGetHydrationLogsQuery(undefined)
+console.log(hydration,"hydration")
+
+const week=profile?.data.current_week
+const totalGlass=hydration?.data.glass_count
+console.log(totalGlass)
+const total = 10
+const hydrationProgress =
+  totalGlass ? (totalGlass / total) * 100 : 0
+
+    const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/user-dashboard/profile");
+  };
+
+
   return (
     <div className="min-h-screen mt-8">
       {/* ================= Header ================= */}
@@ -46,12 +72,12 @@ export default function UserHomeDashboard() {
 
             <div>
               <h1 className="text-xl md:text-2xl font-medium text-slate-800">
-                Hi <span className="text-sky-500 font-semibold">Sarah</span>,
+                Hi <span className="text-sky-500 font-semibold">{user?.data.first_name}</span>,
                 Welcome back to{" "}
                 <span className="text-pink-500 font-semibold">Mamabot!</span> 👋
               </h1>
               <p className="text-sm md:text-base text-slate-400 mt-1">
-                You are in week 22 of pregnancy
+                You are in week {week} of pregnancy
               </p>
             </div>
           </div>
@@ -60,7 +86,7 @@ export default function UserHomeDashboard() {
           <div className="flex flex-wrap items-center gap-3">
             {/* Postpartum Mode */}
             <Link
-              href="/user-dashboard/postpartum-phase"
+              href="/user-dashboard/postpartum"
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100 text-cyan-600 hover:bg-cyan-100 transition-colors cursor-pointer"
             >
               <div className="p-1 bg-white rounded-md shadow-sm">
@@ -120,7 +146,7 @@ export default function UserHomeDashboard() {
                 <div>
                   <h3 className="font-semibold mb-2">Today&apos;s Insight</h3>
                   <p className="text-sm text-muted-foreground">
-                    At week 22, your baby&apos;s senses are developing rapidly.
+                    At week {week}, your baby&apos;s senses are developing rapidly.
                     They can now hear your voice and respond to sounds!
                   </p>
                 </div>
@@ -208,13 +234,13 @@ export default function UserHomeDashboard() {
                     <div>
                       <p className="font-medium">Mom’s Hydration Goal</p>
                       <p className="text-xs text-muted-foreground">
-                        8 of 10 glasses
+                       {totalGlass} of 10 glasses
                       </p>
                     </div>
                   </div>
                   <div className="flex-1">
                     <Progress
-                      value={70}
+                      value={hydrationProgress}
                       className="h-2 "
                       indicatorClassName="bg-[#229ECF]"
                     />
@@ -432,11 +458,11 @@ export default function UserHomeDashboard() {
               <div className="space-y-3">
                 <div className="flex justify-between mb-4">
                   <p className="font-medium">Name</p>
-                  <p className="font-medium">Sarah</p>
+                  <p className="font-medium">{profile?.data.user.first_name}</p>
                 </div>
                 <div className="flex justify-between mb-4">
                   <p className="font-medium">Stage</p>
-                  <p className="font-medium">Week 22</p>
+                  <p className="font-medium">Week {profile?.data.current_week}</p>
                 </div>
 
                 <div className="flex justify-between">
@@ -445,7 +471,7 @@ export default function UserHomeDashboard() {
                 </div>
               </div>
 
-              <button className="w-full mt-4 flex items-center justify-center gap-2 border border-[#229ECF] text-[#229ECF] bg-white/25 hover:bg-white/40 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer">
+              <button onClick={handleClick} className="w-full mt-4 flex items-center justify-center gap-2 border border-[#229ECF] text-[#229ECF] bg-white/25 hover:bg-white/40 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer">
                 <UserCircle size={18} />
                 <span>Edit Profile</span>
               </button>
@@ -519,7 +545,7 @@ export default function UserHomeDashboard() {
       <HydrationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        currentGlasses={8}
+        
       />
       <BabyMovementModal
         isOpen={isMovementModalOpen}

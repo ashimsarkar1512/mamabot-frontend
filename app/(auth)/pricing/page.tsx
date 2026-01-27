@@ -5,6 +5,7 @@ import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { useRouter } from "next/navigation";
 import { useCreateCheckoutMutation, useGetPlansQuery, Plan } from "@/redux/features/api/user/subscription";
 import { useState } from "react";
+import Loading from "@/components/Loading";
 
 export default function PricingPage() {
   const router = useRouter();
@@ -38,7 +39,8 @@ export default function PricingPage() {
     }
   };
 
-  if (isLoading || isFetching) return <p className="text-center mt-20">Loading plans...</p>;
+  if (isLoading || isFetching) return <Loading/>;
+
   if (error) return <p className="text-center mt-20 text-red-500">Failed to load plans</p>;
 
   // Extract plans array from response
