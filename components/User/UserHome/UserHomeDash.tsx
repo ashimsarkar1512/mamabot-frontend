@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Star,
   UserCircle,
+  MoveDown,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/Button";
@@ -18,6 +19,7 @@ import Link from "next/link";
 import { useState } from "react";
 import HydrationModal from "./Modal/HydrationModal";
 import BabyMovementModal from "./Modal/BabyMovementModal";
+import { motion } from "framer-motion";
 
 export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -452,7 +454,7 @@ export default function UserHomeDashboard() {
         </div>
 
         {/* ================= Articles ================= */}
-        <div>
+        <div className="bg-white/25 border border-white p-6 rounded-xl">
           <h2 className="text-xl sm:text-2xl font-bold mb-6">
             Top <span className="text-primary">Articles</span> For You Today
           </h2>
@@ -500,9 +502,17 @@ export default function UserHomeDashboard() {
           </div>
 
           <div className="flex justify-center mt-8">
-            <button className="h-10 w-10 rounded-full border hover:bg-muted">
-              ↓
-            </button>
+            <motion.button
+              className="h-14 w-10 rounded-full border hover:bg-muted flex items-center justify-center cursor-pointer"
+              animate={{ y: [0, 8, 0] }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <MoveDown className="text-xl text-pink-600" />
+            </motion.button>
           </div>
         </div>
       </main>

@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { X, Calendar, Clock, RefreshCw, Play } from "lucide-react";
@@ -15,24 +17,34 @@ interface BabyMovementModalProps {
 export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 }: BabyMovementModalProps) {
   const [currentDate] = useState(new Date());
   const [isKickCounterOpen, setIsKickCounterOpen] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
-  const [showHistory, setShowHistory] = useState(false); 
+  // Fixed: Check isOpen first, before rendering other modals
+  if (!isOpen) return null;
 
+  // Render history modal
   if (showHistory) {
     return (
       <MovementHistoryModal
         isOpen={true} 
-        onClose={onClose} 
+        onClose={() => {
+          setShowHistory(false);
+          onClose();
+        }}
         onBack={() => setShowHistory(false)}
       />
     );
   }
 
-  if (!isOpen) {
+  // Render kick counter modal
+  if (isKickCounterOpen) {
     return (
       <LiveKickCounterModal 
-        isOpen={isKickCounterOpen} 
-        onClose={() => setIsKickCounterOpen(false)}
+        isOpen={true} 
+        onClose={() => {
+          setIsKickCounterOpen(false);
+          onClose();
+        }}
       />
     );
   }
@@ -50,7 +62,6 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
   };
 
   const handleStartTracking = () => {
-    onClose();
     setIsKickCounterOpen(true);
   };
 
@@ -114,7 +125,7 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
         <div className="flex gap-4">
           <button
             onClick={() => setShowHistory(true)}
-            className="flex-1 py-4 px-6 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3 text-lg"
+            className="flex-1 py-4 px-6 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3 text-lg cursor-pointer"
           >
             <RefreshCw className="h-5 w-5" />
             View Past Logs
@@ -122,7 +133,7 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
 
           <button
             onClick={handleStartTracking}
-            className="flex-1 py-4 px-6 bg-linear-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
+            className="flex-1 py-4 px-6 bg-linear-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg cursor-pointer"
           >
             <Play className="h-5 w-5 fill-white" />
             Start Tracking

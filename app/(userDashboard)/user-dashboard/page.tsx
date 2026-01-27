@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function UserDashboard() {
   return (
-    <div className="bg-[#F2F4F8]">
+    <div >
       <UserHomeDashboard />
     </div>
   );

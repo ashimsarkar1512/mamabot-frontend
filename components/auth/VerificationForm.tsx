@@ -16,6 +16,12 @@ export default function VerificationPage() {
   console.log(email, "email");
   const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
 
+    const handleBack = () => {
+    if (window.history.length > 1) router.back();
+    else router.push("/login");
+  };
+
+
   const handleChange = (value: string, index: number) => {
     if (!/^[0-9]?$/.test(value)) return;
 
@@ -75,12 +81,11 @@ export default function VerificationPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative px-4">
-      <div onClick={() => router.back()} className="absolute top-8 left-8">
-        <button className="border p-1 rounded-full border-pink-600">
+     <div onClick={handleBack} className="absolute top-8 left-8">
+        <button className="border p-1 rounded-full border-pink-600 cursor-pointer">
           <ArrowLeft className="text-pink-500" size={18} />
         </button>
       </div>
-
       <div className="w-full max-w-2xl text-center">
         <div className="flex justify-center mb-4">
           <Image

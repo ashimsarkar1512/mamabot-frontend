@@ -1,8 +1,6 @@
 "use client";
 
 import { X, TrendingUp, CheckCircle2, AlertCircle } from "lucide-react";
-import { useState } from "react";
-import BabyMovementModal from "./BabyMovementModal";
 
 interface MovementHistoryModalProps {
   isOpen: boolean;
@@ -11,20 +9,6 @@ interface MovementHistoryModalProps {
 }
 
 export default function MovementHistoryModal({ isOpen, onClose, onBack }: MovementHistoryModalProps) {
-
-    const [showMonitoring, setShowMonitoring] = useState(false);
-
-  if (showMonitoring) {
-    return (
-      <BabyMovementModal
-        isOpen={true} 
-        onClose={onClose} 
-        pregnancyWeek={22} 
-      />
-    );
-  }
-
-
   if (!isOpen) return null;
 
   const historyData = [
@@ -95,8 +79,8 @@ export default function MovementHistoryModal({ isOpen, onClose, onBack }: Moveme
 
         {/* Back Button */}
         <button
-         onClick={() => setShowMonitoring(true)}
-          className="w-full py-4 border border-gray-200 rounded-xl text-slate-700 font-bold hover:bg-gray-50 transition-all shadow-sm"
+          onClick={onBack}
+          className="w-full py-4 border border-gray-200 rounded-xl text-slate-700 font-bold hover:bg-gray-50 transition-all shadow-sm cursor-pointer"
         >
           Back To Monitoring
         </button>
