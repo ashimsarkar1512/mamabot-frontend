@@ -49,7 +49,7 @@ export default function Home() {
    if (res.data.user.role === "Admin") {
       router.push("/admin-dashboard");
     } else if (res.data.user.role === "User") {
-      router.push("/pricingPage");
+      router.push("/pricing");
     } else {
       router.push("/"); 
     }
@@ -60,11 +60,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div onClick={handleBack} className="absolute top-8 left-8">
-        <button className="border p-1 rounded-full border-pink-600 cursor-pointer">
-          <ArrowLeft className="text-pink-500" size={18} />
-        </button>
-      </div>
+    <div onClick={handleBack} className="absolute top-8 left-8">
+            <button className="border p-1 rounded-full border-pink-600! cursor-pointer">
+              <ArrowLeft className="text-pink-500" size={18} />
+            </button>
+          </div>
 
       <div className="w-full max-w-xl">
         <div className="flex flex-col items-center mb-10">

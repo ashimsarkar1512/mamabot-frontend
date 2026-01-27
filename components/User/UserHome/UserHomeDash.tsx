@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Star,
   UserCircle,
+  MoveDown,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/Button";
@@ -18,10 +19,11 @@ import Link from "next/link";
 import { useState } from "react";
 import HydrationModal from "./Modal/HydrationModal";
 import BabyMovementModal from "./Modal/BabyMovementModal";
+import { motion } from "framer-motion";
 
 export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
+  const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
   return (
     <div className="min-h-screen mt-8">
       {/* ================= Header ================= */}
@@ -66,7 +68,10 @@ export default function UserHomeDashboard() {
 
             {/* Recommendations with Floating Icon */}
             <div className="relative">
-              <Link href="/user-dashboard/recommandation" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer">
+              <Link
+                href="/user-dashboard/recommandation"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
                 <div className="p-1 bg-white rounded-md shadow-sm">
                   <Star size={18} className="text-pink-300 fill-pink-300" />
                 </div>
@@ -246,7 +251,7 @@ export default function UserHomeDashboard() {
                     </div>
                   </div>
                   <Button
-                   onClick={() => setIsMovementModalOpen(true)}
+                    onClick={() => setIsMovementModalOpen(true)}
                     variant="outline"
                     className="py-2 px-4 rounded-md text-primary   border-primary"
                   >
@@ -446,7 +451,7 @@ export default function UserHomeDashboard() {
         </div>
 
         {/* ================= Articles ================= */}
-        <div>
+        <div className="bg-white/25 border border-white p-6 rounded-xl">
           <h2 className="text-xl sm:text-2xl font-bold mb-6">
             Top <span className="text-primary">Articles</span> For You Today
           </h2>
@@ -494,9 +499,17 @@ export default function UserHomeDashboard() {
           </div>
 
           <div className="flex justify-center mt-8">
-            <button className="h-10 w-10 rounded-full border hover:bg-muted">
-              ↓
-            </button>
+            <motion.button
+              className="h-14 w-10 rounded-full border hover:bg-muted flex items-center justify-center cursor-pointer"
+              animate={{ y: [0, 8, 0] }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <MoveDown className="text-xl text-pink-600" />
+            </motion.button>
           </div>
         </div>
       </main>
@@ -505,11 +518,11 @@ export default function UserHomeDashboard() {
         onClose={() => setIsModalOpen(false)}
         currentGlasses={8}
       />
-       <BabyMovementModal 
-    isOpen={isMovementModalOpen} 
-    onClose={() => setIsMovementModalOpen(false)}
-    pregnancyWeek={22}
-  />
+      <BabyMovementModal
+        isOpen={isMovementModalOpen}
+        onClose={() => setIsMovementModalOpen(false)}
+        pregnancyWeek={22}
+      />
     </div>
   );
 }
