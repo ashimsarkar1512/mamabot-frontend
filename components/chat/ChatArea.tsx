@@ -5,6 +5,7 @@ import { Paperclip, Camera, Mic, ArrowUp, ChessQueen } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import ChatBotIcon from "@/public/images/icon.png";
 import Image from "next/image";
+import { toast } from "sonner";
 
 export default function ChatArea({ store }: any) {
   const chat = store.activeChat;
@@ -134,7 +135,7 @@ function LandingPage({ store, chat }: any) {
             <div className="flex gap-2 items-center">
               <button
                 onClick={() =>
-                  alert("Listening... (Microphone access not implemented)")
+                  toast("Listening... (Microphone access not implemented)")
                 }
                 className="p-2 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
                 title="Voice Input"

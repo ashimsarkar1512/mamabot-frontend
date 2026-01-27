@@ -17,7 +17,7 @@ export function useChatStore() {
     },
   ]);
 
-  // Standalone chats (History)
+  // Standalone chats (History) -----------------------------------------------------------------
   const [history, setHistory] = useState<Chat[]>([
     {
       id: "h1",
@@ -26,11 +26,11 @@ export function useChatStore() {
       createdAt: 1737517000000,
     },
     {
-        id: "h2",
-        title: "More Homes for Sale Isn't a Warning...",
-        messages: [],
-        createdAt: 1737417000000,
-    }
+      id: "h2",
+      title: "More Homes for Sale Isn't a Warning...",
+      messages: [],
+      createdAt: 1737417000000,
+    },
   ]);
 
   // If null, we are in History mode. If string, we are in Project mode.
@@ -73,16 +73,15 @@ export function useChatStore() {
 
     // If targetProjectId is explicitly null, use history.
     // If undefined, use current activeProjectId.
-    const pid = targetProjectId !== undefined ? targetProjectId : activeProjectId;
+    const pid =
+      targetProjectId !== undefined ? targetProjectId : activeProjectId;
 
     if (pid) {
       // Add to Project
       setProjects((prev) =>
         prev.map((p) =>
-          p.id === pid
-            ? { ...p, chats: [newChat, ...p.chats] }
-            : p
-        )
+          p.id === pid ? { ...p, chats: [newChat, ...p.chats] } : p,
+        ),
       );
       setActiveProjectId(pid);
     } else {
@@ -100,8 +99,8 @@ export function useChatStore() {
         prev.map((p) =>
           p.id === activeProjectId
             ? { ...p, chats: p.chats.filter((c) => c.id !== chatId) }
-            : p
-        )
+            : p,
+        ),
       );
     } else {
       setHistory((prev) => prev.filter((c) => c.id !== chatId));
@@ -112,8 +111,48 @@ export function useChatStore() {
     }
   }
 
+  async function sendMessageHelper({
+    token,
+    chat_id,
+    message,
+  }: {
+    token: string;
+    chat_id: string;
+    message: string;
+  }) {
+    const formData = new FormData();
+
+    formData.append("chat_id", chat_id);
+    formData.append("message", message);
+    formData.append("language", "en");
+    formData.append("country", "bd");
+    formData.append("mode", "pregnancy");
+    formData.append("pregnancy_week", "3");
+    formData.append("postpartum_day", "0");
+    formData.append("delivery_type", "vaginal");
+    formData.append("tone_of_ai", "empathetic");
+    formData.append("support_type", "emotional");
+    formData.append("dietary_preferences", "no_restriction");
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-chat-logs`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      },
+    );
+
+    return res.json();
+  }
+
   async function sendMessage(text: string) {
     if (!activeChatId) return;
+    const chatId = activeChatId;
+    // i want to get actual token from the server which is stored in the cookie
+    const token = "7|nj0jpk41OpTSSsSVo7ZjG6AmQiKjJqz3kZuLS9d1707584ba";
 
     // Helper to add message
     const addMsg = (role: "user" | "ai", content: string) => {
@@ -133,27 +172,33 @@ export function useChatStore() {
                   chats: p.chats.map((c) =>
                     c.id === activeChatId
                       ? { ...c, messages: [...c.messages, msg] }
-                      : c
+                      : c,
                   ),
                 }
-              : p
-          )
+              : p,
+          ),
         );
       } else {
         setHistory((prev) =>
           prev.map((c) =>
             c.id === activeChatId
               ? { ...c, messages: [...c.messages, msg] }
-              : c
-          )
+              : c,
+          ),
         );
       }
       return msg;
     };
 
     addMsg("user", text);
-    const aiText = await mockAIReply(text);
-    addMsg("ai", aiText);
+    const aiText = await sendMessageHelper({
+      token: token,
+      chat_id: chatId,
+      message: text,
+    });
+    console.log("response is:", aiText);
+
+    addMsg("ai", aiText.data.ai_response);
   }
 
   return {
