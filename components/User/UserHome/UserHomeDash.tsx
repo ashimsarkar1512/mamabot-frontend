@@ -59,12 +59,15 @@ export default function UserHomeDashboard() {
           {/* Right Section: Action Buttons */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Postpartum Mode */}
-            <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100 text-cyan-600 hover:bg-cyan-100 transition-colors cursor-pointer">
+            <Link
+              href="/user-dashboard/postpartum-phase"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100 text-cyan-600 hover:bg-cyan-100 transition-colors cursor-pointer"
+            >
               <div className="p-1 bg-white rounded-md shadow-sm">
                 <MessageSquare size={18} className="text-cyan-400" />
               </div>
               <span className="font-medium text-sm">Postpartum Mode</span>
-            </button>
+            </Link>
 
             {/* Recommendations with Floating Icon */}
             <div className="relative">
