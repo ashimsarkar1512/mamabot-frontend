@@ -183,6 +183,7 @@ export default function UserHomeNavbar() {
                               <Link
                                 key={link.name}
                                 href={link.href}
+                                 onClick={() => setIsAuthOpen(false)} 
                                 className={`flex items-center gap-3 px-4 py-3 text-[15px] transition-colors rounded-2xl
                     ${
                       isActive

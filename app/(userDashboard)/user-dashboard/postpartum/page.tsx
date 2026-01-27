@@ -1,8 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const PostpartumCard: React.FC = () => {
+   const router = useRouter();
+
+  const handleStartPostpartum = () => {
+    router.push("/user-dashboard/postpartum-phase"); // Navigate to the route
+  };
   return (
     <div className="flex min-h-screen items-center justify-center  p-4 pb-12">
       {/* Main Card Container */}
@@ -20,7 +26,7 @@ const PostpartumCard: React.FC = () => {
         {/* Action Button */}
         <button
           className="inline-block rounded-xl bg-secondary px-12 py-4 font-medium text-white transition-all  cursor-pointer"
-          onClick={() => console.log("Mode Activated")}
+          onClick={handleStartPostpartum}
         >
           Start Postpartum Period
         </button>
