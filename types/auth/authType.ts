@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Authentication-related types
 
 // Login request payload
@@ -38,6 +39,7 @@ export interface RegisterResponse {
 // Auth state interface
 export interface AuthState {
   user: import("../user/userType").User | null;
+  userFullInfo?: any;
 }
 
 // API user interface (as received from API)

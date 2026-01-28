@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import {
   LayoutGrid,
@@ -17,8 +17,16 @@ import {
 import Image from "next/image";
 
 // Interface
+export type RecommendationTab =
+  | "all"
+  | "product"
+  | "nutrition"
+  | "mental"
+  | "wellness"
+  | "articles";
+
 interface Category {
-  id: string;
+  id: RecommendationTab;
   label: string;
   image?: string;
 }
@@ -27,7 +35,7 @@ interface Category {
 const categories: Category[] = [
   { id: "all", label: "All", image: "/images/recommandation/all.png" },
   {
-    id: "products",
+    id: "product",
     label: "Products",
     image: "/images/recommandation/products.png",
   },
@@ -53,9 +61,13 @@ const categories: Category[] = [
   },
 ];
 
-export default function RecommendationBannerPage() {
-  const [active, setActive] = useState("all");
-
+export default function RecommendationBannerPage({
+  active,
+  setActive,
+}: {
+  active: RecommendationTab;
+  setActive: (value: RecommendationTab) => void;
+}) {
   return (
     <div className="flex flex-col gap-8  min-h-screen">
       {/* Category Selection */}
