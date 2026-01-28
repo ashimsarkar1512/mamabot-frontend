@@ -6,15 +6,15 @@ const community = baseApi.injectEndpoints({
       query: () => ({
         url: "/community/posts/1",
         method: "GET",
-        providesTags: ["Community"],
       }),
+      providesTags: ["Community"],
     }),
     getCommunityGroups: builder.query({
       query: () => ({
         url: "/community-groups",
         method: "GET",
-        providesTags: ["Community"],
       }),
+      providesTags: ["Community"],
     }),
     joinCommunityGroup: builder.mutation({
       query: (id: number) => ({
@@ -23,8 +23,8 @@ const community = baseApi.injectEndpoints({
         body: {
           group_id: id,
         },
-        invalidatesTags: ["Community"],
       }),
+      invalidatesTags: ["Community"],
     }),
     likeCommunityGroupPost: builder.mutation({
       query: (id: number) => ({
@@ -33,8 +33,8 @@ const community = baseApi.injectEndpoints({
         body: {
           post_id: id,
         },
-        invalidatesTags: ["Community"],
       }),
+      invalidatesTags: ["Community"],
     }),
     commentCommunityGroupPost: builder.mutation({
       query: (body: { post_id: number; comment: string }) => ({
@@ -44,8 +44,8 @@ const community = baseApi.injectEndpoints({
           post_id: body.post_id,
           comment: body.comment,
         },
-        invalidatesTags: ["Community"],
       }),
+      invalidatesTags: ["Community"],
     }),
   }),
 });
