@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useGetCommunityGroupsQuery } from "@/redux/features/api/user/community";
+import {
+  useGetCommunityGroupsQuery,
+  useJoinCommunityGroupMutation,
+} from "@/redux/features/api/user/community";
 import { Users, Baby, Activity, CalendarHeart } from "lucide-react";
 const MOCK_GROUPS = [
   {
@@ -32,6 +35,8 @@ const MOCK_GROUPS = [
 ];
 const SuggestedGroups = () => {
   const { data: communityGroups } = useGetCommunityGroupsQuery({});
+  const [joinCommunityGroup] = useJoinCommunityGroupMutation();
+
   return (
     <div className="mb-6 bg-sky-50/50 rounded-2xl  border-3 border-white! overflow-hidden">
       <div className="px-6 pt-6 pb-2 bg-[#E9F5FA] border-b border-white!">
@@ -74,11 +79,17 @@ const SuggestedGroups = () => {
               </div>
             </div>
             {group.is_member ? (
-              <button className="w-full py-1.5 rounded-lg border border-sky-200 text-sky-500 text-sm font-medium hover:bg-sky-50 transition-colors">
+              <button
+                onClick={() => joinCommunityGroup(group.id)}
+                className="w-full py-1.5 rounded-lg border border-sky-200 text-sky-500 text-sm font-medium hover:bg-sky-50 transition-colors"
+              >
                 Leave Group
               </button>
             ) : (
-              <button className="w-full py-1.5 rounded-lg border border-sky-200 text-sky-500 text-sm font-medium hover:bg-sky-50 transition-colors">
+              <button
+                onClick={() => joinCommunityGroup(group.id)}
+                className="w-full py-1.5 rounded-lg border border-sky-200 text-sky-500 text-sm font-medium hover:bg-sky-50 transition-colors"
+              >
                 Join Group
               </button>
             )}

@@ -16,10 +16,46 @@ const community = baseApi.injectEndpoints({
         providesTags: ["Community"],
       }),
     }),
+    joinCommunityGroup: builder.mutation({
+      query: (id: number) => ({
+        url: `/groups/join`,
+        method: "POST",
+        body: {
+          group_id: id,
+        },
+        invalidatesTags: ["Community"],
+      }),
+    }),
+    likeCommunityGroupPost: builder.mutation({
+      query: (id: number) => ({
+        url: `/community/like`,
+        method: "POST",
+        body: {
+          post_id: id,
+        },
+        invalidatesTags: ["Community"],
+      }),
+    }),
+    commentCommunityGroupPost: builder.mutation({
+      query: (body: { post_id: number; comment: string }) => ({
+        url: `/community/comment`,
+        method: "POST",
+        body: {
+          post_id: body.post_id,
+          comment: body.comment,
+        },
+        invalidatesTags: ["Community"],
+      }),
+    }),
   }),
 });
 
-export const { useGetCommunityPostsQuery, useGetCommunityGroupsQuery } =
-  community;
+export const {
+  useGetCommunityPostsQuery,
+  useGetCommunityGroupsQuery,
+  useJoinCommunityGroupMutation,
+  useLikeCommunityGroupPostMutation,
+  useCommentCommunityGroupPostMutation,
+} = community;
 
 export default community;

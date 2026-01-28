@@ -16,6 +16,11 @@ import {
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { format, formatDistanceToNow } from "date-fns";
+import {
+  useCommentCommunityGroupPostMutation,
+  useJoinCommunityGroupMutation,
+  useLikeCommunityGroupPostMutation,
+} from "@/redux/features/api/user/community";
 
 const PostCard = ({ post }: { post: any }) => {
   const [comment, setComment] = useState("");
@@ -27,6 +32,10 @@ const PostCard = ({ post }: { post: any }) => {
   };
 
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const [likeCommunityGroupPost] = useLikeCommunityGroupPostMutation();
+  const [joinCommunityGroup] = useJoinCommunityGroupMutation();
+  const [commentCommunityGroupPost] = useCommentCommunityGroupPostMutation();
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -53,7 +62,10 @@ const PostCard = ({ post }: { post: any }) => {
             <Plus className="w-4 h-4 mr-1" /> Join Group
           </button>
         )} */}
-        <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
+        <button
+          onClick={() => joinCommunityGroup(post.group_id)}
+          className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors"
+        >
           <Plus className="w-4 h-4 mr-1" /> Join Group
         </button>
       </div>
@@ -198,6 +210,7 @@ const PostCard = ({ post }: { post: any }) => {
       {/* Action Buttons */}
       <div className="flex items-center justify-between border-t border-b border-gray-200! py-2 mb-4">
         <button
+          onClick={() => likeCommunityGroupPost(post.id)}
           className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors text-gray-500 hover:text-gray-700`}
         >
           <Heart className={`w-4 h-4`} /> Like
@@ -242,7 +255,12 @@ const PostCard = ({ post }: { post: any }) => {
               </button>
             </div>
             {comment && (
-              <button className="text-sky-500 hover:text-sky-600">
+              <button
+                onClick={() =>
+                  commentCommunityGroupPost({ post_id: post.id, comment })
+                }
+                className="text-sky-500 hover:text-sky-600"
+              >
                 <Send className="w-4 h-4" />
               </button>
             )}

@@ -25,8 +25,6 @@
 //   endpoints: () => ({}),
 // });
 
-
-
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
@@ -48,6 +46,14 @@ const dynamicBaseQuery = fetchBaseQuery({
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: dynamicBaseQuery,
-  tagTypes: ["User", "Products", "Profile","Dashboard","Hydration"],
+  tagTypes: [
+    "User",
+    "Products",
+    "Profile",
+    "Dashboard",
+    "Hydration",
+    "Community",
+    "Recommendations",
+  ],
   endpoints: () => ({}),
 });

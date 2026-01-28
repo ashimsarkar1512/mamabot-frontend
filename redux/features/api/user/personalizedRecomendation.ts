@@ -19,7 +19,7 @@ const personalizedRecomendation = baseApi.injectEndpoints({
           dietary_preference,
           food_items,
         },
-        providesTags: ["PersonalizedRecomendation"],
+        providesTags: ["Recommendations"],
       }),
     }),
   }),
