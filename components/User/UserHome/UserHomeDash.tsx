@@ -36,7 +36,7 @@ console.log(user,"user")
 const {data:hydration}=useGetHydrationLogsQuery(undefined)
 console.log(hydration,"hydration")
 
-const week=profile?.data.current_week
+const week=profile?.data?.current_week
 const totalGlass=hydration?.data.glass_count
 console.log(totalGlass)
 const total = 10
@@ -467,7 +467,7 @@ const hydrationProgress =
 
                 <div className="flex justify-between">
                   <p className="font-medium">Plan</p>
-                  <p className="font-medium">Free</p>
+                  <p className="font-medium">{profile?.data?.user?.subscription_plan}</p>
                 </div>
               </div>
 
@@ -545,12 +545,13 @@ const hydrationProgress =
       <HydrationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        profile={profile}
         
       />
       <BabyMovementModal
         isOpen={isMovementModalOpen}
         onClose={() => setIsMovementModalOpen(false)}
-        pregnancyWeek={22}
+      profile={profile}
       />
     </div>
   );

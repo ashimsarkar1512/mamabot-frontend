@@ -13,13 +13,14 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { 
-  IUpdateProfilePayload,
+ 
   useGetMyProfileQuery, 
   useGetUserDashboardQuery, 
   usePostMyProfileMutation 
 } from "@/redux/features/api/user/profile";
 import { toast } from "sonner"; // Assuming you use sonner or similar for feedback
 import Loading from "@/components/Loading";
+import { IUpdateProfilePayload } from "@/types/user/profile";
 
 type ToggleState = {
   kickReminders: boolean;

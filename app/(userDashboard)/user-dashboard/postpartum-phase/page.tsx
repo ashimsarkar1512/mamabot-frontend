@@ -282,12 +282,12 @@ export default function UserHomeDashboard() {
       <HydrationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        currentGlasses={8}
+       
       />
       <BabyMovementModal
         isOpen={isMovementModalOpen}
         onClose={() => setIsMovementModalOpen(false)}
-        pregnancyWeek={22} // you might want to make this dynamic too
+       
       />
     </div>
   );

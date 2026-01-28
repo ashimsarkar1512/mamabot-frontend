@@ -1,14 +1,54 @@
+
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { useCreatePersonalizationMutation, useGetPersonalizationQuery } from "@/redux/features/api/user/settings/personalizeSetting";
+import Loading from "@/components/Loading";
+import { toast } from "sonner";
+
+
 type Props = {
   activeTab: string;
 };
+
 const Personalization = ({ activeTab }: Props) => {
-  const [aiTone, setAiTone] = useState("Empathetic");
-  const [chatbotSpeed, setChatbotSpeed] = useState("Normal");
-  const [backgroundSound, setBackgroundSound] = useState("Enable");
+  // State for your settings
+  const [aiTone, setAiTone] = useState("empathetic");
+  const [chatbotSpeed, setChatbotSpeed] = useState("normal");
+  const [backgroundSound, setBackgroundSound] = useState("enabled");
+
+  // Fetch personalization from API
+  const { data, isLoading,  } = useGetPersonalizationQuery(undefined);
+  const [createPersonalization, { isLoading: isSaving }] = useCreatePersonalizationMutation();
+  console.log(data,"sdhfksdhfks")
+
+  // When API data arrives, set state
+  useEffect(() => {
+    if (data?.data) {
+      setAiTone(data.data.AI_tone || "empathetic");
+      setChatbotSpeed(data.data.chatbot_speed || "normal");
+      setBackgroundSound(data.data.background_sound || "enabled");
+    }
+  }, [data]);
+
+const handleSave = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("AI_tone", aiTone.toLowerCase());
+    formData.append("chatbot_speed", chatbotSpeed.toLowerCase());
+    formData.append("background_sound", backgroundSound.toLowerCase());
+
+    // Always POST first (create or update on backend)
+    await createPersonalization(formData).unwrap();
+
+    toast.success("Settings saved successfully!");
+  } catch (error) {
+    console.error("Failed to save settings:", error);
+    toast.error("Error saving settings.");
+  }
+};
+  if (isLoading) return <Loading/>;
 
   return (
     <div className=" bg-white/25 border-2  rounded-2xl !border-white ">
@@ -37,7 +77,6 @@ const Personalization = ({ activeTab }: Props) => {
               </label>
               
               <div className="relative  w-2/3 flex items-center gap-2">
-                {/* Bullet */}
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center rounded-full bg-white shadow-sm text-primary text-4xl font-bold pointer-events-none">
                   •
                 </span>
@@ -47,10 +86,9 @@ const Personalization = ({ activeTab }: Props) => {
                   onChange={(e) => setAiTone(e.target.value)}
                   className="w-full pl-10 appearance-none bg-white/25 border-2 !border-white shadow-md rounded-lg px-4 py-3 pr-10 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#229ECF] focus:border-transparent cursor-pointer"
                 >
-                  <option>Empathetic</option>
-                  <option>Professional</option>
-                  <option>Casual</option>
-                  <option>Friendly</option>
+                  <option value="empathetic">Empathetic</option>
+                  <option value="professional">Professional</option>
+                  <option value="casual">Casual</option>
                 </select>
 
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
@@ -68,13 +106,16 @@ const Personalization = ({ activeTab }: Props) => {
                 </span>
               </label>
 
-              {["Calm", "Normal", "Fast"].map((speed) => {
-                const isActive = chatbotSpeed === speed;
-
+              {[
+                { label: "Calm", value: "calm" },
+                { label: "Normal", value: "normal" },
+                { label: "Fast", value: "fast" }
+              ].map((speed) => {
+                const isActive = chatbotSpeed === speed.value;
                 return (
                   <button
-                    key={speed}
-                    onClick={() => setChatbotSpeed(speed)}
+                    key={speed.value}
+                    onClick={() => setChatbotSpeed(speed.value)}
                     className={`flex items-center cursor-pointer justify-center gap-2 py-2.5 px-8 rounded-lg text-sm font-medium transition-all ${
                       isActive
                         ? "text-[#229ECF] bg-white/25 border-2 !border-white shadow-md"
@@ -88,7 +129,7 @@ const Personalization = ({ activeTab }: Props) => {
                     >
                       •
                     </span>
-                    {speed}
+                    {speed.label}
                   </button>
                 );
               })}
@@ -105,14 +146,17 @@ const Personalization = ({ activeTab }: Props) => {
                 </span>
               </label>
               <div className="flex gap-2 w-2/3">
-                {["Enable", "Disabled"].map((option) => {
-                  const isActive = backgroundSound === option;
+                {[
+                  { label: "Enable", value: "enabled" },
+                  { label: "Disabled", value: "disabled" }
+                ].map((option) => {
+                  const isActive = backgroundSound === option.value;
                   return (
                     <button
-                      key={option}
-                      onClick={() => setBackgroundSound(option)}
+                      key={option.value}
+                      onClick={() => setBackgroundSound(option.value)}
                       className={`flex items-center gap-6 justify-center cursor-pointer hover:opacity-80 py-2.5 px-6 rounded-lg text-sm font-medium transition-all ${
-                        backgroundSound === option
+                        backgroundSound === option.value
                           ? "text-[#229ECF] bg-white/25 border-2 !border-white shadow-md"
                           : "text-gray-600"
                       }`}
@@ -124,11 +168,22 @@ const Personalization = ({ activeTab }: Props) => {
                       >
                         •
                       </span>
-                      {option}
+                      {option.label}
                     </button>
                   );
                 })}
               </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="px-6 py-5">
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="bg-[#229ECF] hover:bg-[#1b82b8] text-white font-medium py-3 px-6 rounded-lg shadow-md transition-all disabled:opacity-50"
+              >
+                {isSaving ? "Saving..." : "Save Settings"}
+              </button>
             </div>
           </div>
         </div>
