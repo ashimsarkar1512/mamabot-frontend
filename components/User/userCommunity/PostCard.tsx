@@ -15,18 +15,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { format, formatDistanceToNow } from "date-fns";
 
 const PostCard = ({ post }: { post: any }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(post.stats.likes);
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCount((prev: any) => (isLiked ? prev - 1 : prev + 1));
-  };
 
   const formatNumber = (num: number) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num;
@@ -48,14 +42,20 @@ const PostCard = ({ post }: { post: any }) => {
     <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
       {/* Group Header Line */}
       <div className="flex justify-between items-center pb-3">
-        <h3 className="font-medium text-gray-700 text-lg">{post.groupName}</h3>
-        {isSaved ? (
+        <h3 className="font-medium text-gray-700 text-lg">
+          {post.groupName ? post.groupName : "Group name"}
+        </h3>
+        {/* api not integrated here ------------------------ */}
+        {/* {isSaved ? (
           <BookmarkIcon className="w-5 h-5 text-[#229ECF] fill-[#229ECF]" />
         ) : (
           <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
             <Plus className="w-4 h-4 mr-1" /> Join Group
           </button>
-        )}
+        )} */}
+        <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
+          <Plus className="w-4 h-4 mr-1" /> Join Group
+        </button>
       </div>
 
       {/* User Info Row */}
@@ -63,24 +63,34 @@ const PostCard = ({ post }: { post: any }) => {
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-200">
             <Image
-              src={post.user.avatar}
-              alt={post.user.name}
+              src={
+                post.user.image
+                  ? post.user.image
+                  : "https://i.pravatar.cc/150?u=sarah"
+              }
+              alt={post.user.first_name}
               fill
               className="object-cover"
             />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-bold text-gray-900">{post.user.name}</span>
-              <span className="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded-full font-medium border border-pink-100">
-                {post.user.week}
+              <span className="font-medium text-sky-500">
+                {post.user.first_name} {post.user.last_name}
               </span>
-              <button className="text-pink-500 text-xs font-medium flex items-center gap-1 hover:text-pink-600">
+              <span className="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded-full font-medium border border-pink-100">
+                Week {post.week}
+              </span>
+              {/* <button className="text-pink-500 text-xs font-medium flex items-center gap-1 hover:text-pink-600">
                 <UserPlus className="w-3 h-3" />
                 {post.user.isFollowing ? "Following" : "Follow"}
-              </button>
+              </button> */}
             </div>
-            <span className="text-xs text-gray-400">{post.timeAgo}</span>
+            <span className="text-xs text-gray-400">
+              {formatDistanceToNow(new Date(post.updated_at), {
+                addSuffix: true,
+              })}
+            </span>
           </div>
         </div>
         <div className="relative" ref={menuRef}>
@@ -111,6 +121,14 @@ const PostCard = ({ post }: { post: any }) => {
               >
                 Hide Post
               </button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                }}
+                className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition"
+              >
+                Report
+              </button>
             </div>
           )}
         </div>
@@ -121,30 +139,34 @@ const PostCard = ({ post }: { post: any }) => {
         <h4 className="font-semibold text-gray-900 mb-2">{post.title}</h4>
         <p className="text-gray-600 text-sm leading-relaxed mb-2">
           {post.content}
-          <span className="text-pink-500 font-medium cursor-pointer ml-1 hover:underline">
-            Read More
-          </span>
+          {post.content.length > 100 && (
+            <span className="text-pink-500 font-medium cursor-pointer ml-1 hover:underline">
+              Read More
+            </span>
+          )}
         </p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-3">
-          {post.tags.map((tag: any, idx: any) => (
-            <span
-              key={idx}
-              className="bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full border border-gray-200"
-            >
-              #{tag}
-            </span>
-          ))}
+          {post.tags
+            ? post.tags.map((tag: any, idx: any) => (
+                <span
+                  key={idx}
+                  className="bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full border border-gray-200"
+                >
+                  #{tag}
+                </span>
+              ))
+            : null}
         </div>
       </div>
 
       {/* Images Grid */}
-      {post.images.length > 0 && (
+      {post.image_urls && post.image_urls.length > 0 ? (
         <div
-          className={`grid gap-2 mb-4 rounded-xl overflow-hidden ${post.images.length > 1 ? "grid-cols-2 h-64" : "grid-cols-1 h-72"}`}
+          className={`grid gap-2 mb-4 rounded-xl overflow-hidden ${post.image_urls.length > 1 ? "grid-cols-2 h-64" : "grid-cols-1 h-72"}`}
         >
-          {post.images.map((img: any, idx: any) => (
+          {post.image_urls.map((img: any, idx: any) => (
             <div key={idx} className="relative h-full w-full">
               <Image
                 src={img}
@@ -155,33 +177,30 @@ const PostCard = ({ post }: { post: any }) => {
             </div>
           ))}
         </div>
-      )}
+      ) : null}
 
       {/* Stats Line */}
       <div className="flex items-center justify-between text-xs text-gray-500 mb-3 px-1">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1 text-pink-500">
             <Heart className="w-3.5 h-3.5 fill-current" />{" "}
-            {formatNumber(likeCount)}
+            {formatNumber(post.likes_count)}
           </span>
           <span className="flex items-center gap-1 text-sky-500">
-            <MessageSquare className="w-3.5 h-3.5" /> {post.stats.comments}
+            <MessageSquare className="w-3.5 h-3.5" /> {post.comments_count}
           </span>
         </div>
         <span className="flex items-center gap-1">
-          <Share2 className="w-3.5 h-3.5" /> {post.stats.shares}
+          <Share2 className="w-3.5 h-3.5" /> {post.shares_count}
         </span>
       </div>
 
       {/* Action Buttons */}
       <div className="flex items-center justify-between border-t border-b border-gray-200! py-2 mb-4">
         <button
-          onClick={handleLike}
-          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors ${
-            isLiked ? "text-pink-500" : "text-gray-500 hover:text-gray-700"
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors text-gray-500 hover:text-gray-700`}
         >
-          <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} /> Like
+          <Heart className={`w-4 h-4`} /> Like
         </button>
         <button className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 py-1 transition-colors">
           <MessageSquare className="w-4 h-4" /> Comment
