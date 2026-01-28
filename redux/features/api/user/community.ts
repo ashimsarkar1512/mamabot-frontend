@@ -9,9 +9,17 @@ const community = baseApi.injectEndpoints({
         providesTags: ["Community"],
       }),
     }),
+    getCommunityGroups: builder.query({
+      query: () => ({
+        url: "/community-groups",
+        method: "GET",
+        providesTags: ["Community"],
+      }),
+    }),
   }),
 });
 
-export const { useGetCommunityPostsQuery } = community;
+export const { useGetCommunityPostsQuery, useGetCommunityGroupsQuery } =
+  community;
 
 export default community;
