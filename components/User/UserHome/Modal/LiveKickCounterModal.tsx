@@ -7,20 +7,28 @@ import {
   ChevronRight,
   Pause,
   Save,
-  CheckCircle2, 
+  CheckCircle2,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import MovementHistoryModal from "./MovementHistoryModal";
+import { useCreatebabyMovementLogMutation } from "@/redux/features/api/user/baby-movement-logs";
+import { toast } from "sonner";
 
 interface LiveKickCounterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  trackingData: {
+    week: number;
+    date: string;
+    time:string;
+  };
 }
 
 export default function LiveKickCounterModal({
   isOpen,
   onClose,
+  trackingData,
 }: LiveKickCounterModalProps) {
   const MAX_KICKS = 15;
 
@@ -28,9 +36,15 @@ export default function LiveKickCounterModal({
   const [seconds, setSeconds] = useState(0);
   const [isTracking, setIsTracking] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [isSaved, setIsSaved] = useState(false); 
+  const [isSaved, setIsSaved] = useState(false);
   const [note, setNote] = useState("");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [startTime, setStartTime] = useState<string | null>(null);
+
+  console.log(trackingData, "tracking data ");
+
+  const [createBabyMovement]=useCreatebabyMovementLogMutation()
+  
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isTracking && !isFinished) {
@@ -40,6 +54,14 @@ export default function LiveKickCounterModal({
     }
     return () => clearInterval(interval);
   }, [isTracking, isFinished]);
+  const [finishedTracking, setFinishedTracking] = useState<{
+    week: number;
+    date: string;
+    kicks: number;
+    duration: string;
+    startTime: string;
+    endTime: string;
+  } | null>(null);
 
   const formatTime = (secs: number) => {
     const min = String(Math.floor(secs / 60)).padStart(2, "0");
@@ -47,12 +69,14 @@ export default function LiveKickCounterModal({
     return `${min}:${sec}`;
   };
 
-  const handleKickCount = () => {
-    if (kicks < MAX_KICKS && !isFinished) {
-      setKicks((prev) => prev + 1);
-      if (!isTracking) setIsTracking(true);
-    }
-  };
+ const handleKickCount = () => {
+  if (kicks < MAX_KICKS && !isFinished) {
+    if (!isTracking) setIsTracking(true);
+    if (!startTime) setStartTime(new Date().toISOString()); // set start time only once
+    setKicks((prev) => prev + 1);
+  }
+};
+
 
   const handleReset = () => {
     setKicks(0);
@@ -63,15 +87,49 @@ export default function LiveKickCounterModal({
     setNote("");
   };
 
-  const handleFinish = () => {
-    setIsTracking(false);
-    setIsFinished(true);
-  };
+const handleFinish = () => {
+  setIsTracking(false);
+  setIsFinished(true);
 
-  const handleSaveLog = () => {
-    console.log("Saving Log...");
-    setIsSaved(true); 
-  };
+  const endTime = new Date().toISOString(); // current timestamp
+
+  setFinishedTracking({
+    week: trackingData.week,
+    date: trackingData.date,
+    kicks: kicks,
+    duration: formatTime(seconds),
+    startTime: startTime || endTime, // fallback if somehow startTime is null
+    endTime: endTime,
+  });
+};
+
+
+ const handleSaveLog = async () => {
+  if (!finishedTracking) return;
+
+  try {
+    const movementStatus = finishedTracking.kicks >= 10 ? "normal" : "reduced";
+
+    const payload = {
+      log_date: new Date(finishedTracking.date).toISOString().split("T")[0], // yyyy-mm-dd
+        start_time: finishedTracking.startTime.split("T")[1].split(".")[0],
+      end_time: new Date().toISOString().split("T")[1].split(".")[0], // hh:mm:ss
+      kick_count: finishedTracking.kicks,
+      movement_status: movementStatus, // ✅ fixed
+      pregnancy_week: finishedTracking.week,
+      note: note || "",
+    };
+
+    await createBabyMovement(payload).unwrap();
+
+    toast.success("Baby movement log saved successfully!");
+    setIsSaved(true);
+  } catch (error: any) {
+    console.error(error);
+    toast.error(error?.data?.error || "Failed to save the log. Please try again.");
+  }
+};
+
 
   const handleAllClose = () => {
     setIsHistoryOpen(false);
@@ -95,7 +153,6 @@ export default function LiveKickCounterModal({
           /* --- LOG SAVED SUCCESS MODAL --- */
           <div className="flex flex-col items-center justify-center animate-in fade-in zoom-in duration-300">
             <div className="mb-6">
-            
               <CheckCircle2
                 size={100}
                 className="text-green-500 stroke-[1.5]"
@@ -107,7 +164,7 @@ export default function LiveKickCounterModal({
             </h2>
 
             <button
-             onClick={() => setIsHistoryOpen(true)}
+              onClick={() => setIsHistoryOpen(true)}
               className="flex items-center gap-2 px-8 py-3 border border-gray-200 rounded-xl text-slate-600 font-medium hover:bg-gray-50 transition-colors"
             >
               <RotateCcw size={18} />
@@ -118,8 +175,13 @@ export default function LiveKickCounterModal({
           /* --- KICK COUNTER INTERFACE --- */
           <>
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-2xl">
-                👶
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <Image
+                  src="/images/user/baby1.png"
+                  width={36}
+                  height={36}
+                  alt="baby"
+                />
               </div>
               <h2 className="text-[20px] font-medium text-slate-700">
                 Live Kick Counter
@@ -194,8 +256,13 @@ export default function LiveKickCounterModal({
           /* --- TRACKING SUMMARY INTERFACE --- */
           <div className="animate-in slide-in-from-right duration-300">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-2xl">
-                👶
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <Image
+                  src="/images/user/baby1.png"
+                  width={36}
+                  height={36}
+                  alt="baby"
+                />
               </div>
               <h2 className="text-[20px] font-medium text-slate-700">
                 Tracking Summary
@@ -268,10 +335,11 @@ export default function LiveKickCounterModal({
           </div>
         )}
       </div>
-      <MovementHistoryModal 
-        isOpen={isHistoryOpen} 
-        onClose={handleAllClose} 
-        onBack={() => setIsHistoryOpen(false)} 
+      <MovementHistoryModal
+        isOpen={isHistoryOpen}
+        onClose={handleAllClose}
+        onBack={() => setIsHistoryOpen(false)}
+        trackingLog={finishedTracking}
       />
     </div>
   );

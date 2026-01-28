@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { X, Calendar, Clock, RefreshCw, Play } from "lucide-react";
@@ -7,17 +5,31 @@ import { useState } from "react";
 import LiveKickCounterModal from "./LiveKickCounterModal";
 import Image from "next/image";
 import MovementHistoryModal from "./MovementHistoryModal";
+import { IProfileResponse } from "@/types/user/profile";
 
 interface BabyMovementModalProps {
   isOpen: boolean;
   onClose: () => void;
-  pregnancyWeek: number;
+  profile?: IProfileResponse;
 }
 
-export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 }: BabyMovementModalProps) {
+export default function BabyMovementModal({
+  isOpen,
+  onClose,
+  profile,
+}: BabyMovementModalProps) {
+  const pregnancyWeek = profile?.data?.current_week ?? 0;
   const [currentDate] = useState(new Date());
   const [isKickCounterOpen, setIsKickCounterOpen] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [trackingData, setTrackingData] = useState<{
+  week: number;
+  date: string;
+  time:string;
+} | null>(null);
+
+
+  console.log(profile, "profile fserwerte");
 
   // Fixed: Check isOpen first, before rendering other modals
   if (!isOpen) return null;
@@ -26,7 +38,7 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
   if (showHistory) {
     return (
       <MovementHistoryModal
-        isOpen={true} 
+        isOpen={true}
         onClose={() => {
           setShowHistory(false);
           onClose();
@@ -37,33 +49,46 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
   }
 
   // Render kick counter modal
-  if (isKickCounterOpen) {
-    return (
-      <LiveKickCounterModal 
-        isOpen={true} 
-        onClose={() => {
-          setIsKickCounterOpen(false);
-          onClose();
-        }}
-      />
-    );
-  }
+  if (isKickCounterOpen && trackingData) {
+  return (
+    <LiveKickCounterModal
+      isOpen={true}
+      onClose={() => {
+        setIsKickCounterOpen(false);
+        onClose();
+      }}
+      trackingData={trackingData} // ✅ pass week + date here
+    />
+  );
+}
+
 
   const formatDate = () => {
-    return currentDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  };
-
-  const formatTime = () => {
-    return currentDate.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: true 
+    return currentDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
-  const handleStartTracking = () => {
-    setIsKickCounterOpen(true);
+  const formatTime = () => {
+    return currentDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
+
+const handleStartTracking = () => {
+  setTrackingData({
+    week: pregnancyWeek,
+    date: formatDate(),
+    time:formatTime()
+  });
+  setIsKickCounterOpen(true);
+};
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -78,11 +103,20 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
-              <Image src="/images/user/baby1.png" width={36} height={36} alt="baby" />
+              <Image
+                src="/images/user/baby1.png"
+                width={36}
+                height={36}
+                alt="baby"
+              />
             </div>
-            <h2 className="text-3xl font-bold text-gray-800">Monitor Baby Movement</h2>
+            <h2 className="text-3xl font-bold text-gray-800">
+              Monitor Baby Movement
+            </h2>
           </div>
-          <p className="text-gray-600 text-base">Track your baby's kicks to monitor their well-being</p>
+          <p className="text-gray-600 text-base">
+            Track your baby's kicks to monitor their well-being
+          </p>
         </div>
 
         <div className="bg-linear-to-br from-pink-50 to-purple-50 rounded-2xl p-6 mb-6 border border-pink-100">
@@ -91,7 +125,9 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
                 <Calendar className="h-5 w-5 text-pink-500" />
               </div>
-              <span className="text-gray-700 font-medium text-lg">Pregnancy Week</span>
+              <span className="text-gray-700 font-medium text-lg">
+                Pregnancy Week
+              </span>
             </div>
             <div className="px-6 py-2 bg-linear-to-r from-pink-500 to-pink-600 text-white font-bold rounded-full text-lg shadow-md">
               Week {pregnancyWeek}
@@ -103,11 +139,27 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
                 <Clock className="h-5 w-5 text-purple-500" />
               </div>
-              <span className="text-gray-700 font-medium text-lg">Date & Time</span>
+              <span className="text-gray-700 font-medium text-lg">
+                Date & Time
+              </span>
             </div>
             <div className="text-right">
-              <div className="text-gray-800 font-semibold">{formatDate()}</div>
-              <div className="text-gray-600 text-sm mt-0.5">{formatTime()}</div>
+              <div className="text-gray-800 font-semibold">
+                {currentDate.toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </div>
+              <div className="text-gray-600 text-sm mt-0.5">
+                {currentDate.toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: true,
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -117,7 +169,10 @@ export default function BabyMovementModal({ isOpen, onClose, pregnancyWeek = 22 
             <span className="text-2xl">💡</span>
             <div>
               <h3 className="font-semibold text-gray-800 mb-1.5">Tip</h3>
-              <p className="text-blue-800 leading-relaxed">Relax in a comfortable position and start counting every movement you feel.</p>
+              <p className="text-blue-800 leading-relaxed">
+                Relax in a comfortable position and start counting every
+                movement you feel.
+              </p>
             </div>
           </div>
         </div>

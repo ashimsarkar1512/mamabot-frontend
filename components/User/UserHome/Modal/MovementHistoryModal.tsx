@@ -6,15 +6,24 @@ interface MovementHistoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onBack: () => void;
+   trackingLog?: {
+    week: number;
+    date: string;
+    kicks: number;
+    duration: string;
+  } | null;
 }
 
-export default function MovementHistoryModal({ isOpen, onClose, onBack }: MovementHistoryModalProps) {
+export default function MovementHistoryModal({ isOpen, onClose, onBack,trackingLog }: MovementHistoryModalProps) {
+  console.log(trackingLog,"tracking")
   if (!isOpen) return null;
 
   const historyData = [
     { id: 1, date: "2025-10-21", time: "09:32 AM", kicks: 15, duration: "0:08", status: "Normal" },
     { id: 2, date: "2025-10-19", time: "05:45 PM", kicks: 8, duration: "65:00", status: "Below Average" },
   ];
+
+  
 
   return (
     <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">

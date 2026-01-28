@@ -208,7 +208,7 @@
 "use client";
 
 import { useCreateHydrationLogMutation, useGetHydrationLogsQuery } from "@/redux/features/api/user/hydration";
-import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
+import { IProfileResponse } from "@/types/user/profile";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -217,25 +217,35 @@ import { toast } from "sonner";
 interface HydrationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  profile?: IProfileResponse;
+
 }
 
-export default function HydrationModal({ isOpen, onClose }: HydrationModalProps) {
+export default function HydrationModal({ isOpen, onClose,profile }: HydrationModalProps) {
   const maxGlasses = 10;
 
   // Redux queries
-  const { data: profile } = useGetMyProfileQuery(undefined);
+ 
   const { data: hydrationLogs, isLoading: isFetchingLogs } = useGetHydrationLogsQuery(undefined);
+  console.log(hydrationLogs,"hayfsferdf")
   const [createHydration, { isLoading: isPosting }] = useCreateHydrationLogMutation();
 
   // ✅ Determine today's log
-  const todayLog = hydrationLogs?.data?.log_date
-    ? hydrationLogs.data
-    : null;
+const todayLog = hydrationLogs?.data ?? null;
+  
+
+    console.log(todayLog,"fkjlatfg")
 
   // State
-  const [glasses, setGlasses] = useState<number>(todayLog?.glass_count || 0);
-  const [seconds, setSeconds] = useState<number>(todayLog?.duration_seconds || 0);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
+ const [glasses, setGlasses] = useState<number>(todayLog?.glass_count || 0);
+const [seconds, setSeconds] = useState<number>(todayLog?.duration_seconds || 0);
+const [isRunning, setIsRunning] = useState<boolean>(false);
+useEffect(() => {
+  if (todayLog) {
+    setGlasses(todayLog.glass_count);
+    setSeconds(todayLog.duration_seconds);
+  }
+}, [todayLog]);
 
   // Timer logic
   useEffect(() => {

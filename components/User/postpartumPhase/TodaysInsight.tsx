@@ -10,8 +10,14 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { useGetFeedingLogsQuery } from "@/redux/features/api/user/postpurtum/babyfeeding";
 
 const TodaysInsight = ({ mockData }: { mockData: any }) => {
+
+  const{data}=useGetFeedingLogsQuery(undefined)
+  console.log(data)
+  const lastFeedingHoursAgo = data?.data?.last_feeding_hours_ago ?? 0;
+
   return (
     <Card className="overflow-hidden shadow-sm border-2 border-white! bg-sky-50/50 rounded-xl">
       {/* Header */}
@@ -39,7 +45,7 @@ const TodaysInsight = ({ mockData }: { mockData: any }) => {
               <p className="text-sm text-gray-600">
                 Last feeding{" "}
                 <span className="font-medium text-pink-600">
-                  {mockData.lastFeeding}
+                  {lastFeedingHoursAgo} hrs
                 </span>
               </p>
             </div>

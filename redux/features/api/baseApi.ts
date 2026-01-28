@@ -48,6 +48,6 @@ const dynamicBaseQuery = fetchBaseQuery({
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: dynamicBaseQuery,
-  tagTypes: ["User", "Products", "Profile","Dashboard","Hydration"],
+  tagTypes: ["User", "Products", "Profile","Dashboard","Hydration","Movement","Personalize","NotificationSetting","FeedingLogs","RecoveryLogs"],
   endpoints: () => ({}),
 });
