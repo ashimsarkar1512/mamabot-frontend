@@ -16,34 +16,76 @@ import SummeryTable from "./reusable/SummeryTable";
 import LastModalHeader from "./reusable/LastModalHeader";
 import TipsCard from "./reusable/TipsCard";
 import FirstStep from "./reusable/FirstStep";
+import { 
+  useCreateSleepTrackingMutation, 
+  useGetSleepTrackingsQuery 
+} from "@/redux/features/api/user/postpurtum/sleepTrackerLog";
+import { toast } from "sonner";
 
 type SleepEntry = {
   startTime: string; // "HH:mm"
   endTime: string; // "HH:mm"
-  type: "Nap" | "Night Sleep";
-  quality: "Calm" | "Restless" | "Interrupted";
+  type: "nap" | "night";
+  quality: "calm" | "restless" | "interrupted";
   notes?: string;
   durationMin: number;
+};
+
+type SleepSummary = {
+  total: string;
+  naps: string;
+  night: string;
+  timeline: any[];
 };
 
 export default function BabySleepTrackingModal() {
   const [step, setStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Today's sleep sessions (reset on mount or use date-keyed storage in prod)
-  const [todaySleeps, setTodaySleeps] = useState<SleepEntry[]>([]);
+  // Fetch existing sleep data
+  const { data: sleepData, isLoading } = useGetSleepTrackingsQuery(undefined);
+  const [createSleepTracking] = useCreateSleepTrackingMutation();
+  console.log(sleepData,"sleepdata")
 
   const [currentSleep, setCurrentSleep] = useState<SleepEntry>({
     startTime: "",
     endTime: "",
-    type: "Nap",
-    quality: "Calm",
+    type: "nap",
+    quality: "calm",
     notes: "",
     durationMin: 0,
   });
 
-  const next = () => setStep((s) => s + 1);
-  const back = () => setStep((s) => s - 1);
+  const [summary, setSummary] = useState<SleepSummary>({
+    total: "0 hours",
+    naps: "0 sessions",
+    night: "0 long stretch",
+    timeline: [],
+  });
+
+  // Load existing data from GET API
+  useEffect(() => {
+    if (sleepData?.data) {
+      console.log("Sleep data loaded:", sleepData.data);
+      setSummary({
+        total: sleepData.data.total_sleep_today || "0 hours",
+        naps: sleepData.data.naps || "0 sessions",
+        night: sleepData.data.night || "0 long stretch",
+        timeline: sleepData.data.timeline || [],
+      });
+    }
+  }, [sleepData]);
+
+  const next = () => {
+    setError(null);
+    setStep((s) => s + 1);
+  };
+
+  const back = () => {
+    setError(null);
+    setStep((s) => s - 1);
+  };
 
   const updateField = (field: keyof SleepEntry, value: any) => {
     setCurrentSleep((prev) => {
@@ -62,49 +104,104 @@ export default function BabySleepTrackingModal() {
     });
   };
 
+  // Build payload for API
+  const buildPayload = () => {
+    const today = new Date().toISOString().split("T")[0];
+    
+    // Combine date with times
+    const startDateTime = `${today} ${currentSleep.startTime}:00`;
+    const endDateTime = `${today} ${currentSleep.endTime}:00`;
+
+    return {
+      start_time: startDateTime,
+      end_time: endDateTime,
+      sleep_type: currentSleep.type,
+      sleep_quality: currentSleep.quality,
+      notes: currentSleep.notes || null,
+    };
+  };
+
   const handleSave = async () => {
-    setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 800)); // simulate API
+    // Validation
+    if (!currentSleep.startTime || !currentSleep.endTime) {
+      setError("Please select both start and end time");
+      toast.error("Please select both start and end time");
+      return;
+    }
 
-    setTodaySleeps((prev) => [...prev, { ...currentSleep }]);
+    if (currentSleep.durationMin <= 0) {
+      setError("End time must be after start time");
+      toast.error("End time must be after start time");
+      return;
+    }
 
-    setIsSubmitting(false);
-    next(); // → success
+    try {
+      setIsSubmitting(true);
+      setError(null);
+
+      const payload = buildPayload();
+      console.log("Submitting sleep log:", payload);
+
+      const response = await createSleepTracking(payload).unwrap();
+      console.log("Sleep log saved:", response);
+
+      // Update summary if response contains it
+      if (response?.data) {
+        setSummary({
+          total: response.data.total_sleep_today || summary.total,
+          naps: response.data.naps || summary.naps,
+          night: response.data.night || summary.night,
+          timeline: response.data.timeline || summary.timeline,
+        });
+      }
+
+      toast.success("Sleep session logged successfully!");
+      next();
+    } catch (error: any) {
+      console.error("Failed to save sleep log", error);
+
+      let errorMessage = "Failed to save sleep log. Please try again.";
+      if (error?.data?.message) {
+        errorMessage = error.data.message;
+      } else if (error?.data?.error) {
+        errorMessage = error.data.error;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFinish = () => {
     setStep(0);
-    setTodaySleeps([]);
+    setError(null);
     setCurrentSleep({
       startTime: "",
       endTime: "",
-      type: "Nap",
-      quality: "Calm",
+      type: "nap",
+      quality: "calm",
       notes: "",
       durationMin: 0,
     });
-    // modal closes via DialogClose
+    toast.success("Sleep tracking completed!");
   };
 
-  const getSummary = () => {
-    const totalMin = todaySleeps.reduce((sum, s) => sum + s.durationMin, 0);
-    const totalHours = Math.floor(totalMin / 60);
-    const totalMins = totalMin % 60;
+  // Calculate progress percentage
+  const totalSteps = 2;
+  const progressPercentage = (step / totalSteps) * 100;
 
-    const naps = todaySleeps.filter((s) => s.type === "Nap").length;
-    const nights = todaySleeps.filter((s) => s.type === "Night Sleep").length;
-
-    return {
-      total:
-        `${totalHours} hours ${totalMins > 0 ? `${totalMins} min` : ""}`.trim(),
-      naps,
-      nights,
-    };
+  // Format duration display
+  const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}h ${mins}min`;
   };
 
   function renderStep() {
-    const { total, naps, nights } = getSummary();
-
     switch (step) {
       // STEP 0 — Intro
       case 0:
@@ -154,66 +251,95 @@ export default function BabySleepTrackingModal() {
               <label className="text-sm font-medium">Duration</label>
               <div className="p-2 bg-gray-50 border rounded text-gray-700">
                 {currentSleep.durationMin > 0
-                  ? `${Math.floor(currentSleep.durationMin / 60)}h ${currentSleep.durationMin % 60}min`
+                  ? formatDuration(currentSleep.durationMin)
                   : "---"}
               </div>
             </div>
 
             <div className="space-y-2">
               <p className="text-sm font-medium">Sleep type</p>
-              {["Nap", "Night Sleep"].map((opt) => (
-                <label
-                  key={opt}
-                  className={`flex items-center gap-2 p-2 border rounded cursor-pointer ${
-                    currentSleep.type === opt
-                      ? "bg-[#229ECF]/10 border-[#229ECF]/40"
-                      : "border-gray-200"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    checked={currentSleep.type === opt}
-                    onChange={() => updateField("type", opt)}
-                    className="accent-[#229ECF]"
-                  />
-                  {opt}
-                </label>
-              ))}
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { value: "nap", label: "Nap" },
+                  { value: "night", label: "Night Sleep" },
+                ].map((opt) => (
+                  <label
+                    key={opt.value}
+                    className={`flex items-center gap-2 p-3 border rounded cursor-pointer transition-colors ${
+                      currentSleep.type === opt.value
+                        ? "bg-[#229ECF]/10 border-[#229ECF]/40"
+                        : "border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      checked={currentSleep.type === opt.value}
+                      onChange={() => updateField("type", opt.value)}
+                      className="accent-[#229ECF]"
+                    />
+                    <span className="text-sm">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div className="space-y-2">
               <p className="text-sm font-medium">Quality</p>
-              {["Calm", "Restless", "Interrupted"].map((opt) => (
-                <label
-                  key={opt}
-                  className={`flex items-center gap-2 p-2 border rounded cursor-pointer ${
-                    currentSleep.quality === opt
-                      ? "bg-[#229ECF]/10 border-[#229ECF]/40"
-                      : "border-gray-200"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    checked={currentSleep.quality === opt}
-                    onChange={() => updateField("quality", opt)}
-                    className="accent-[#229ECF]"
-                  />
-                  {opt}
-                </label>
-              ))}
+              <div className="space-y-2">
+                {[
+                  { value: "calm", label: "Calm" },
+                  { value: "restless", label: "Restless" },
+                  { value: "interrupted", label: "Interrupted" },
+                ].map((opt) => (
+                  <label
+                    key={opt.value}
+                    className={`flex items-center gap-2 p-2 border rounded cursor-pointer transition-colors ${
+                      currentSleep.quality === opt.value
+                        ? "bg-[#229ECF]/10 border-[#229ECF]/40"
+                        : "border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      checked={currentSleep.quality === opt.value}
+                      onChange={() => updateField("quality", opt.value)}
+                      className="accent-[#229ECF]"
+                    />
+                    <span className="text-sm">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div className="space-y-1">
-              <label className="text-sm font-medium">Notes</label>
+              <label className="text-sm font-medium">Notes (Optional)</label>
               <textarea
                 placeholder="e.g., colic, crying, feeding before sleep..."
                 value={currentSleep.notes}
                 onChange={(e) => updateField("notes", e.target.value)}
-                className="w-full h-20 p-3 bg-[#229ECF]/5 border border-[#229ECF]/20 rounded resize-none"
+                className="w-full h-20 p-3 bg-[#229ECF]/5 border border-[#229ECF]/20 rounded resize-none text-sm"
               />
             </div>
 
-            <StepControllButtons back={back} next={handleSave} />
+            {error && (
+              <div className="flex items-center gap-2 py-3 px-4 bg-red-50 rounded border border-red-200">
+                <p className="text-red-600 font-medium text-sm">{error}</p>
+              </div>
+            )}
+
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={back}>
+                Back
+              </Button>
+              <Button
+                variant="primary"
+                className="bg-[#229ECF] text-white"
+                onClick={handleSave}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Saving..." : "Save Session →"}
+              </Button>
+            </div>
           </div>
         );
 
@@ -227,49 +353,56 @@ export default function BabySleepTrackingModal() {
               tableTitle="Today's Summary"
               items={[
                 {
-                  label: "Total sleep today :",
+                  label: "Total sleep today:",
                   value: (
-                    <span className="text-[#229ECF] font-medium">{total}</span>
-                  ),
-                },
-                {
-                  label: "Naps :",
-                  value: (
-                    <span className="text-[#229ECF] font-medium">
-                      {naps} sessions
+                    <span className="text-[#229ECF] font-semibold">
+                      {summary.total}
                     </span>
                   ),
                 },
                 {
-                  label: "Night :",
+                  label: "Naps:",
                   value: (
-                    <span className="text-[#229ECF] font-medium">
-                      {nights} {nights === 1 ? "long stretch" : ""}
+                    <span className="text-[#229ECF] font-semibold">
+                      {summary.naps}
+                    </span>
+                  ),
+                },
+                {
+                  label: "Night:",
+                  value: (
+                    <span className="text-[#229ECF] font-semibold">
+                      {summary.night}
                     </span>
                   ),
                 },
               ]}
             />
 
-            {/* Optional: show recent sessions timeline */}
-            {todaySleeps.length > 0 && (
+            {/* Timeline of recent sessions */}
+            {summary.timeline && summary.timeline.length > 0 && (
               <div className="space-y-3 text-left">
                 <p className="text-sm font-medium">Recent sessions</p>
                 <div className="space-y-2">
-                  {todaySleeps.slice(-4).map((s, i) => (
+                  {summary.timeline.slice(-4).map((session: any, i: number) => (
                     <div
                       key={i}
-                      className={`p-2 rounded text-sm flex justify-between items-center ${
-                        s.type === "Night Sleep" ? "bg-pink-50" : "bg-blue-50"
+                      className={`p-3 rounded text-sm flex justify-between items-center ${
+                        session.sleep_type === "night" 
+                          ? "bg-indigo-50 border border-indigo-100" 
+                          : "bg-blue-50 border border-blue-100"
                       }`}
                     >
-                      <span>
-                        {s.startTime} –{" "}
-                        {s.type === "Nap" ? "Nap" : "Night sleep"}
-                      </span>
-                      <span className="font-medium">
-                        {Math.floor(s.durationMin / 60)}h {s.durationMin % 60}
-                        min
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {session.sleep_type === "nap" ? "Nap" : "Night Sleep"}
+                        </span>
+                        <span className="text-xs text-gray-600">
+                          {session.start_time} - {session.end_time}
+                        </span>
+                      </div>
+                      <span className="font-semibold text-[#229ECF]">
+                        {session.duration}
                       </span>
                     </div>
                   ))}
@@ -277,7 +410,7 @@ export default function BabySleepTrackingModal() {
               </div>
             )}
 
-            <TipsCard tips="Newborns typically need 14–17 hours of sleep per day (including naps)." />
+            <TipsCard tips="Newborns typically need 14–17 hours of sleep per day (including naps). Track patterns to understand your baby's sleep needs better." />
 
             <DialogClose asChild>
               <Button
@@ -294,9 +427,29 @@ export default function BabySleepTrackingModal() {
 
   return (
     <DialogContent className="max-w-md sm:max-w-lg p-6">
-      <DialogHeader className="sr-only">
+      <DialogHeader>
         <DialogTitle>Baby Sleep Tracking</DialogTitle>
       </DialogHeader>
+
+      {/* Progress Bar - Show during steps 1-2 */}
+      {step > 0 && (
+        <div className="mb-4">
+          <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+            <span>
+              {step === 1 ? "Add Session" : "Complete"}
+            </span>
+            <span>{Math.round(progressPercentage)}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full transition-all duration-300 ${
+                step === 2 ? "bg-green-600" : "bg-[#229ECF]"
+              }`}
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       {renderStep()}
     </DialogContent>

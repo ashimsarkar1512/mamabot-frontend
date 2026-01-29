@@ -5,6 +5,7 @@ import PostCard from "@/components/User/userCommunity/PostCard";
 import ResourcesTips from "@/components/User/userCommunity/ResourcesTips";
 import SuggestedGroups from "@/components/User/userCommunity/SuggestedGroups";
 import Community from "@/public/images/user/community.png";
+import { useGetCommunityPostsQuery } from "@/redux/features/api/user/community";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -100,6 +101,8 @@ const buttons: ButtonTypes[] = [
 const CommunityPage = () => {
   const [selectedBtn, setSelectedBtn] = useState<string>("");
 
+  const { data: communityPosts } = useGetCommunityPostsQuery({});
+
   return (
     <div className="flex flex-col justify-between gap-5 py-8">
       <CommunityLanding />
@@ -123,9 +126,17 @@ const CommunityPage = () => {
 
             {/* Feed Area */}
             <div className="flex flex-col">
-              {MOCK_POSTS.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
+              {communityPosts?.data.length === 0 ? (
+                <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
+                  <p className="text-gray-500 text-sm">
+                    No community posts found
+                  </p>
+                </div>
+              ) : (
+                communityPosts?.data.map((post: any) => (
+                  <PostCard key={post.id} post={post} />
+                ))
+              )}
             </div>
           </div>
         </div>

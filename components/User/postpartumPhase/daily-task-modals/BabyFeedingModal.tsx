@@ -54,6 +54,8 @@ export default function BabyFeedingModal() {
   // fetch logs (optional usage later)
 const{data}=useGetFeedingLogsQuery(undefined)
 
+console.log(data,"werweroiuoopipopewrwerwewewr")
+
 const lastFeedingHoursAgo = data?.data?.last_feeding_hours_ago ?? 0;
 
   const [createFeedingLog] = useCreateFeedingLogMutation();
@@ -97,7 +99,7 @@ const lastFeedingHoursAgo = data?.data?.last_feeding_hours_ago ?? 0;
       duration_left: Number(formData.leftSideDuration) || 0,
       duration_right: Number(formData.rightSideDuration) || 0,
       latch_quality: formData.latchQuality.toLowerCase(), // good/difficult/painful
-      delivery_type: "vaginal",
+      
     };
   };
 

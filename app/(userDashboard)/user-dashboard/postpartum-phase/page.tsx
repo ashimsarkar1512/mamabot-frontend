@@ -13,6 +13,8 @@ import TodaysInsight from "@/components/User/postpartumPhase/TodaysInsight";
 import DailyTaskGrid from "@/components/User/postpartumPhase/DailyTaskGrid";
 import MothersWellnessEnergy from "@/components/User/postpartumPhase/MothersWellnessEnergy";
 import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
+import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
+import { useRouter } from "next/navigation";
 
 // mock data for articles
 const ARTICLES_DATA = [
@@ -74,14 +76,20 @@ export default function UserHomeDashboard() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
+    const{data:profile}=useGetMyProfileQuery(undefined)
+    const week=profile?.data?.current_week
+       const router = useRouter();
 
+  const handleClick = () => {
+    router.push("/user-dashboard/profile");
+  };
   // Mock data – in real app this would come from backend based on deliveryType
   const mockProfile = {
     name: "Sarah",
     stage:
       deliveryType === "Vaginal Delivery"
-        ? "Week 4 Postpartum"
-        : "Week 4 Postpartum (C-Section)",
+        ? `Week ${week} Postpartum`
+        : `Week ${week} Postpartum (C-Section)`,
     plan: "Free",
     queriesUsed: 4,
     queriesLimit: 10,
@@ -90,7 +98,7 @@ export default function UserHomeDashboard() {
   // Mock data - in real app, this would come from backend/user tracking
   const mockDataForInsight = {
     lineText:
-      "At 4 weeks postpartum, it's normal to feel emotional changes. Gentle daily walks and proper hydration can ease recovery. Your baby may also begin making early eye contact.",
+      `At ${week} weeks postpartum, it's normal to feel emotional changes. Gentle daily walks and proper hydration can ease recovery. Your baby may also begin making early eye contact.`,
     lastFeeding: "1 hour ago",
     totalSleepHours: "3.8",
     diapers: {
@@ -245,23 +253,24 @@ export default function UserHomeDashboard() {
               <div className="space-y-4 text-sm">
                 <div className="flex justify-between items-center border-b-2 border-white! pb-2">
                   <span className="text-gray-600">Name:</span>
-                  <span className="font-medium">{mockProfile.name}</span>
+                  <span className="font-medium">{profile?.data.user.first_name}</span>
                 </div>
 
                 <div className="flex justify-between items-center border-b-2 border-white! pb-2">
                   <span className="text-gray-600">Stage:</span>
-                  <span className="font-medium">{mockProfile.stage}</span>
+                  <span className="font-medium">{profile?.data.current_week}</span>
                 </div>
 
                 <div className="flex justify-between items-center border-b-2 border-white! pb-2">
                   <span className="text-gray-600">Plan:</span>
                   <span className="font-medium bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs">
-                    {mockProfile.plan}
+                   {profile?.data?.user?.subscription_plan}
                   </span>
                 </div>
               </div>
 
               <Button
+              onClick={handleClick} 
                 variant="outline"
                 className="w-full mt-6 bg-transparent rounded-lg border border-[#229ECF]! text-[#229ECF]  flex items-center gap-2"
               >
@@ -282,7 +291,10 @@ export default function UserHomeDashboard() {
       <HydrationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+<<<<<<< HEAD
        
+=======
+>>>>>>> ahsan
       />
       <BabyMovementModal
         isOpen={isMovementModalOpen}

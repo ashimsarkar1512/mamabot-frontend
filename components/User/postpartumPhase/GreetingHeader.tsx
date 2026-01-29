@@ -1,3 +1,4 @@
+import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
 import { Users, MessageSquare, UserStar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +8,11 @@ const GreetingHeader = ({
 }: {
   deliveryType?: "Vaginal Delivery" | "C-Section";
 }) => {
+
+   const{data:profile}=useGetMyProfileQuery(undefined)
+  const{data:user}=useGetUserDashboardQuery(undefined)
+
+  const week=profile?.data?.current_week
   return (
     <>
       <div className="mx-auto container py-6 px-4">
@@ -28,12 +34,12 @@ const GreetingHeader = ({
 
             <div>
               <h1 className="text-xl md:text-2xl font-medium text-slate-800">
-                Hi <span className="text-pink-600 font-semibold">Sarah</span>,
+                Hi <span className="text-pink-600 font-semibold">{user?.data.first_name}</span>,
                 Welcome back to{" "}
                 <span className="text-pink-600 font-semibold">Mamabot!</span> 👶
               </h1>
               <p className="text-sm md:text-base text-slate-500 mt-1">
-                You are at week 4 of postpartum
+                You are at week {week} of postpartum
               </p>
             </div>
           </div>

@@ -29,12 +29,8 @@ export default function UserHomeDashboard() {
   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
 
 const{data:profile}=useGetMyProfileQuery(undefined)
-console.log(profile,"profile ")
-
 const{data:user}=useGetUserDashboardQuery(undefined)
-console.log(user,"user")
 const {data:hydration}=useGetHydrationLogsQuery(undefined)
-console.log(hydration,"hydration")
 
 const week=profile?.data?.current_week
 const totalGlass=hydration?.data.glass_count
@@ -48,7 +44,6 @@ const hydrationProgress =
   const handleClick = () => {
     router.push("/user-dashboard/profile");
   };
-
 
   return (
     <div className="min-h-screen mt-8">

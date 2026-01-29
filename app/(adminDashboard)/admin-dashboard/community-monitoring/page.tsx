@@ -173,7 +173,9 @@ export default function CommunityMonitoring() {
                 <div className="flex items-center gap-3 mt-2">
                   <Clock className="w-5 h-5 text-gray-500" />
                   <p className=" text-gray-500">
-                    {new Date(post.date).toLocaleString()}
+                    {post.date && !isNaN(new Date(post.date).getTime())
+                      ? new Date(post.date).toLocaleString()
+                      : "Unknown date"}
                   </p>
                 </div>
               </div>
