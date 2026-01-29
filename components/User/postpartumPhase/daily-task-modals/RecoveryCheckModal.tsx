@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DialogClose,
   DialogContent,
@@ -62,8 +62,9 @@ export default function RecoveryCheckModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch logs (optional usage later)
-  useGetRecoveryLogsQuery(undefined);
+  // Fetch logs
+  const { data } = useGetRecoveryLogsQuery(undefined);
+  console.log(data, "data");
 
   const [createRecoveryLog] = useCreateRecoveryLogMutation();
 
@@ -76,6 +77,38 @@ export default function RecoveryCheckModal() {
     moods: [],
     notes: "",
   });
+
+  // Helper function to convert API energy format to form format
+  // "Very Low" -> "very-low", "Normal" -> "normal"
+  const convertEnergyToFormFormat = (apiEnergy: string): FormData["energy"] => {
+    const normalized = apiEnergy.toLowerCase().replace(/\s+/g, "-");
+    return normalized as FormData["energy"];
+  };
+
+  // Helper function to convert API bleeding format to form format
+  // "Light" -> "light", "Moderate" -> "moderate"
+  const convertBleedingToFormFormat = (apiBleding: string): FormData["bleeding"] => {
+    return apiBleding.toLowerCase() as FormData["bleeding"];
+  };
+
+  // Load existing data when component mounts or data changes
+  useEffect(() => {
+    if (data?.data) {
+      const existingLog = data.data;
+      console.log("Loading existing data:", existingLog);
+      
+      // Pre-fill form with existing data
+      setFormData({
+        painLevel: existingLog.pain_range || 2,
+        painTypes: existingLog.pain_type || [],
+        bleeding: convertBleedingToFormFormat(existingLog.bleeding_today || "none"),
+        clots: existingLog.clots_present || false,
+        energy: convertEnergyToFormFormat(existingLog.energy_level || "Normal"),
+        moods: existingLog.mood || [],
+        notes: existingLog.notes || "",
+      });
+    }
+  }, [data]);
 
   const next = () => {
     setError(null);
@@ -121,65 +154,59 @@ export default function RecoveryCheckModal() {
       pain_type: formData.painTypes,
       bleeding_today: formData.bleeding.charAt(0).toUpperCase() + formData.bleeding.slice(1), // Capitalize
       clots_present: formData.clots,
-      energy_level: formData.energy.charAt(0).toUpperCase() + formData.energy.slice(1).replace("-", " "), // "Very Low", "Normal", etc.
+      energy_level: formData.energy.split("-").map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(" "), // "very-low" -> "Very Low"
       mood: formData.moods,
-      notes: formData.notes,
+      notes: formData.notes || null,
       log_date: today,
     };
   };
-const handleSubmit = async () => {
-  try {
-    setIsSubmitting(true);
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      setError(null);
+
+      const payload = buildPayload();
+      console.log("Payload to send:", payload); // Debug log
+
+      await createRecoveryLog(payload).unwrap();
+
+      // Success toast
+      toast.success("Recovery log submitted successfully!");
+
+      // Move to success screen
+      next();
+    } catch (error: any) {
+      console.error("Failed to save recovery log", error);
+
+      let errorMessage = "Failed to save recovery log. Please try again.";
+
+      if (error?.data?.message) {
+        errorMessage = error.data.message;
+      } else if (error?.data?.error) {
+        errorMessage = error.data.error;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      setError(errorMessage);
+
+      // Error toast
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFinish = () => {
+    setStep(0);
     setError(null);
 
-    const payload = buildPayload();
-    console.log("Payload to send:", payload); // Debug log
-
-    await createRecoveryLog(payload).unwrap();
-
-    // Success toast
-    toast.success("Recovery log submitted successfully!");
-
-    // Move to success screen
-    next();
-  } catch (error: any) {
-    console.error("Failed to save recovery log", error);
-
-    let errorMessage = "Failed to save recovery log. Please try again.";
-
-    if (error?.data?.message) {
-      errorMessage = error.data.message;
-    } else if (error?.data?.error) {
-      errorMessage = error.data.error;
-    } else if (error?.message) {
-      errorMessage = error.message;
-    }
-
-    setError(errorMessage);
-
-    // Error toast
-    toast.error(errorMessage);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
-const handleFinish = () => {
-  setStep(0);
-  setFormData({
-    painLevel: 2,
-    painTypes: [],
-    bleeding: "none",
-    clots: false,
-    energy: "normal",
-    moods: [],
-    notes: "",
-  });
-  setError(null);
-
-  // Optional toast when done
-  toast.success("Recovery check completed!");
-};
+    // Optional toast when done
+    toast.success("Recovery check completed!");
+  };
 
   // Calculate progress percentage
   const totalSteps = 5;
