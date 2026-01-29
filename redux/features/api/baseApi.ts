@@ -62,12 +62,14 @@ export const baseApi = createApi({
     "PainMovementLogs",
     "DiaperLog",
     "SleepTrackings",
-    "IncisionHealingChecks"
+    "IncisionHealingChecks",
     "AboutUs",
     "OurMission",
     "OurJourney",
     "Community",
     "Recommendations",
+    "MotherWellnessLogs",
+    "Notifications"
   ],
   endpoints: () => ({}),
 });

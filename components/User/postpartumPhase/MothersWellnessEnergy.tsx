@@ -1,18 +1,23 @@
 "use client";
 
-import { ClipboardList } from "lucide-react";
+import { useCreateMotherWellnessLogMutation, useGetMotherWellnessLogsQuery } from "@/redux/features/api/user/postpurtum/motherWellnessLog";
 import { useState } from "react";
 
-type EnergyLevel = "good" | "neutral" | "low";
+type EnergyLevel = "good" | "medium" | "low";
 
 const energyLevels: { value: EnergyLevel; label: string; emoji: string }[] = [
   { value: "good", label: "Good", emoji: "😄" },
-  { value: "neutral", label: "Neutral", emoji: "😐" },
+  { value: "medium", label: "Neutral", emoji: "😐" },
   { value: "low", label: "Low", emoji: "😔" },
 ];
 
 export default function MothersWellnessEnergy() {
   const [selected, setSelected] = useState<EnergyLevel>("good");
+
+  const {data:wellness}=useGetMotherWellnessLogsQuery(undefined)
+  console.log(wellness,"wellness")
+  const[createwellness]=useCreateMotherWellnessLogMutation()
+
 
   return (
     <div className="w-full  mx-auto  rounded-2xl overflow-hidden">

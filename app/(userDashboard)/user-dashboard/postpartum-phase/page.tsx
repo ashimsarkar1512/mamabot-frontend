@@ -291,10 +291,6 @@ export default function UserHomeDashboard() {
       <HydrationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-<<<<<<< HEAD
-       
-=======
->>>>>>> ahsan
       />
       <BabyMovementModal
         isOpen={isMovementModalOpen}

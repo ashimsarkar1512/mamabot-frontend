@@ -12,13 +12,17 @@ import {
 import { Card } from "@/components/ui/card";
 import { useGetFeedingLogsQuery } from "@/redux/features/api/user/postpurtum/babyfeeding";
 import { useGetDiaperLogsQuery } from "@/redux/features/api/user/postpurtum/diaperLog";
+import { useGetSleepTrackingsQuery } from "@/redux/features/api/user/postpurtum/sleepTrackerLog";
 
 const TodaysInsight = ({ mockData }: { mockData: any }) => {
 
   const{data}=useGetFeedingLogsQuery(undefined)
   const {data:diaper}=useGetDiaperLogsQuery(undefined)
-  console.log(diaper,"diaper")
-  
+  const {data:sleep}=useGetSleepTrackingsQuery(undefined)
+const totalSleepTime = sleep?.data?.total_sleep_today ?? "0 hours";
+ const dirtyCount = diaper?.data?.dirty_count ?? 0;
+const wetCount = diaper?.data?.wet_count ?? 0;
+
   const lastFeedingHoursAgo = data?.data?.last_feeding_hours_ago ?? 0;
 
   return (
@@ -66,7 +70,7 @@ const TodaysInsight = ({ mockData }: { mockData: any }) => {
               <p className="text-sm text-gray-600">
                 Total sleep today:{" "}
                 <span className="font-medium text-indigo-600">
-                  {mockData.totalSleepHours} hrs
+                  {totalSleepTime}
                 </span>
               </p>
             </div>
@@ -82,8 +86,8 @@ const TodaysInsight = ({ mockData }: { mockData: any }) => {
             <div className="flex flex-col">
               <h3 className="font-medium text-gray-800">Diapers Used</h3>
               <p className="text-sm text-gray-600">
-                <span className="font-medium">{mockData.diapers.wet}</span> wet
-                • <span className="font-medium">{mockData.diapers.dirty}</span>{" "}
+                <span className="font-medium">{wetCount}</span> wet
+                • <span className="font-medium">{dirtyCount}</span>{" "}
                 dirty
               </p>
             </div>
