@@ -2,38 +2,51 @@
 
 import Image from "next/image";
 import { beauRivage, comfortaa } from "@/app/fonts";
+import { useGetAboutUsQuery } from "@/redux/features/api/user/aboutUs/AboutUs";
 
 const AboutUs = () => {
+  const { data, isLoading, isError } = useGetAboutUsQuery();
+
+  if (isLoading) {
+    return (
+      <section className="w-full py-12 text-center">
+        <p>Loading...</p>
+      </section>
+    );
+  }
+
+  if (isError || !data?.success) {
+    return (
+      <section className="w-full py-12 text-center">
+        <p>Failed to load About Us data</p>
+      </section>
+    );
+  }
+
+  const { title, subtitle, content, main_img, inset_img } = data.data;
+
   return (
     <section className="w-full bg-[#E9F5FA]/80 border-2 rounded-lg !border-white px-7 md:px-14 py-6 md:py-12">
-      <div className="mx-auto ">
+      <div className="mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Left - Text Content */}
-          <div className=" text-center lg:text-left">
+          <div className="text-center lg:text-left">
             <div className="inline-block mb-6">
               <span
                 className={`${beauRivage.className} text-2xl md:text-[26px] text-primary tracking-wide`}
               >
-                About Us —
+                {title} —
               </span>
             </div>
 
             <h2
               className={`text-2xl md:text-[40px] font-bold leading-tight mb-6 md:mb-8 ${comfortaa.className}`}
             >
-              Your <span className="text-[#229ECF]">Compassionate</span> Digital
-              Companion
-              <br />
-              for Every Stage of{" "}
-              <span className="text-primary">Motherhood</span>
+              {subtitle}
             </h2>
 
             <p className="text-base md:text-lg text-[#677381] leading-relaxed mb-8 max-w-3xl mx-auto lg:mx-0">
-              Mamabot is more than an app — it's an AI-powered support system
-              built to guide, comfort, and empower women through pregnancy and
-              early motherhood. With medically reviewed insights and a community
-              that truly listens, Mamabot helps every mother feel seen,
-              supported, and confident.
+              {content}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 lg:justify-start">
@@ -47,32 +60,36 @@ const AboutUs = () => {
           </div>
 
           {/* Right - Images */}
-          <div className=" relative flex justify-center lg:justify-end">
+          <div className="relative flex justify-center lg:justify-end">
             <div className="relative">
-              {/* Main large image */}
-              <div className="relative max-w-[420px] md:max-w-[524px]  z-10 rounded-2xl overflow-hidden shadow-2xl ">
-                <Image
-                  src="/images/About-us/aboutUs1.png"
-                  alt="Mother holding newborn baby"
-                  width={500}
-                  height={600}
-                  className="w-full h-full object-cover"
-                  priority
-                />
-              </div>
-
-              {/* Floating small circular image */}
-              <div className="absolute -bottom-8 -left-4 md:-left-12 lg:-left-16 z-20">
-                <div className="relative w-32 h-32  md:w-44 md:h-44 lg:w-48 lg:h-48  overflow-hidden shadow-xl">
+              {/* Main Image */}
+              {main_img && (
+                <div className="relative max-w-[420px] md:max-w-[524px] z-10 rounded-2xl overflow-hidden shadow-2xl">
                   <Image
-                    src="/images/About-us/aboutUs2.png"
-                    alt="Confident doctor / mother support figure"
-                    width={180}
-                    height={180}
-                    className=" h-full w-full object-cover"
+                    src={main_img}
+                    alt={title}
+                    width={500}
+                    height={600}
+                    className="w-full h-full object-cover"
+                    priority
                   />
                 </div>
-              </div>
+              )}
+
+              {/* Inset Image */}
+              {inset_img && (
+                <div className="absolute -bottom-8 -left-4 md:-left-12 lg:-left-16 z-20">
+                  <div className="relative w-32 h-32 md:w-44 md:h-44 lg:w-48 lg:h-48 overflow-hidden shadow-xl">
+                    <Image
+                      src={inset_img}
+                      alt="About Mamabot"
+                      width={180}
+                      height={180}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
