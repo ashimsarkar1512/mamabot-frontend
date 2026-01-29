@@ -4,6 +4,7 @@ import { User } from "@/types/user/userType";
 
 const initialState: AuthState = {
   user: null,
+  userFullInfo: null,
 };
 
 const authSlice = createSlice({
@@ -21,11 +22,15 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
+    setUserFullInfo: (state, action) => {
+      state.userFullInfo = action.payload;
+    },
     clearUser: (state) => {
       state.user = null;
     },
   },
 });
 
-export const { setCredentials, logOut, setUser, clearUser } = authSlice.actions;
+export const { setCredentials, logOut, setUser, setUserFullInfo, clearUser } =
+  authSlice.actions;
 export default authSlice.reducer;

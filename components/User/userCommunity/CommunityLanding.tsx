@@ -1,3 +1,4 @@
+"use client";
 import LoveBgImage from "@/public/images/user/LoveBg.png";
 import LeafBgImage from "@/public/images/user/LeafBg.png";
 import WomenModel from "@/public/images/user/Model.png";
@@ -6,12 +7,57 @@ import Community from "@/public/images/user/community.png";
 import Image from "next/image";
 import { Search, User } from "lucide-react";
 
+import gsap from "gsap";
+import { useEffect, useRef } from "react";
+
 const CommunityLanding = () => {
+  const mainDiv = useRef<HTMLDivElement>(null);
+  const women = useRef<HTMLDivElement>(null);
+  const bgObjectPng = useRef<HTMLDivElement>(null);
+  const bgObjectPng2 = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap
+        .timeline()
+        .fromTo(
+          mainDiv.current,
+          { opacity: 0, scale: 0.5 },
+          { opacity: 1, scale: 1, duration: 1.4, ease: "back.out(1)" },
+        )
+        .fromTo(
+          bgObjectPng.current,
+          { opacity: 0, y: 140 },
+          { opacity: 1, y: 0, duration: 1, ease: "linear" },
+          "-=0.8",
+        )
+        .fromTo(
+          bgObjectPng2.current,
+          { opacity: 0, y: 140 },
+          { opacity: 1, y: 0, duration: 1, ease: "linear" },
+          "-=0.8",
+        )
+        .fromTo(
+          women.current,
+          { opacity: 0, y: 100 },
+          { opacity: 1, y: 0, duration: 1.5, ease: "back.out(1.4)" },
+          "-=0.2",
+        );
+    });
+
+    return () => ctx.revert();
+  }, []);
   return (
-    <section className="w-full px-4 py-4">
-      <div className="w-full relative bg-[#FBE9F240] border-[3px] border-white! rounded-[32px] overflow-hidden h-[500px] md:h-[250px] lg:h-[380px] xl:h-[480px] flex items-center">
+    <section className="w-full  py-4">
+      <div
+        ref={mainDiv}
+        className="w-full relative bg-[#FBE9F240] border-[3px] border-white! rounded-[32px] overflow-hidden h-[500px] md:h-[250px] lg:h-[380px] xl:h-[480px] flex items-center"
+      >
         {/* Left: Leaf/Flower Background */}
-        <div className="absolute bottom-0 left-0 w-1/3 h-full z-0 opacity-80 pointer-events-none">
+        <div
+          ref={bgObjectPng}
+          className="absolute bottom-0 left-0 w-1/3 h-full z-0 opacity-80 pointer-events-none"
+        >
           <Image
             src={LeafBgImage}
             alt="Floral Background"
@@ -19,7 +65,10 @@ const CommunityLanding = () => {
           />
         </div>
 
-        <div className="absolute top-0 right-0 w-1/3 h-full z-0 pointer-events-none">
+        <div
+          ref={bgObjectPng2}
+          className="absolute top-0 right-0 w-1/3 h-full z-0 pointer-events-none"
+        >
           <Image
             src={LoveBgImage}
             alt="Hearts Background"
@@ -27,7 +76,10 @@ const CommunityLanding = () => {
           />
         </div>
 
-        <div className="absolute bottom-0 right-0 md:right-10 lg:right-50 xl:right-65 w-[85%] md:w-[55%] lg:w-[28%] h-[90%] z-10 pointer-events-none">
+        <div
+          ref={women}
+          className="absolute bottom-0 right-0 md:right-10 lg:right-50 xl:right-65 w-[85%] md:w-[55%] lg:w-[28%] h-[90%] z-10 pointer-events-none"
+        >
           <Image
             src={WomenModel}
             alt="Happy Pregnant Woman"
