@@ -1,14 +1,16 @@
+"use client";
 import ProductAndFoodRecommendationsPage from "@/components/User/Recommandation/ProductAndFoodRecommandation";
-import RecommendationBannerPage from "@/components/User/Recommandation/RecommandationBanner";
-
+import RecommendationBannerPage, {
+  RecommendationTab,
+} from "@/components/User/Recommandation/RecommandationBanner";
+import { useState } from "react";
 
 export default function RecommandationPage() {
+  const [active, setActive] = useState<RecommendationTab>("all");
   return (
     <div>
- 
- <RecommendationBannerPage/>
- <ProductAndFoodRecommendationsPage/>
-
+      <RecommendationBannerPage active={active} setActive={setActive} />
+      <ProductAndFoodRecommendationsPage active={active} />
     </div>
-  )
+  );
 }
