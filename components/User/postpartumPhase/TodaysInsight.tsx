@@ -11,11 +11,14 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useGetFeedingLogsQuery } from "@/redux/features/api/user/postpurtum/babyfeeding";
+import { useGetDiaperLogsQuery } from "@/redux/features/api/user/postpurtum/diaperLog";
 
 const TodaysInsight = ({ mockData }: { mockData: any }) => {
 
   const{data}=useGetFeedingLogsQuery(undefined)
-  console.log(data)
+  const {data:diaper}=useGetDiaperLogsQuery(undefined)
+  console.log(diaper,"diaper")
+  
   const lastFeedingHoursAgo = data?.data?.last_feeding_hours_ago ?? 0;
 
   return (

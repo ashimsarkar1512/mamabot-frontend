@@ -10,11 +10,15 @@ import { useRouter } from "next/navigation";
 import { useLoginMutation } from "@/redux/features/api/auth/authApi";
 import { handleError, handleSuccess } from "@/lib/data/handdleError";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/features/slice/authSlice";
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
 
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
@@ -41,6 +45,7 @@ export default function Home() {
       handleSuccess(res.message || "Login successful");
 
       console.log(res, "response");
+      dispatch(setUser(res.data.user));
 
       Cookies.set("token", res.data.token, { path: "/" }); // Optional: for API calls
       Cookies.set("role", res.data.user.role, { path: "/" }); // "Admin" or "User"
