@@ -123,6 +123,7 @@ useEffect(() => {
 const formatDate = (dateStr: string) => {
   if (!dateStr) return "";
   const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return ""; // Handle invalid date
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",

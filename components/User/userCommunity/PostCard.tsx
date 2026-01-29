@@ -99,9 +99,11 @@ const PostCard = ({ post }: { post: any }) => {
               </button> */}
             </div>
             <span className="text-xs text-gray-400">
-              {formatDistanceToNow(new Date(post.updated_at), {
-                addSuffix: true,
-              })}
+              {post.updated_at && !isNaN(new Date(post.updated_at).getTime()) 
+                ? formatDistanceToNow(new Date(post.updated_at), {
+                    addSuffix: true,
+                  })
+                : "Recently"}
             </span>
           </div>
         </div>
