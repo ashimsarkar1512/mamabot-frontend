@@ -33,6 +33,7 @@ export const baseApi = createApi({
     "AboutUs",
     "OurMission",
     "OurJourney",
+    "OurTeam",
   ],
   endpoints: () => ({}),
 });
