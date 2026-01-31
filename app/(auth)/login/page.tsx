@@ -53,16 +53,15 @@ export default function Home() {
       console.log(res,"res")
     
 
-  if (res.data.user.role === "Admin") {
-  router.push("/admin-dashboard");
-} else if (res.data.user.role === "User") {
-  if (res.data.user.subscriptionPlan) {
-    router.push("/user-dashboard");
+if (res.data.user.role === "User") {
+  // Check if the user has a subscription
+  if (res.data.user["plan id"] && res.data.user["subscription Plan"]) {
+    router.push("/user-dashboard"); 
   } else {
-    router.push("/pricing");
+    router.push("/pricing"); 
   }
 } else {
-  router.push("/");
+  router.push("/"); 
 }
 
   } catch (error) {

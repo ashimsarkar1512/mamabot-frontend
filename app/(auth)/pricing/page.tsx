@@ -127,7 +127,7 @@ export default function PricingPage() {
 
               {/* Features */}
               <ul className="space-y-3 mb-8 flex-1">
-                {plan.features.map((feature, i) => (
+                {(plan.features || []).map((feature, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm">
                     <span className="flex items-center justify-center w-5 h-5 rounded-full bg-green-100 text-green-600">
                       <Check size={14} />

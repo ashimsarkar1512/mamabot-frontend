@@ -85,10 +85,13 @@ export default function DiaperLogModal() {
 
   // Build payload for API
   const buildPayload = () => {
-    const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
+const localDate = today.getFullYear() + "-" + 
+                  String(today.getMonth() + 1).padStart(2, "0") + "-" +
+                  String(today.getDate()).padStart(2, "0");
 
     return {
-      log_date: today,
+      log_date: localDate,
       diaper_type: currentEntry.type,
       notes: currentEntry.notes || null,
       delivery_type: "vaginal", // You might want to get this from user profile
@@ -146,17 +149,18 @@ export default function DiaperLogModal() {
     } catch (error: any) {
       console.error("Failed to save diaper log", error);
 
-      let errorMessage = "Failed to save diaper log. Please try again.";
-      if (error?.data?.message) {
-        errorMessage = error.data.message;
-      } else if (error?.data?.error) {
-        errorMessage = error.data.error;
-      } else if (error?.message) {
-        errorMessage = error.message;
-      }
+      // let errorMessage = "Failed to save diaper log. Please try again.";
+      // if (error?.data?.message) {
+      //   errorMessage = error.data.message;
+      // } else if (error?.data?.error) {
+      //   errorMessage = error.data.error;
+      // } else if (error?.message) {
+      //   errorMessage = error.message;
+      // }
 
-      setError(errorMessage);
-      toast.error(errorMessage);
+       const message = "You can only log one diaper entry per day.";
+    setError(message);
+    toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

@@ -22,6 +22,7 @@ import { useGetPersonalizedRecomendationProductsQuery } from "@/redux/features/a
 import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
+import { useGetPregnancyProductsByWeekQuery } from "@/redux/features/api/user/recommandetion/productRecommandetion";
 
 interface Category {
   id: string;
@@ -116,15 +117,20 @@ export default function ProductAndFoodRecommendationsPage({
   const [showDisclosure, setShowDisclosure] = useState(false);
 
   const userInfo = useSelector((state: RootState) => state.auth.userFullInfo);
+  console.log(userInfo,"rwertert435")
+  const {data:profile}=useGetMyProfileQuery(undefined)
+  console.log(profile)
 
-  const {
-    data: productData,
-    isLoading,
-    error,
-  } = useGetPersonalizedRecomendationProductsQuery({
-    pregnancy_week: userInfo?.current_week,
-    dietary_preference: userInfo?.dietary_preferences,
-  });
+  const week = profile?.data?.current_week;
+
+  const { data: productData, isLoading, error } =
+    useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
+
+    console.log(productData,"product data ")
+
+
+
+  console.log(productData,"product")
 
   return (
     <div className="flex flex-col gap-12 min-h-fit">

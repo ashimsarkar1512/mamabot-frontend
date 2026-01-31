@@ -6,7 +6,7 @@ import Link from "next/link";
 const GreetingHeader = ({
   deliveryType,
 }: {
-  deliveryType?: "Vaginal Delivery" | "C-Section";
+  deliveryType?: "Vaginal Delivery" | "Cesarean Delivery";
 }) => {
 
    const{data:profile}=useGetMyProfileQuery(undefined)

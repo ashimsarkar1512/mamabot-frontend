@@ -4,7 +4,7 @@ import { Heart, MessageCircle, UserCircle, ChevronDown } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HydrationModal from "@/components/User/UserHome/Modal/HydrationModal";
 import BabyMovementModal from "@/components/User/UserHome/Modal/BabyMovementModal";
 import GreetingHeader from "@/components/User/postpartumPhase/GreetingHeader";
@@ -71,25 +71,36 @@ const ARTICLES_DATA = [
 export default function UserHomeDashboard() {
   // This value will come from backend in real app
   const [deliveryType, setDeliveryType] = useState<
-    "Vaginal Delivery" | "C-Section"
+    "Vaginal Delivery" | "Cesarean Delivery"
   >("Vaginal Delivery");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
     const{data:profile}=useGetMyProfileQuery(undefined)
+    console.log(profile,"this is profile")
     const week=profile?.data?.current_week
+    const delivery_type = profile?.data?.delivery_type;
+
        const router = useRouter();
 
   const handleClick = () => {
     router.push("/user-dashboard/profile");
   };
+//   useEffect(() => {
+//   if (delivery_type === "cesarean_delivery") {
+//     setDeliveryType("Cesarean Delivery");
+//   } else {
+//     setDeliveryType("Vaginal Delivery");
+//   }
+// }, [delivery_type]);
+
   // Mock data – in real app this would come from backend based on deliveryType
   const mockProfile = {
     name: "Sarah",
     stage:
       deliveryType === "Vaginal Delivery"
         ? `Week ${week} Postpartum`
-        : `Week ${week} Postpartum (C-Section)`,
+        : `Week ${week} Postpartum (Cesarean Delivery)`,
     plan: "Free",
     queriesUsed: 4,
     queriesLimit: 10,
@@ -186,18 +197,27 @@ export default function UserHomeDashboard() {
               </div>
 
               <div className="relative">
-                <select
-                  value={deliveryType}
-                  onChange={(e) =>
-                    setDeliveryType(
-                      e.target.value as "Vaginal Delivery" | "C-Section",
-                    )
-                  }
-                  className="w-full appearance-none bg-sky-50/50 border-2 border-sky-100! text-gray-800 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent cursor-pointer"
-                >
-                  <option>Vaginal Delivery</option>
-                  <option>C-Section</option>
-                </select>
+            <select
+  value={deliveryType}
+  onChange={(e) =>
+    setDeliveryType(
+      e.target.value as "Vaginal Delivery" | "Cesarean Delivery"
+    )
+  }
+  className="w-full appearance-none bg-sky-50/50 border-2 border-sky-100! text-gray-800 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent cursor-pointer"
+>
+  <option value="Vaginal Delivery">
+    Vaginal Delivery
+  </option>
+
+  <option
+    value="Cesarean Delivery"
+    disabled={delivery_type !== "cesarean_delivery"}
+  >
+    Cesarean Delivery
+  </option>
+</select>
+
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
                   <ChevronDown size={18} />
                 </div>
@@ -205,7 +225,7 @@ export default function UserHomeDashboard() {
             </Card>
 
             {/* AI Chat Usage */}
-            <Card className="p-5 shadow-sm border-2 border-white! bg-sky-50/50 ">
+            {/* <Card className="p-5 shadow-sm border-2 border-white! bg-sky-50/50 ">
               <div className="flex items-center gap-3 mb-4">
                 <div className="text-[#229ECF]">
                   <MessageCircle className="h-5 w-5" />
@@ -233,7 +253,7 @@ export default function UserHomeDashboard() {
                   Upgrade for <span className="font-medium">Unlimited</span>
                 </p>
               </div>
-            </Card>
+            </Card> */}
 
             {/* Profile Summary */}
             <Card className="p-6 shadow-sm border-2 border-white! bg-sky-50/50 ">
