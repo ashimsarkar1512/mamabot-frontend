@@ -1,5 +1,6 @@
 import { Footer } from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import ReduxProvider from "@/redux/provider";
 
 import type { Metadata } from "next";
 
@@ -14,6 +15,8 @@ export default function LandingLayout({
   children: React.ReactNode;
 }>) {
   return (
+
+    <ReduxProvider>
     <div className="relative overflow-hidden">
       {/* Oval gradient background */}
       <div
@@ -30,5 +33,6 @@ export default function LandingLayout({
       </div>
       <Footer />
     </div>
+    </ReduxProvider>
   );
 }

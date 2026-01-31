@@ -17,7 +17,7 @@ import {
 export default function DailyTaskGrid({
   deliveryType,
 }: {
-  deliveryType: "Vaginal Delivery" | "C-Section";
+  deliveryType: "Vaginal Delivery" | "Cesarean Delivery";
 }) {
   return (
     <>

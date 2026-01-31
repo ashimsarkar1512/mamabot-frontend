@@ -160,17 +160,18 @@ export default function BabySleepTrackingModal() {
     } catch (error: any) {
       console.error("Failed to save sleep log", error);
 
-      let errorMessage = "Failed to save sleep log. Please try again.";
-      if (error?.data?.message) {
-        errorMessage = error.data.message;
-      } else if (error?.data?.error) {
-        errorMessage = error.data.error;
-      } else if (error?.message) {
-        errorMessage = error.message;
-      }
+      // let errorMessage = "Failed to save sleep log. Please try again.";
+      // if (error?.data?.message) {
+      //   errorMessage = error.data.message;
+      // } else if (error?.data?.error) {
+      //   errorMessage = error.data.error;
+      // } else if (error?.message) {
+      //   errorMessage = error.message;
+      // }
 
-      setError(errorMessage);
-      toast.error(errorMessage);
+     const message = "You can only log one sleep session per day.";
+    setError(message);
+    toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

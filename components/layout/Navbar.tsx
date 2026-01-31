@@ -15,7 +15,10 @@ import Image from "next/image";
 import Button from "../ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import CommonButton from "../ui/Reusable/CommonButton";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
+import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
+import Cookies from "js-cookie";
 
 type UserType = {
   name?: string;
@@ -28,20 +31,37 @@ export default function Navbar() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [activeHash, setActiveHash] = useState("");
 
-  // TEMP auth state (replace later with real auth)
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<UserType | null>(null);
-
   const authDropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
+  const { data } = useGetUserDashboardQuery(undefined);
+   const [logout] = useLogOutMutation();
+
+  // Derive authentication state from API data
+  const isAuthenticated = !!data?.data;
+  const user: UserType | null = data?.data
+    ? {
+        name: `${data.data.first_name} ${data.data.last_name}`.trim(),
+        email: data.data.email,
+        roles: [],
+      }
+    : null;
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    setIsAuthOpen(false);
+ const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch (err) {
+      console.error("Logout failed", err);
+    } finally {
+      Cookies.remove("token");
+      Cookies.remove("role");
+
+      router.replace("/login");
+    }
   };
+
   const menuItems = [
     { label: "Home", href: "#home" },
     { label: "About", href: "#about" },
@@ -89,7 +109,7 @@ export default function Navbar() {
               <Link
                 key={item.label}
                 href={item.href}
-                onClick={() => setActiveHash(item.href)} // <-- set active on click
+                onClick={() => setActiveHash(item.href)}
                 className={`font-medium transition-colors ${
                   activeHash === item.href
                     ? "text-[#D82479] font-semibold"
@@ -110,47 +130,57 @@ export default function Navbar() {
             <div className="relative" ref={authDropdownRef}>
               <button
                 onClick={() => setIsAuthOpen(!isAuthOpen)}
-                className="flex items-center gap-2 rounded-full bg-gray-200 p-1"
+                className="flex items-center gap-2 rounded-full bg-gray-200 p-1 pr-3 hover:bg-gray-300 transition-colors cursor-pointer"
               >
                 <div className="h-8 w-8 flex items-center justify-center rounded-full bg-[#D82479] text-white">
                   <User size={16} />
                 </div>
-                <span className="max-w-25 truncate">
+                <span className="max-w-30 truncate text-sm font-medium">
                   {user.name || user.email}
                 </span>
               </button>
 
               {isAuthOpen && (
                 <div className="absolute right-0 mt-2 w-56 rounded-md bg-white shadow-lg border">
-                  <div className="px-4 py-2">
-                    <p className="font-medium">{user.name || "User"}</p>
-                    <p className="text-xs text-gray-500">{user.email}</p>
+                  <div className="px-4 py-3 border-b">
+                    <p className="font-medium text-gray-900">{user.name || "User"}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
-                  <div className="border-t my-1" />
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
-                  >
-                    <CreditCard size={16} /> Dashboard
-                  </Link>
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
-                  >
-                    <User size={16} /> Profile
-                  </Link>
-                  <Link
-                    href="/settings"
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
-                  >
-                    <Settings size={16} /> Settings
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="flex w-full items-center gap-2 px-4 py-2 hover:bg-gray-100 text-left"
-                  >
-                    <LogOut size={16} /> Sign out
-                  </button>
+                  <div className="py-1">
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsAuthOpen(false)}
+                    >
+                      <CreditCard size={18} className="text-gray-600" />
+                      <span className="text-sm text-gray-700">Dashboard</span>
+                    </Link>
+                    <Link
+                      href="/user-dashboard/profile"
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsAuthOpen(false)}
+                    >
+                      <User size={18} className="text-gray-600" />
+                      <span className="text-sm text-gray-700">Profile</span>
+                    </Link>
+                    <Link
+                      href="/user-dashboard/settings"
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsAuthOpen(false)}
+                    >
+                      <Settings size={18} className="text-gray-600" />
+                      <span className="text-sm text-gray-700">Settings</span>
+                    </Link>
+                  </div>
+                  <div className="border-t py-1">
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left"
+                    >
+                      <LogOut size={18} className="text-red-600" />
+                      <span className="text-sm text-red-600 font-medium">Sign out</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -202,27 +232,29 @@ export default function Navbar() {
 
             {isAuthenticated && user ? (
               <div className="border-t mt-2 pt-2 flex flex-col gap-2">
-                <p className="font-medium">{user.name || "User"}</p>
-                <p className="text-xs text-gray-500">{user.email}</p>
+                <div className="px-2 py-2">
+                  <p className="font-medium text-gray-900">{user.name || "User"}</p>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
 
                 <Link
                   href="/dashboard"
                   onClick={toggleMenu}
-                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded"
+                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded transition-colors"
                 >
                   <CreditCard size={16} /> Dashboard
                 </Link>
                 <Link
                   href="/profile"
                   onClick={toggleMenu}
-                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded"
+                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded transition-colors"
                 >
                   <User size={16} /> Profile
                 </Link>
                 <Link
                   href="/settings"
                   onClick={toggleMenu}
-                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded"
+                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded transition-colors"
                 >
                   <Settings size={16} /> Settings
                 </Link>
@@ -231,19 +263,16 @@ export default function Navbar() {
                     handleLogout();
                     toggleMenu();
                   }}
-                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded text-left"
+                  className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded text-left transition-colors text-red-600 cursor-pointer"
                 >
                   <LogOut size={16} /> Sign out
                 </button>
               </div>
             ) : (
               <div className="flex flex-col gap-2 mt-2 border-t pt-2">
-                <Button
-                  text="Log in"
-                  href="/login"
-                  variant="outline"
-                  onClick={toggleMenu}
-                />
+                <Link href="/login" onClick={toggleMenu}>
+                  <Button text="Log in" variant="outline" className="w-full" />
+                </Link>
               </div>
             )}
           </div>

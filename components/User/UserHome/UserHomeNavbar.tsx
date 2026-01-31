@@ -23,6 +23,7 @@ export default function UserHomeNavbar() {
   const pathname = usePathname();
 
   const [logout] = useLogOutMutation();
+  
   const router = useRouter();
 
   const { data: userInfo } = useGetMyProfileQuery(undefined);
@@ -95,7 +96,7 @@ export default function UserHomeNavbar() {
       Cookies.remove("token");
       Cookies.remove("role");
 
-      router.push("/login");
+      router.replace("/login");
     }
   };
 

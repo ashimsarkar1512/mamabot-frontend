@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
 import { useGetHydrationLogsQuery } from "@/redux/features/api/user/hydration";
 import { useRouter } from "next/navigation";
+import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
 
 export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,10 +32,12 @@ export default function UserHomeDashboard() {
 const{data:profile}=useGetMyProfileQuery(undefined)
 const{data:user}=useGetUserDashboardQuery(undefined)
 const {data:hydration}=useGetHydrationLogsQuery(undefined)
+const {data:pregnancyArticle}=useGetArticlesQuery(undefined)
+console.log(pregnancyArticle,"pregnancyArticle")
 
 const week=profile?.data?.current_week
-const totalGlass=hydration?.data.glass_count
-console.log(totalGlass)
+const totalGlass = hydration?.data?.glass_count ?? 0;
+
 const total = 10
 const hydrationProgress =
   totalGlass ? (totalGlass / total) * 100 : 0
@@ -414,7 +417,7 @@ const hydrationProgress =
           {/* ========== Right Column ========== */}
           <div className="space-y-3">
             {/* AI Usage */}
-            <Card className="p-4">
+            {/* <Card className="p-4">
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-5 w-5 text-primary" />
                 <h3 className="font-semibold">AI Chat Usage</h3>
@@ -433,7 +436,7 @@ const hydrationProgress =
                   Upgrade for Unlimited
                 </p>
               </div>
-            </Card>
+            </Card> */}
 
             {/* Profile */}
             <Card className="p-6">
@@ -474,68 +477,89 @@ const hydrationProgress =
           </div>
         </div>
 
-        {/* ================= Articles ================= */}
-        <div className="bg-white/25 border border-white p-6 rounded-xl">
-          <h2 className="text-xl sm:text-2xl font-bold mb-6">
-            Top <span className="text-primary">Articles</span> For You Today
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[1, 2, 3, 4].map((item) => (
-              <Card
-                key={item}
-                className="hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="flex flex-col sm:flex-row gap-4 p-4">
-                  {/* ================= Article Image ================= */}
-                  <div className="relative w-full h-44 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-xl overflow-hidden bg-muted flex items-center justify-center">
-                    <Image
-                      src="/images/user/userarticle.png"
-                      alt="Pregnancy article"
-                      fill
-                      priority
-                      className=""
-                      sizes="(max-width: 640px) 100vw, 144px"
-                    />
+   
+{/* ================= Articles ================= */}
+<div className="bg-white/25 border border-white p-6 rounded-xl">
+  <h2 className="text-xl sm:text-2xl font-bold mb-6">
+    Top <span className="text-primary">Articles</span> For You Today
+  </h2>
+  
+  {pregnancyArticle?.data && pregnancyArticle.data.length > 0 ? (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {pregnancyArticle.data
+          .filter((article: any) => article.phase_type === "pregnancy")
+          .map((article: any) => (
+            <Card
+              key={article.id}
+              className="hover:shadow-xl transition-shadow duration-300"
+            >
+              <div className="flex flex-col sm:flex-row gap-4 p-4">
+                {/* ================= Article Image ================= */}
+                <div className="relative w-full h-44 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-xl overflow-hidden bg-muted flex items-center justify-center">
+                  <Image
+                    src={article.thumb_img || "/images/user/userarticle.png"}
+                    alt={article.title}
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, 144px"
+                  />
+                </div>
+
+                {/* ================= Content ================= */}
+                <div className="flex-1 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs text-primary font-semibold mb-1">
+                      {article.category?.title || "Latest Article"}
+                    </p>
+                    <h3 className="font-semibold text-foreground line-clamp-2">
+                      {article.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                      {article.short_description}
+                    </p>
                   </div>
 
-                  {/* ================= Content ================= */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div>
-                      <p className="text-xs text-primary font-semibold mb-1">
-                        Latest Article
-                      </p>
-                      <h3 className="font-semibold text-foreground line-clamp-2">
-                        5 Ways to Stay Active in the 2nd Trimester
-                      </h3>
-                      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                        Staying active during pregnancy is crucial for both you
-                        and your baby. Learn safe and effective exercises...
-                      </p>
-                    </div>
-
-                    <button className="mt-3 text-primary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all">
+                  <div className="flex items-center justify-between mt-3">
+                    <Link
+                      href={`/user-dashboard/articles/${article.id}`}
+                      className="text-primary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all"
+                    >
                       Read More <ArrowRight className="h-3 w-3" />
-                    </button>
+                    </Link>
+                    <span className="text-xs text-muted-foreground">
+                      {article.read_duration}
+                    </span>
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
+              </div>
+            </Card>
+          ))}
+      </div>
 
-          <div className="flex justify-center mt-8">
-            <motion.button
-              className="h-14 w-10 rounded-full border hover:bg-muted flex items-center justify-center cursor-pointer"
-              animate={{ y: [0, 8, 0] }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <MoveDown className="text-xl text-pink-600" />
-            </motion.button>
-          </div>
+      {pregnancyArticle.data.filter((article: any) => article.phase_type === "pregnancy").length > 4 && (
+        <div className="flex justify-center mt-8">
+          <motion.button
+            className="h-14 w-10 rounded-full border hover:bg-muted flex items-center justify-center cursor-pointer"
+            animate={{ y: [0, 8, 0] }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <MoveDown className="text-xl text-pink-600" />
+          </motion.button>
         </div>
+      )}
+    </>
+  ) : (
+    <div className="text-center py-12">
+      <p className="text-muted-foreground">No articles available at the moment.</p>
+    </div>
+  )}
+</div>
       </main>
       <HydrationModal
         isOpen={isModalOpen}
