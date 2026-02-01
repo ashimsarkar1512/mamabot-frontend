@@ -1,8 +1,59 @@
 "use client";
 
+import { useSendMessageMutation } from "@/redux/features/api/user/ContactUs/SendMessage";
+import { Play } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const GetInTouch = () => {
+  const [agreed, setAgreed] = useState(false);
+
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone_number: "",
+    message: "",
+  });
+
+  const [sendMessage, { isLoading, isSuccess, error }] =
+    useSendMessageMutation();
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await sendMessage({
+        ...formData,
+        agreed_to_privacy: agreed ? 1 : 0,
+      }).unwrap();
+
+      toast.success("Message sent successfully!");
+
+      // reset form
+      setFormData({
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone_number: "",
+        message: "",
+      });
+      setAgreed(false);
+    } catch (err) {
+      toast.error("Failed to send message. Please try again.");
+    }
+  };
   return (
     <section className="bg-[#ffffff]/25 rounded-3xl shadow-lg px-6 my-7 md:my-24 py-10 md:px-16 md:py-14">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -15,94 +66,108 @@ const GetInTouch = () => {
             Our friendly team would love to hear from you.
           </p>
 
-          <form className="space-y-5">
-            {/* First + Last name */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">
-                  First name
+          {/* Main Form Container */}
+          <div className="bg-white/25 max-w-6xl mx-auto   overflow-hidden">
+            <form onSubmit={handleSubmit} className="">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">
+                    First Name
+                  </label>
+                  <input
+                    name="first_name"
+                    placeholder="First Name"
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">
+                    Last Name
+                  </label>
+                  <input
+                    name="last_name"
+                    placeholder="Last Name"
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">
+                    Email Address
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Email Address"
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">
+                    Phone Number
+                  </label>
+                  <input
+                    name="phone_number"
+                    placeholder="Phone Number"
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border rounded-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Message */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-1.5">
+                  Message
                 </label>
-                <input
-                  type="text"
-                  placeholder="First name"
-                  className="w-full h-10 rounded-lg bg-white border border-gray-200 px-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
+                <textarea
+                  name="message"
+                  rows={5}
+                  placeholder="Tell us how we can help you..."
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border rounded-lg"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">
-                  Last name
+              {/* Terms & Conditions */}
+              <div className="mb-6 flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-1 h-4 w-4"
+                />
+                <label className="text-sm text-gray-600">
+                  I have read and understood the{" "}
+                  <a
+                    href="/terms-and-conditions"
+                    target="_blank"
+                    className="text-primary underline"
+                  >
+                    Terms & Conditions
+                  </a>{" "}
+                  <span className="italic">(Optional)</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder="Last name"
-                  className="w-full h-10 rounded-lg bg-white border border-gray-200 px-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
-                />
               </div>
-            </div>
 
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="you@company.com"
-                className="w-full h-10 rounded-lg bg-white border border-gray-200 px-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
-              />
-            </div>
-
-            {/* Phone */}
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Phone number
-              </label>
-              <div className="flex">
-                <select className="h-10 rounded-l-lg border border-gray-200 bg-white px-3 text-base focus:outline-none">
-                  <option>US</option>
-                  <option>BD</option>
-                  <option>IN</option>
-                </select>
-                <input
-                  type="tel"
-                  placeholder="+1 (555) 000-0000"
-                  className="w-full h-10 rounded-r-lg bg-white border border-l-0 border-gray-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
-                />
+              {/* Submit Button */}
+              <div className="text-center">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl"
+                >
+                  <Play size={18} />
+                  {isLoading ? "Sending..." : "Send Message"}
+                </button>
               </div>
-            </div>
-
-            {/* Message */}
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Message
-              </label>
-              <textarea
-                rows={4}
-                className="w-full rounded-lg border bg-white border-gray-200 px-3 py-2 text-base resize-none focus:outline-none focus:ring-2 focus:ring-primary/40"
-              />
-            </div>
-
-            {/* Privacy */}
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <input type="checkbox" className="rounded border-gray-300" />
-              <span>
-                You agree to our friendly{" "}
-                <span className="text-primary underline cursor-pointer">
-                  privacy policy
-                </span>
-                .
-              </span>
-            </div>
-
-            {/* Button */}
-            <button
-              type="submit"
-              className="w-full h-11 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90 transition"
-            >
-              Send message
-            </button>
-          </form>
+            </form>
+          </div>
         </div>
 
         {/* RIGHT – IMAGE */}
