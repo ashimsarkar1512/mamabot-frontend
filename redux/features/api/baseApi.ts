@@ -72,6 +72,7 @@ export const baseApi = createApi({
     "MovementRestrictions",
     "Articles",
     "PregnancyProducts",
+    "OurTeam",
   ],
   endpoints: () => ({}),
 });

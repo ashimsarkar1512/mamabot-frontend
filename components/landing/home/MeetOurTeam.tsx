@@ -3,8 +3,28 @@
 import React from "react";
 import TeamCard from "./TeamMemberCard";
 import { teamMembers } from "@/lib/data/meetoutteamdata";
+import { useGetOurTeamQuery } from "@/redux/features/api/user/OurTeam/OurTeam";
 
 const MeetOurTeam = () => {
+  const { data, isLoading, isError } = useGetOurTeamQuery();
+
+  if (isLoading) {
+    return (
+      <section className="py-16 text-center">
+        <p>Loading team members...</p>
+      </section>
+    );
+  }
+
+  if (isError || !data?.success || !data.data.teams.length) {
+    return (
+      <section className="py-16 text-center">
+        <p>Failed to load team members.</p>
+      </section>
+    );
+  }
+
+  const teamMembers = data.data.teams;
   return (
     <section className="bg-[#ffffff]/25 px-5 py-12 border-2 !border-white rounded-xl md:px-10 md:py-24">
       <div className="text-center">
