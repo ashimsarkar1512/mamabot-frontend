@@ -46,6 +46,7 @@ export const baseApi = createApi({
     "PregnancyProducts",
     "OurTeam",
     "PrivacyData",
+    "SmartPersonalization",
   ],
   endpoints: () => ({}),
 });
