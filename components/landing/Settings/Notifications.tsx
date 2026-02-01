@@ -1,43 +1,98 @@
 "use client";
 
-import React, { useState } from "react";
-import { BellOffIcon, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BellOffIcon } from "lucide-react";
+
 import {
-  NotificationSetting,
-  notificationSettings,
-} from "@/lib/data/SettingsData";
+  NotificationSettingsPayload,
+  useCreateNotificationSettingsMutation,
+  useGetNotificationSettingsQuery,
+} from "@/redux/features/api/user/settings/notificationSetting";
 type Props = {
   activeTab: string;
 };
 const Notifications = ({ activeTab }: Props) => {
-  const [aiTone, setAiTone] = useState("Empathetic");
-  const [chatbotSpeed, setChatbotSpeed] = useState("Normal");
-  const [backgroundSound, setBackgroundSound] = useState("Enable");
+  const { data, isLoading, error } = useGetNotificationSettingsQuery();
+  const [createNotificationSettings] = useCreateNotificationSettingsMutation();
 
-  const [toggles, setToggles] = useState<Record<string, boolean>>(
-    notificationSettings.reduce(
-      (acc, item) => ({
-        ...acc,
-        [item.id]: item.defaultEnabled ?? false,
-      }),
-      {} as Record<string, boolean>,
-    ),
-  );
+  /* ======================
+     Toggle state (ONE source of truth)
+  ====================== */
+  const [toggles, setToggles] = useState<Record<string, boolean>>({
+    health_wellness: false,
+    baby_movement_recovery: false,
+    community: false,
+    recommendation: false,
+    mindful_moments: false,
+    announcements: false,
+  });
 
-  const toggleSetting = (id: string) => {
-    setToggles((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  /* ======================
+     GET → State sync
+  ====================== */
+  useEffect(() => {
+    if (data?.data) {
+      setToggles({
+        health_wellness: Boolean(data.data.health_wellness),
+        baby_movement_recovery: Boolean(data.data.baby_movement_recovery),
+        community: Boolean(data.data.community),
+        recommendation: Boolean(data.data.recommendation),
+        mindful_moments: Boolean(data.data.mindful_moments),
+        announcements: Boolean(data.data.announcements),
+      });
+    }
+  }, [data]);
+
+  const toggleSetting = async (key: keyof NotificationSettingsPayload) => {
+    const updatedToggles = {
+      ...toggles,
+      [key]: !toggles[key],
+    };
+
+    setToggles(updatedToggles);
+
+    const payload: NotificationSettingsPayload = {
+      health_wellness: updatedToggles.health_wellness ? 1 : 0,
+      baby_movement_recovery: updatedToggles.baby_movement_recovery ? 1 : 0,
+      community: updatedToggles.community ? 1 : 0,
+      recommendation: updatedToggles.recommendation ? 1 : 0,
+      mindful_moments: updatedToggles.mindful_moments ? 1 : 0,
+      announcements: updatedToggles.announcements ? 1 : 0,
+    };
+
+    try {
+      await createNotificationSettings(payload).unwrap();
+      console.log("✅ Auto-saved");
+    } catch (err) {
+      console.error("❌ Auto-save failed", err);
+    }
   };
-  const groupedSettings = notificationSettings.reduce(
-    (acc, item) => {
-      if (!acc[item.category]) acc[item.category] = [];
-      acc[item.category].push(item);
-      return acc;
-    },
-    {} as Record<string, NotificationSetting[]>,
-  );
+
+  const turnOffAll = async () => {
+    const offPayload: NotificationSettingsPayload = {
+      health_wellness: 0,
+      baby_movement_recovery: 0,
+      community: 0,
+      recommendation: 0,
+      mindful_moments: 0,
+      announcements: 0,
+    };
+
+    setToggles({
+      health_wellness: false,
+      baby_movement_recovery: false,
+      community: false,
+      recommendation: false,
+      mindful_moments: false,
+      announcements: false,
+    });
+
+    await createNotificationSettings(offPayload);
+  };
+
+  if (isLoading) return <p>Loading notifications...</p>;
+  if (error) return <p>Failed to load notifications</p>;
+
   return (
     <div className=" ">
       <div className="bg-white/25 border-2  rounded-2xl !border-white mb-8 md:mb-16">
@@ -51,58 +106,39 @@ const Notifications = ({ activeTab }: Props) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Object.entries(groupedSettings).map(([category, items]) => (
-            <div
-              key={category}
-              className="px-3 md:px-6 py-5 md:py-10 border-b-2 !border-b-[#DEF0F8] flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6"
-            >
-              <div>
-                <h3 className="text-base font-bold ">{category}</h3>
-                {items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between py-3 border-b border-[#DEF0F8] last:border-b-0"
-                  >
-                    <div>
-                      <p className="text-sm text-[#6A7282] font-medium ">
-                        {item.title}
-                      </p>
-                      {item.description && (
-                        <p className="text-sm text-[#6A7282] mt-0.5">
-                          {item.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+          {(Object.keys(toggles) as (keyof NotificationSettingsPayload)[]).map(
+            (key) => (
+              <div
+                key={key}
+                className="flex justify-between px-3 md:px-6 py-5 md:py-10"
+              >
+                <span className="capitalize">{key.replaceAll("_", " ")}</span>
 
-              {items.map((item) => (
-                <div>
-                  {/* Toggle Switch */}
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={toggles[item.id]}
-                      onChange={() => toggleSetting(item.id)}
-                      className="sr-only peer"
-                    />
-                    <div
-                      className="w-11 h-6 bg-[#677381] rounded-full peer peer-checked:bg-primary
+                <label className="relative inline-flex cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={toggles[key]}
+                    onChange={() => toggleSetting(key)}
+                    className="sr-only peer"
+                  />
+                  <div
+                    className="w-11 h-6 bg-gray-400 rounded-full peer-checked:bg-primary
               after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-              after:bg-white after:border after:rounded-full after:h-5 after:w-5
+              after:bg-white after:rounded-full after:h-5 after:w-5
               after:transition-all peer-checked:after:translate-x-full"
-                    ></div>
-                  </label>
-                </div>
-              ))}
-            </div>
-          ))}
+                  />
+                </label>
+              </div>
+            ),
+          )}
         </div>
       </div>
       <div className="flex justify-center">
-        <button className="bg-white flex justify-center text-sm md:text-lg items-center gap-2 text-[#229ECF] border-2 border-[#229ECF] px-2 md:px-8 py-2 md:py-4 rounded-lg hover:bg-[#229ECF] hover:text-white cursor-pointer transition-colors">
+        <button
+          onClick={turnOffAll}
+          className="bg-white flex justify-center text-sm md:text-lg items-center gap-2 text-[#229ECF] border-2 border-[#229ECF] px-2 md:px-8 py-2 md:py-4 rounded-lg hover:bg-[#229ECF] hover:text-white cursor-pointer transition-colors"
+        >
           <BellOffIcon className="w-5 h-5" />
           <span>Turn Off All Notifications</span>
         </button>

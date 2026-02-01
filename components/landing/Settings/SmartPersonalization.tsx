@@ -42,7 +42,7 @@ const SmartPersonalization = ({ activeTab }: Props) => {
         {/* Header */}
         <div className=" bg-[#DEF0F8] p-6  rounded-2xl">
           <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 ">
-            Notifications & Alerts
+            Smart Personalization
           </h1>
           <p className="text-sm text-gray-500">
             Choose which reminders, updates, and emails you'd like to receive.
