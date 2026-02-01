@@ -1,4 +1,3 @@
-
 // import { getSession } from "next-auth/react";
 // import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -70,10 +69,9 @@ export const baseApi = createApi({
     "Recommendations",
     "MotherWellnessLogs",
     "Notifications",
-"MovementRestrictions",
-"Articles",
-"PregnancyProducts"
-
-],
+    "MovementRestrictions",
+    "Articles",
+    "PregnancyProducts",
+  ],
   endpoints: () => ({}),
 });
