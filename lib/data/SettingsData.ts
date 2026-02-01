@@ -73,14 +73,7 @@ export interface PrivacySetting {
 }
 
 export const privacySettings: PrivacySetting[] = [
-  {
-    id: "download-data",
-    title: "Download My Data",
-    description: "Export a copy of your pregnancy or postpartum logs",
-
-    actionLabel: "Export Data",
-    variant: "button",
-  },
+  
   {
     id: "analytics-cookies",
     title: "Analytics & Cookies",
@@ -89,13 +82,7 @@ export const privacySettings: PrivacySetting[] = [
     defaultEnabled: true,
     variant: "toggle",
   },
-  {
-    id: "connected-apps",
-    title: "Connected Apps",
-    description: "Review health data sharing permissions",
-    actionLabel: "Manage Connections",
-    variant: "button",
-  },
+  
   {
     id: "two-factor-auth",
     title: "Two-Factor Authentication",
