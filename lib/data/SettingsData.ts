@@ -174,14 +174,7 @@ export const subscriptionItems: SubscriptionItem[] = [
      actionVariant: "upgrade",
     isHighlighted: true,
   },
-  {
-    id: "cancel-subscription",
-    title: "Cancel Subscription",
-    description: "Stop premium plan",
-    actionLabel: "Cancel",
-    actionVariant: "danger",
-    icon: "AlertTriangle",
-  },
+ 
   {
     id: "payment-method",
     title: "Payment Method",
