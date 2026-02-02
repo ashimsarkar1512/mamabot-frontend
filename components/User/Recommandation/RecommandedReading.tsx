@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 
 interface Article {
@@ -81,7 +81,7 @@ export default function RecommendedReading() {
   const displayedArticles = showAll ? articles : articles.slice(0, 3);
 
   return (
-    <section className=" py-12 ">
+    <section className="py-12">
       <div className="container mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -103,44 +103,40 @@ export default function RecommendedReading() {
           {displayedArticles.map((article) => (
             <div
               key={article.id}
-              className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
+              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 transition"
             >
-              {/* Image Container */}
-              <div className="relative w-full aspect-4/3 bg-gray-200 overflow-hidden group">
+              {/* Image */}
+              <div className="relative w-full aspect-video">
                 <Image
-                  src={article.image || "/placeholder.svg"}
+                  src={article.image}
                   alt={article.title}
                   fill
-                  className="object-contain group-hover:scale-105 transition-transform duration-300"
+                  className="object-cover brightness-90"
                 />
-              </div>
-              {/* Content Container */}
-              <div className="p-5 ">
                
-              <h3 className="text-base font-semibold text-gray-800 mb-1 line-clamp-2">
-  {article.title}
-</h3>
+              </div>
 
-<span className="inline-block bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-1 rounded mb-3">
-  {article.timeToRead}
-</span>
+              {/* Content */}
+              <div className="p-4">
+                <h3 className="font-semibold text-lg mb-1 line-clamp-2">
+                  {article.title}
+                </h3>
+                <span className="inline-block bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-0.5 rounded mb-2">
+                  {article.timeToRead}
+                </span>
+                <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+                  {article.description}
+                </p>
 
-<p className="text-sm text-gray-600 mb-4 line-clamp-3">
-  {article.description}
-</p>
-
-{/* Read Now Button */}
-<button className="w-full cursor-pointer bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2.5 rounded-md transition-colors duration-200 flex items-center justify-center gap-2">
-  <span>📖</span>
-  Read Now
-</button>
-
+                <button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2.5 rounded flex items-center justify-center gap-2 font-semibold transition cursor-pointer">
+                  📖 Read Now
+                </button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* View All / Show Less Animation */}
+        {/* Show All / Show Less */}
         {showAll && (
           <div className="mt-6 text-center">
             <button

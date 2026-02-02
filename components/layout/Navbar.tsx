@@ -19,6 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
 import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 import Cookies from "js-cookie";
+import { AnimatePresence,motion  } from "framer-motion";
 
 type UserType = {
   name?: string;
@@ -143,49 +144,73 @@ export default function Navbar() {
                 </span>
               </button>
 
-              {isAuthOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-md bg-white shadow-lg border">
-                  <div className="px-4 py-3 border-b">
-                    <p className="font-medium text-gray-900">{user.name || "User"}</p>
-                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                  </div>
-                  <div className="py-1">
-                    <Link
-                      href="/dashboard"
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsAuthOpen(false)}
-                    >
-                      <CreditCard size={18} className="text-gray-600" />
-                      <span className="text-sm text-gray-700">Dashboard</span>
-                    </Link>
-                    <Link
-                      href="/user-dashboard/profile"
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsAuthOpen(false)}
-                    >
-                      <User size={18} className="text-gray-600" />
-                      <span className="text-sm text-gray-700">Profile</span>
-                    </Link>
-                    <Link
-                      href="/user-dashboard/settings"
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsAuthOpen(false)}
-                    >
-                      <Settings size={18} className="text-gray-600" />
-                      <span className="text-sm text-gray-700">Settings</span>
-                    </Link>
-                  </div>
-                  <div className="border-t py-1">
-                    <button
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left"
-                    >
-                      <LogOut size={18} className="text-red-600" />
-                      <span className="text-sm text-red-600 font-medium">Sign out</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+             <AnimatePresence>
+  {isAuthOpen && (
+    <motion.div
+      ref={authDropdownRef}
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="absolute right-0 top-full mt-4 w-64 rounded-[2rem] bg-white/90 backdrop-blur-sm p-3 shadow-2xl border border-pink-50 z-50 overflow-hidden"
+    >
+      {/* Decorative Flower Background */}
+      <div className="absolute bottom-5 right-3 pointer-events-none">
+        <Image
+          src="/images/flower.png"
+          alt="bg"
+          width={100}
+          height={100}
+        />
+      </div>
+
+      <div className="relative z-10 space-y-1">
+        {/* User Info */}
+        <div className="px-4 py-3 border-b rounded-2xl bg-white/80 backdrop-blur-sm mb-2">
+          <p className="font-medium text-gray-900">{user.name || "User"}</p>
+          <p className="text-xs text-gray-500 truncate">{user.email}</p>
+        </div>
+
+        {/* Links */}
+        {[
+          { href: "/user-dashboard", label: "Dashboard", icon: <CreditCard size={18} /> },
+          { href: "/user-dashboard/profile", label: "Profile", icon: <User size={18} /> },
+          { href: "/user-dashboard/settings", label: "Settings", icon: <Settings size={18} /> },
+        ].map((link) => {
+          const isActive = pathname === link.href;
+          return (
+            <Link
+              key={link.label}
+              href={link.href}
+              onClick={() => setIsAuthOpen(false)}
+              className={`flex items-center gap-3 px-4 py-3 text-[15px] transition-colors rounded-2xl
+                ${
+                  isActive
+                    ? "font-bold text-[#D82479] bg-white shadow-sm border border-pink-50 rounded-full"
+                    : "font-medium text-gray-700 hover:bg-pink-50/50"
+                }`}
+            >
+              <span className={isActive ? "text-[#D82479]" : "text-gray-700"}>
+                {link.icon}
+              </span>
+              {link.label}
+            </Link>
+          );
+        })}
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="cursor-pointer flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
+        >
+          <LogOut size={18} />
+          Sign out
+        </button>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
             </div>
           ) : (
             <div className="flex gap-2">
