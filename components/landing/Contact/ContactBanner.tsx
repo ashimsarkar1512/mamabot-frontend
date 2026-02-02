@@ -23,12 +23,12 @@ const ContactBanner = () => {
 
               {/* Heading */}
               <h2 className="text-2xl pt-3 md:pt-6 pb-5 md:pb-10  md:text-[40px] font-bold text-gray-900 ">
-                We're here to support, and guide you.
+                We are here to support, and guide you.
               </h2>
 
               {/* Description */}
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl">
-                Whether you're a mom-to-be, a new mother, or simply seeking
+                Whether you are a mom-to-be, a new mother, or simply seeking
                 guidance our team is here to help.
               </p>
             </div>

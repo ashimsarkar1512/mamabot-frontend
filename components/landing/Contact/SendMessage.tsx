@@ -16,7 +16,7 @@ export default function SendMessage() {
     message: "",
   });
 
-  const [sendMessage, { isLoading, isSuccess, error }] =
+  const [sendMessage, { isLoading }] =
     useSendMessageMutation();
 
   const handleChange = (
@@ -40,7 +40,7 @@ export default function SendMessage() {
 
       toast.success("Message sent successfully!");
 
-      // reset form
+     
       setFormData({
         first_name: "",
         last_name: "",
