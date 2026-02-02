@@ -56,12 +56,12 @@ export default function Home() {
 if (res.data.user.role === "User") {
   // Check if the user has a subscription
   if (res.data.user["plan id"] && res.data.user["subscription Plan"]) {
-    router.push("/user-dashboard"); 
+    window.location.href = "/user-dashboard"; 
   } else {
-    router.push("/pricing"); 
+    window.location.href = "/pricing"; 
   }
 } else {
-  router.push("/"); 
+  window.location.href = "/"; 
 }
 
   } catch (error) {
@@ -130,7 +130,7 @@ if (res.data.user.role === "User") {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>

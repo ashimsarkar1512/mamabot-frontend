@@ -41,12 +41,9 @@ export const baseApi = createApi({
     "Recommendations",
     "MotherWellnessLogs",
     "Notifications",
-
-
-"QASessions",
-
-
-    "MovementRestrictions",
+    "NutritionLogs",
+    "QASessions",
+   "MovementRestrictions",
     "Articles",
     "PregnancyProducts",
     "OurTeam",
@@ -56,6 +53,8 @@ export const baseApi = createApi({
     "footer",
     "testimonials",
     "YoureNotAlone",
+    "BabyCueLogs",
+    "MentalHealthLogs"
   ],
   endpoints: () => ({}),
 });
