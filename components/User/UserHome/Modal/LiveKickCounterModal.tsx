@@ -10,7 +10,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MovementHistoryModal from "./MovementHistoryModal";
 import { useCreatebabyMovementLogMutation } from "@/redux/features/api/user/baby-movement-logs";
 import { toast } from "sonner";
@@ -40,7 +40,17 @@ export default function LiveKickCounterModal({
   const [note, setNote] = useState("");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [startTime, setStartTime] = useState<string | null>(null);
-const babyKickSound = new Audio("/sounds/babykick.mp3");
+  
+  // Lazy initialization of Audio to avoid SSR issues
+  const babyKickSoundRef = useRef<HTMLAudioElement | null>(null);
+  
+  const getBabyKickSound = () => {
+    if (typeof window === 'undefined') return null;
+    if (!babyKickSoundRef.current) {
+      babyKickSoundRef.current = new Audio("/sounds/babykick.mp3");
+    }
+    return babyKickSoundRef.current;
+  };
 
 
   console.log(trackingData, "tracking data ");
@@ -76,8 +86,11 @@ const babyKickSound = new Audio("/sounds/babykick.mp3");
     if (!isTracking) setIsTracking(true);
     if (!startTime) setStartTime(new Date().toISOString()); // set start time only once
     setKicks((prev) => prev + 1);
-    babyKickSound.currentTime = 0; 
-    babyKickSound.play().catch((err) => console.log("Sound play failed:", err));
+    const sound = getBabyKickSound();
+    if (sound) {
+      sound.currentTime = 0; 
+      sound.play().catch((err) => console.log("Sound play failed:", err));
+    }
   }
 };
 

@@ -11,11 +11,9 @@ import Cookies from "js-cookie";
 
 
 import {
-  useGetMyProfileQuery,
   useGetUserDashboardQuery,
 } from "@/redux/features/api/user/profile";
-import { useDispatch } from "react-redux";
-import { setUserFullInfo } from "@/redux/features/slice/authSlice";
+
 import {
   useGetLoggedInNotificationsQuery,
   useMarkAsReadMutation,
@@ -31,13 +29,7 @@ export default function UserHomeNavbar() {
   const [logout] = useLogOutMutation();
 
   const router = useRouter();
-
-  const { data: userInfo } = useGetMyProfileQuery(undefined);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setUserFullInfo(userInfo?.data));
-  }, []);
-
+ 
   const { data } = useGetUserDashboardQuery(undefined);
   const profile = data?.data;
 
@@ -48,6 +40,15 @@ export default function UserHomeNavbar() {
   const notifications = notificationsResponse?.data || [];
 
   console.log(notifications,"notification")
+  // Inside your component
+const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
+
+// Filter notifications based on tab
+const filteredNotifications =
+  activeTab === "all"
+    ? notifications
+    : notifications.filter((n: any) => n.read_at === null);
+
 
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
@@ -333,77 +334,92 @@ export default function UserHomeNavbar() {
       </div>
 
       {/* NOTIFICATIONS MODAL */}
-      <AnimatePresence>
-        {isNotificationsOpen && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-[32px] p-8 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden"
+    <AnimatePresence>
+  {isNotificationsOpen && (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="bg-white rounded-[32px] p-8 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-[#E91E63] text-2xl font-bold">
+            Notifications
+          </h2>
+          <button
+            onClick={() => setIsNotificationsOpen(false)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-6 border-b border-gray-100 mb-6">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`pb-2 font-bold text-sm transition-colors ${
+              activeTab === "all"
+                ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
+          >
+            All ({notifications.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("unread")}
+            className={`pb-2 font-medium text-sm transition-colors ${
+              activeTab === "unread"
+                ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
+          >
+            Unread ({notifications.filter((n: any) => n.read_at === null).length})
+          </button>
+        </div>
+
+        {/* Notifications List */}
+        <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+          {filteredNotifications.map((item: any) => (
+            <div
+              key={item.id}
+              className="p-4 bg-[#F8FBFF] border border-blue-50 rounded-2xl"
             >
-              {/* Header */}
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-[#E91E63] text-2xl font-bold">
-                  Notifications
-                </h2>
-                <button
-                  onClick={() => setIsNotificationsOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+              <h3 className="text-[#3EB1E4] font-bold text-sm mb-1">
+                {item.title}
+              </h3>
+              <p className="text-gray-500 text-xs leading-relaxed">
+                {item.message}
+              </p>
+              <p className="text-gray-400 text-[10px] mt-1">
+                {item.created_at_formatted}
+              </p>
+            </div>
+          ))}
+          {filteredNotifications.length === 0 && (
+            <p className="text-center text-gray-400 text-sm">
+              No notifications yet
+            </p>
+          )}
+        </div>
 
-              {/* Tabs */}
-              <div className="flex gap-6 border-b border-gray-100 mb-6">
-                <button className="pb-2 text-[#3EB1E4] border-b-2 border-[#3EB1E4] font-bold text-sm">
-                  All ({notifications.length})
-                </button>
-                <button className="pb-2 text-gray-400 font-medium text-sm hover:text-gray-600">
-                  Unread
-                </button>
-              </div>
+        {/* Footer Action */}
+        <div className="mt-8">
+          <button
+            onClick={handleMarkAllAsRead}
+            disabled={isMarking}
+            className="w-full py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 transition-colors cursor-pointer disabled:opacity-60"
+          >
+            {isMarking ? "Marking..." : "Mark all as read"}
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  )}
+</AnimatePresence>
 
-              {/* Notifications List */}
-              <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
-                {notifications.map((item: any, i: number) => (
-                  <div
-                    key={item.id}
-                    className="p-4 bg-[#F8FBFF] border border-blue-50 rounded-2xl"
-                  >
-                    <h3 className="text-[#3EB1E4] font-bold text-sm mb-1">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-500 text-xs leading-relaxed">
-                      {item.message}
-                    </p>
-                    <p className="text-gray-400 text-[10px] mt-1">
-                      {item.created_at_formatted}
-                    </p>
-                  </div>
-                ))}
-                {notifications.length === 0 && (
-                  <p className="text-center text-gray-400 text-sm">
-                    No notifications yet
-                  </p>
-                )}
-              </div>
-
-              {/* Footer Action */}
-              <div className="mt-8">
-                <button
-                  onClick={handleMarkAllAsRead}
-                  disabled={isMarking}
-                  className="w-full py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 transition-colors cursor-pointer disabled:opacity-60"
-                >
-                  {isMarking ? "Marking..." : "Mark all as read"}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </nav>
   );
 }

@@ -118,7 +118,7 @@ export default function RecoveryDashboardSections() {
 
             <Dialog>
               <DialogTrigger asChild>
-                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
+                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition cursor-pointer">
                   Check Mood
                 </button>
               </DialogTrigger>
@@ -141,7 +141,7 @@ export default function RecoveryDashboardSections() {
 
             <Dialog>
               <DialogTrigger asChild>
-                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
+                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition cursor-pointer">
                   See Nutrition Guide
                 </button>
               </DialogTrigger>
@@ -167,7 +167,7 @@ export default function RecoveryDashboardSections() {
               onOpenChange={handleBabyCareOpenChange}
             >
               <DialogTrigger asChild>
-                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition">
+                <button className="w-2/3 text-md bg-[#229ECF] text-white py-2 rounded-lg hover:bg-[#1b8ab6] transition cursor-pointer">
                   Open Baby Care
                 </button>
               </DialogTrigger>

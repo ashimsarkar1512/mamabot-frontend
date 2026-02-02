@@ -1,110 +1,163 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { RotateCw } from "lucide-react";
+import { Apple, ArrowLeft } from "lucide-react";
 import Button from "@/components/ui/Button";
-import TipsCard from "../../../postpartumPhase/daily-task-modals/reusable/TipsCard";
 import FirstStep from "../../../postpartumPhase/daily-task-modals/reusable/FirstStep";
 import Step from "./reusable2/Step";
+import { 
+  useCreateNutritionLogMutation, 
+  useGetNutritionLogsQuery 
+} from "@/redux/features/api/user/postpurtum/nutration";
+import { toast } from "sonner";
 
-type FormData = {
-  streak: number;
-  time: number;
-  tip: string;
-};
-
-const STEPS = [
+// Data matching the second screenshot
+const NUTRITION_STEPS = [
   {
-    title: "Keep the area clean and dry",
-    description: "Wash gently with warm water every time you use the bathroom.",
+    title: "Hydration",
+    description: "Drink water frequently, especially if breastfeeding.",
   },
   {
-    title: "Use warm sitz baths",
-    description: "Soaking for 10-15 minutes can relieve pain and itching,",
+    title: "Protein",
+    description: "Eggs, fish, lentils, lean meats for tissue repair.",
   },
   {
-    title: "Pat dry gently",
-    description: "Avoid rubbing. Use a clean towel or toilet paper to pat dry.",
+    title: "Iron-rich foods",
+    description: "Leafy greens, red meat, fortified cereals to replenish blood loss.",
   },
   {
-    title: "Use cold packs",
-    description: "Apply for 10-20 minutes to reduce swelling.",
+    title: "Fruits and vegetables",
+    description: "Fiber prevents constipation and provides vitamins.",
   },
 ];
 
-// in this modal there will be 3 steps
 export default function NutritionModal() {
   const [step, setStep] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [formData, setFormData] = useState<FormData>({
-    streak: 0,
-    time: 0,
-    tip: "Consistency strengthens your core and speeds recovery.",
-  });
+  // API hooks
+  const { data, isLoading, error } = useGetNutritionLogsQuery(undefined);
+  const [createNutrition, { isLoading: isSubmitting }] = useCreateNutritionLogMutation();
+
+  // Check if today's nutrition log exists
+  const todayLog = data?.data?.[0];
+  const todayDate = new Date().toISOString().split("T")[0];
+  const hasLoggedToday = todayLog?.log_date === todayDate;
+
+  // Show error toast if GET request fails
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to load nutrition logs");
+    }
+  }, [error]);
+
+  // // Show info toast if already logged today
+  // useEffect(() => {
+  //   if (hasLoggedToday && !isLoading) {
+  //     toast.info("You've already logged your nutrition today!");
+  //   }
+  // }, [hasLoggedToday, isLoading]);
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => s - 1);
 
-  {
-    /* i want when i click on done button the the whole modal will parmanently gone */
-  }
-  const handleFinish = () => {
-    setStep(0);
-    setFormData({
-      streak: 0,
-      time: 0,
-      tip: "Consistency strengthens your core and speeds recovery.",
-    });
-    close();
+  const handleFinish = async () => {
+    // Don't create log if already logged today
+    if (hasLoggedToday) {
+      toast.info("Already completed for today");
+      setStep(0);
+      return;
+    }
+
+    try {
+      await createNutrition({
+        log_date: todayDate,
+        notes: "Completed nutrition guide review",
+        tip: "Drink more water and eat balanced meals",
+      }).unwrap();
+
+      // Success toast
+      toast.success("Nutrition guide completed successfully!");
+      setStep(0);
+    } catch (error: any) {
+      // Error toast
+      const errorMessage = error?.data?.message || error?.message || "Failed to save nutrition log";
+      toast.error(errorMessage);
+      console.error("Nutrition log error:", error);
+    }
   };
 
   function renderStep() {
     switch (step) {
-      // STEP 0 — INTRO
+      // SCREEN 1: Nutrition Intro
       case 0:
         return (
           <FirstStep
-            Icon={RotateCw}
-            title="Perineal Care After Vaginal Birth"
-            description="Soreness, swelling, or stitches in the perineal area are common after delivery. Proper care helps prevent infection and discomfort."
-            buttonText="View Care Step"
+            Icon={Apple} 
+            title="Postpartum Nutrition"
+            description="Proper nutrition supports healing, energy levels, and breastfeeding."
+            buttonText={hasLoggedToday ? "Review Nutrition Guide" : "View Nutrition Guide"}
             onNext={next}
           />
         );
 
-      // STEP 1 — PAIN
+      // SCREEN 2: Essential Nutrients
       case 1:
         return (
-          <div className="space-y-6 min-h-[550px] flex flex-col justify-center">
-            <h1 className="text-lg font-semibold t">Daily Care Steps</h1>
+          <div className="space-y-6 min-h-[500px] flex flex-col">
+            {/* Header with Back Button */}
+            <div className="flex items-center gap-2 hover:underline">
+              <button 
+                onClick={back} 
+                className="text-gray-500 cursor-pointer flex gap-3"
+                disabled={isSubmitting}
+              >
+                <ArrowLeft /> Back
+              </button>
+            </div>
 
-            <Step steps={STEPS} />
-            <TipsCard
-              title="Note"
-              tips="Mild soreness is normal in early weeks. If pain worsens, contact your doctor."
-            />
+            <h1 className="text-xl font-semibold">Essential Nutrients</h1>
+
+            <div className="flex-grow">
+              <Step steps={NUTRITION_STEPS} />
+            </div>
+
             <DialogClose asChild>
-              <Button className="w-full" onClick={handleFinish}>
-                Done
+              <Button 
+                className="w-full cursor-pointer" 
+                onClick={handleFinish}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Saving..." : "Done"}
               </Button>
             </DialogClose>
           </div>
         );
+      
+      default:
+        return null;
     }
   }
 
+  if (isLoading) {
+    return (
+      <DialogContent className="max-w-md p-8 rounded-3xl">
+        <div className="flex items-center justify-center min-h-[200px]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#229ECF]"></div>
+        </div>
+      </DialogContent>
+    );
+  }
+
   return (
-    <DialogContent className="max-w-md">
+    <DialogContent className="max-w-md p-8 rounded-3xl">
       <DialogHeader>
-        <DialogTitle> </DialogTitle>
+        <DialogTitle className="sr-only">Postpartum Nutrition Guide</DialogTitle>
       </DialogHeader>
 
       {renderStep()}

@@ -3,81 +3,36 @@
 import Image from "next/image";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
+import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
+import Link from "next/link";
 
 interface Article {
   id: number;
   title: string;
   description: string;
-  image: string;
+  image: string | null;
   timeToRead: string;
   category: string;
 }
 
-const articles: Article[] = [
-  {
-    id: 1,
-    title: "How Your Baby Responds to Sound This Week",
-    description:
-      "As your baby continues to grow and develop, each week brings exciting milestones. One of the most remarkable developments in the early pregnancy is your baby's hearing ability.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-    timeToRead: "5 mins read",
-    category: "Week 22",
-  },
-  {
-    id: 2,
-    title: "Safe Sleep Positions in the Second Trimester",
-    description:
-      "As your pregnancy progresses, sleep can become increasingly difficult. While most safe sleep positions vary based on personal comfort, finding the right position becomes even more important.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-    timeToRead: "4 mins read",
-    category: "Sleep",
-  },
-  {
-    id: 3,
-    title: "Foods That Reduce Pregnancy Fatigue",
-    description:
-      "Pregnancy can be a beautiful journey, but it also comes with a host of challenges especially when it comes to nutrition. Let's explore what we can eat to stay healthy.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-    timeToRead: "6 mins read",
-    category: "Nutrition",
-  },
-  {
-    id: 4,
-    title: "Managing Pregnancy Fatigue Naturally",
-    description:
-      "Explore natural remedies and lifestyle changes that can help manage pregnancy fatigue during your second trimester.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-    timeToRead: "5 mins read",
-    category: "Wellness",
-  },
-  {
-    id: 5,
-    title: "Prenatal Exercise Guide for Week 22",
-    description:
-      "Safe and effective exercises you can do during your second trimester to maintain fitness and prepare for labor.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-    timeToRead: "7 mins read",
-    category: "Exercise",
-  },
-  {
-    id: 6,
-    title: "Understanding Baby Development in Week 22",
-    description:
-      "Learn about the incredible developments happening with your baby this week, from brain development to physical growth.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
-    timeToRead: "6 mins read",
-    category: "Development",
-  },
-];
+const placeholderImage =
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop";
 
 export default function RecommendedReading() {
   const [showAll, setShowAll] = useState(false);
+  const { data } = useGetArticlesQuery(undefined);
+
+  // Transform API data to our Article type
+  const articles: Article[] =
+    data?.data?.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      description: item.short_description || item.long_description || "",
+      image: item.main_img || item.thumb_img || placeholderImage,
+      timeToRead: item.read_duration || "5 mins read",
+      category: `Week ${item.week || 22}`,
+    })) || [];
+
   const displayedArticles = showAll ? articles : articles.slice(0, 3);
 
   return (
@@ -108,12 +63,11 @@ export default function RecommendedReading() {
               {/* Image */}
               <div className="relative w-full aspect-video">
                 <Image
-                  src={article.image}
+                  src={article.image || placeholderImage}
                   alt={article.title}
                   fill
                   className="object-cover brightness-90"
                 />
-               
               </div>
 
               {/* Content */}
@@ -128,9 +82,12 @@ export default function RecommendedReading() {
                   {article.description}
                 </p>
 
-                <button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2.5 rounded flex items-center justify-center gap-2 font-semibold transition cursor-pointer">
-                  📖 Read Now
-                </button>
+                <Link
+    href={`/user-dashboard/articles/${article.id}`}
+    className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2.5 rounded-md flex items-center justify-center gap-2 font-semibold transition cursor-pointer"
+  >
+    📖 Read Now
+  </Link>
               </div>
             </div>
           ))}
