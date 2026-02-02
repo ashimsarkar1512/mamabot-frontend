@@ -40,6 +40,8 @@ export default function LiveKickCounterModal({
   const [note, setNote] = useState("");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [startTime, setStartTime] = useState<string | null>(null);
+const babyKickSound = new Audio("/sounds/babykick.mp3");
+
 
   console.log(trackingData, "tracking data ");
 
@@ -74,6 +76,8 @@ export default function LiveKickCounterModal({
     if (!isTracking) setIsTracking(true);
     if (!startTime) setStartTime(new Date().toISOString()); // set start time only once
     setKicks((prev) => prev + 1);
+    babyKickSound.currentTime = 0; 
+    babyKickSound.play().catch((err) => console.log("Sound play failed:", err));
   }
 };
 

@@ -235,6 +235,8 @@ const todayLog = hydrationLogs?.data ?? null;
   
 
     console.log(todayLog,"fkjlatfg")
+    const waterSound = new Audio("/sounds/drinkwater1.mp3");
+    waterSound.preload = "auto";
 
   // State
  const [glasses, setGlasses] = useState<number>(todayLog?.glass_count || 0);
@@ -270,6 +272,8 @@ useEffect(() => {
     if (glasses < maxGlasses) {
       setGlasses(prev => prev + 1);
       setIsRunning(true);
+      waterSound.currentTime = 0;
+    waterSound.play().catch(err => console.log("Sound play failed:", err));
     }
   };
 
