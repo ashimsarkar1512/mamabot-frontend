@@ -8,7 +8,7 @@ export const pregnancyProductsApi = baseApi.injectEndpoints({
         `/pregnancy-products/fetch?pregnancy_week=${pregnancy_week}`,
       providesTags: ["PregnancyProducts"],
       transformResponse: (response: any) => {
-        // Optional: normalize the response if needed
+      
         console.log("API Response:", response);
         return response;
       },

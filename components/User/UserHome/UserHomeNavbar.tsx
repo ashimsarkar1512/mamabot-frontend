@@ -14,7 +14,11 @@ import {
 } from "@/redux/features/api/user/profile";
 import { useDispatch } from "react-redux";
 import { setUserFullInfo } from "@/redux/features/slice/authSlice";
-import { useGetLoggedInNotificationsQuery } from "@/redux/features/api/user/notification";
+import {
+  useGetLoggedInNotificationsQuery,
+  useMarkAsReadMutation,
+} from "@/redux/features/api/user/notification";
+import { toast } from "sonner";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,7 +27,7 @@ export default function UserHomeNavbar() {
   const pathname = usePathname();
 
   const [logout] = useLogOutMutation();
-  
+
   const router = useRouter();
 
   const { data: userInfo } = useGetMyProfileQuery(undefined);
@@ -35,9 +39,13 @@ export default function UserHomeNavbar() {
   const { data } = useGetUserDashboardQuery(undefined);
   const profile = data?.data;
 
-  const{data:notificationsResponse}=useGetLoggedInNotificationsQuery(undefined)
- 
-   const notifications = notificationsResponse?.data || [];
+  const { data: notificationsResponse } =
+    useGetLoggedInNotificationsQuery(undefined);
+  const [markAsRead, { isLoading: isMarking }] = useMarkAsReadMutation();
+
+  const notifications = notificationsResponse?.data || [];
+
+  console.log(notifications,"notification")
 
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
@@ -97,6 +105,21 @@ export default function UserHomeNavbar() {
       Cookies.remove("role");
 
       router.replace("/login");
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAsRead({ all: true }).unwrap();
+
+      toast.success("All notifications marked as read ✅");
+    } catch (error: any) {
+      console.error("Mark all read failed", error);
+
+      toast.error(
+        error?.data?.message ||
+          "Failed to mark notifications as read. Please try again.",
+      );
     }
   };
 
@@ -182,12 +205,12 @@ export default function UserHomeNavbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute right-0 top-full mt-4 w-64 rounded-[2rem] bg-white/90 backdrop-blur-md p-3 shadow-2xl border border-pink-50 z-50 overflow-hidden"
+                        className="absolute right-0 top-full mt-4 w-64 rounded-[2rem] bg-white/90 backdrop-blur-sm p-3 shadow-2xl border border-pink-50 z-50 overflow-hidden"
                       >
                         {/* Decorative Flower Background */}
-                        <div className="absolute bottom-0 right-0 opacity-20 pointer-events-none">
+                        <div className="absolute bottom-5 right-3  pointer-events-none">
                           <Image
-                            src="/images/flowers-bg.png"
+                            src="/images/flower.png"
                             alt="bg"
                             width={100}
                             height={100}
@@ -308,66 +331,77 @@ export default function UserHomeNavbar() {
       </div>
 
       {/* NOTIFICATIONS MODAL */}
-       <AnimatePresence>
-      {isNotificationsOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white rounded-[32px] p-8 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden"
-          >
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-[#E91E63] text-2xl font-bold">Notifications</h2>
-              <button
-                onClick={() => setIsNotificationsOpen(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Tabs */}
-            <div className="flex gap-6 border-b border-gray-100 mb-6">
-              <button className="pb-2 text-[#3EB1E4] border-b-2 border-[#3EB1E4] font-bold text-sm">
-                All ({notifications.length})
-              </button>
-              <button className="pb-2 text-gray-400 font-medium text-sm hover:text-gray-600">
-                Unread
-              </button>
-            </div>
-
-            {/* Notifications List */}
-            <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
-              {notifications.map((item: any, i: number) => (
-                <div
-                  key={item.id}
-                  className="p-4 bg-[#F8FBFF] border border-blue-50 rounded-2xl"
+      <AnimatePresence>
+        {isNotificationsOpen && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-[32px] p-8 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden"
+            >
+              {/* Header */}
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-[#E91E63] text-2xl font-bold">
+                  Notifications
+                </h2>
+                <button
+                  onClick={() => setIsNotificationsOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
                 >
-                  <h3 className="text-[#3EB1E4] font-bold text-sm mb-1">{item.title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed">{item.message}</p>
-                  <p className="text-gray-400 text-[10px] mt-1">{item.created_at_formatted}</p>
-                </div>
-              ))}
-              {notifications.length === 0 && (
-                <p className="text-center text-gray-400 text-sm">No notifications yet</p>
-              )}
-            </div>
+                  <X size={24} />
+                </button>
+              </div>
 
-            {/* Footer Action */}
-            <div className="mt-8">
-              <button
-                onClick={() => setIsNotificationsOpen(false)}
-                className="w-full py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 transition-colors cursor-pointer"
-              >
-                Mark all as read
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+              {/* Tabs */}
+              <div className="flex gap-6 border-b border-gray-100 mb-6">
+                <button className="pb-2 text-[#3EB1E4] border-b-2 border-[#3EB1E4] font-bold text-sm">
+                  All ({notifications.length})
+                </button>
+                <button className="pb-2 text-gray-400 font-medium text-sm hover:text-gray-600">
+                  Unread
+                </button>
+              </div>
+
+              {/* Notifications List */}
+              <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+                {notifications.map((item: any, i: number) => (
+                  <div
+                    key={item.id}
+                    className="p-4 bg-[#F8FBFF] border border-blue-50 rounded-2xl"
+                  >
+                    <h3 className="text-[#3EB1E4] font-bold text-sm mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-500 text-xs leading-relaxed">
+                      {item.message}
+                    </p>
+                    <p className="text-gray-400 text-[10px] mt-1">
+                      {item.created_at_formatted}
+                    </p>
+                  </div>
+                ))}
+                {notifications.length === 0 && (
+                  <p className="text-center text-gray-400 text-sm">
+                    No notifications yet
+                  </p>
+                )}
+              </div>
+
+              {/* Footer Action */}
+              <div className="mt-8">
+                <button
+                  onClick={handleMarkAllAsRead}
+                  disabled={isMarking}
+                  className="w-full py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 transition-colors cursor-pointer disabled:opacity-60"
+                >
+                  {isMarking ? "Marking..." : "Mark all as read"}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

@@ -41,6 +41,11 @@ export const baseApi = createApi({
     "Recommendations",
     "MotherWellnessLogs",
     "Notifications",
+
+
+"QASessions",
+
+
     "MovementRestrictions",
     "Articles",
     "PregnancyProducts",

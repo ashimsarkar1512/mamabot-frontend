@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCreateCheckoutMutation, useGetPlansQuery, Plan } from "@/redux/features/api/user/subscription";
 import { useState } from "react";
 import Loading from "@/components/Loading";
+import { toast } from "sonner";
 
 export default function PricingPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function PricingPage() {
 
   // Fetch subscription plans
   const { data: response, isLoading, isFetching, error } = useGetPlansQuery();
+  console.log(response,"sdfser34")
 
   const [createCheckout] = useCreateCheckoutMutation();
 
@@ -26,10 +28,10 @@ export default function PricingPage() {
       setProcessingPlan(String(planId));
       const result = await createCheckout({ plan_id: String(planId) }).unwrap();
       if (result.url) window.location.href = result.url;
-      else alert("Failed to start checkout. Please try again.");
+      else toast.error("Failed to start checkout. Please try again.");
     } catch (err: any) {
       console.error("Checkout error:", err);
-      alert(
+      toast.error(
         err?.data?.errors?.plan_id
           ? `Checkout error: ${err.data.errors.plan_id[0]}`
           : "Something went wrong. Please try again."
