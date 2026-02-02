@@ -95,8 +95,11 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 right-0 left-0 z-50 px-5 md:px-20 py-4  ">
-      <div className="relative mx-auto flex container items-center justify-between rounded-full bg-white px-4 py-3 shadow-sm backdrop-blur-sm sm:px-4 sm:py-2 border ">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-6 ">
+      <div className="container mx-auto">
+
+
+      <div className="relative flex items-center justify-between rounded-full border border-gray-100 bg-white/90 px-6 py-4 shadow-sm backdrop-blur-md">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image src="/images/icon.png" alt="Mamabot" width={40} height={40} />
@@ -278,6 +281,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
+            </div>
     </nav>
   );
 }

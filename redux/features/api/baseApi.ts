@@ -72,7 +72,8 @@ export const baseApi = createApi({
     "Notifications",
 "MovementRestrictions",
 "Articles",
-"PregnancyProducts"
+"PregnancyProducts",
+"QASessions"
 
 ],
   endpoints: () => ({}),
