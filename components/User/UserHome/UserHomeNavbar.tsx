@@ -350,7 +350,7 @@ const filteredNotifications =
           </h2>
           <button
             onClick={() => setIsNotificationsOpen(false)}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 cursor-pointer"
           >
             <X size={24} />
           </button>
@@ -360,7 +360,7 @@ const filteredNotifications =
         <div className="flex gap-6 border-b border-gray-100 mb-6">
           <button
             onClick={() => setActiveTab("all")}
-            className={`pb-2 font-bold text-sm transition-colors ${
+            className={`pb-2 font-bold text-sm transition-colors cursor-pointer ${
               activeTab === "all"
                 ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
                 : "text-gray-400 hover:text-gray-600"
@@ -370,7 +370,7 @@ const filteredNotifications =
           </button>
           <button
             onClick={() => setActiveTab("unread")}
-            className={`pb-2 font-medium text-sm transition-colors ${
+            className={`pb-2 font-medium text-sm transition-colors cursor-pointer ${
               activeTab === "unread"
                 ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
                 : "text-gray-400 hover:text-gray-600"
