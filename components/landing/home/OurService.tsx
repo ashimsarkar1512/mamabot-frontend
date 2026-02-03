@@ -1,10 +1,25 @@
 "use client";
 
-import { services } from "@/lib/data/servicedata";
+import { useGetLandingServicesQuery } from "@/redux/features/api/GuestLanding/ServiceLanding";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 const OurService = () => {
+  const { data, isLoading, isError } = useGetLandingServicesQuery();
+  const [showAll, setShowAll] = useState(false);
+
+  if (isLoading) {
+    return <p className="text-center py-20">Loading services...</p>;
+  }
+
+  if (isError || !data?.data?.length) {
+    return <p className="text-center py-20">Failed to load services</p>;
+  }
+
+  // only active services
+  const services = data.data.filter((service) => service.is_active === 1);
+
+  const visibleServices = showAll ? services : services.slice(0, 3);
   return (
     <div className="bg-[#F6F8FB] my-7 rounded-xl shadow-md md:my-24 border border-white px-16 md:px-40 py-10 md:py-24">
       <div className="mb-8 md:mb-16 text-center">
@@ -16,11 +31,9 @@ const OurService = () => {
 
       {/* Services */}
       <div className="">
-        {services.map((service, index) => {
-          const isImageLeft = service.imagePosition === "left";
-
+        {visibleServices.map((service, index) => {
+          const isImageLeft = index % 2 === 0;
           const isMiddle = index === 1;
-
           const gradientClass = isMiddle
             ? "bg-gradient-to-r from-[#F9FAFB00] to-[#F3E8FF]"
             : "bg-gradient-to-r from-[#F3E8FF] to-[#F9FAFB00]";
@@ -38,7 +51,7 @@ const OurService = () => {
                 {/* Image */}
                 <div className="w-28 h-28 md:w-56 md:h-56 shrink-0">
                   <Image
-                    src={service.image}
+                    src={service.main_img || "/images/placeholder.png"}
                     alt={service.title}
                     width={224}
                     height={224}
@@ -71,6 +84,18 @@ const OurService = () => {
           );
         })}
       </div>
+
+      {/* See More Button */}
+      {services.length > 3 && (
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="px-8 py-3 rounded-lg bg-primary text-white text-lg font-medium hover:opacity-90 transition"
+          >
+            {showAll ? "See Less" : "See More"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -43,7 +43,7 @@ export const baseApi = createApi({
     "Notifications",
     "NutritionLogs",
     "QASessions",
-   "MovementRestrictions",
+    "MovementRestrictions",
     "Articles",
     "PregnancyProducts",
     "OurTeam",
@@ -54,7 +54,8 @@ export const baseApi = createApi({
     "testimonials",
     "YoureNotAlone",
     "BabyCueLogs",
-    "MentalHealthLogs"
+    "MentalHealthLogs",
+    "ServiceLanding",
   ],
   endpoints: () => ({}),
 });
