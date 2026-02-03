@@ -74,13 +74,16 @@ export default function RecommendationBannerPage({
       <section className="relative w-full overflow-hidden px-6 py-16 font-sans border border-white rounded-xl bg-white shadow-sm mt-8">
         {/* Gradient & Wave Background */}
         <div className="absolute inset-0 z-0 bg-linear-to-b from-pink-50/40 via-white to-blue-50/30" />
-        <div
-          className="absolute inset-0 z-1 opacity-40 bg-cover bg-bottom bg-no-repeat pointer-events-none"
-          style={{
-            backgroundImage:
-              "url('/images/recommandation/recommendation-Img.png')",
-          }}
-        />
+
+        <video
+          className="absolute inset-0 z-1 w-full h-full object-cover opacity-40 pointer-events-none"
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src="/video/bg-video.mp4" type="video/mp4" />
+        </video>
 
         {/* Content */}
         <div className="relative z-10 max-w-6xl mx-auto text-center">
