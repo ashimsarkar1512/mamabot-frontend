@@ -6,10 +6,11 @@ import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useCreateCheckoutMutation, useGetPlansQuery } from "@/redux/features/api/user/subscription";
+import {
+  useCreateCheckoutMutation,
+  useGetPlansQuery,
+} from "@/redux/features/api/user/subscription";
 import Loading from "@/components/Loading";
-
-
 
 export default function PricingPricing() {
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function PricingPricing() {
       console.error("Checkout error:", err);
       toast.error(
         err?.data?.errors?.plan_id?.[0] ??
-          "You already have an active subscription for this plan."
+          "You already have an active subscription for this plan.",
       );
     } finally {
       setProcessingPlan(null);
@@ -63,11 +64,11 @@ export default function PricingPricing() {
           Pricing
         </span>
 
-        <h1 className="text-3xl md:text-4xl text-gray-900 mb-4">
+        <h1 className="text-xl md:text-4xl text-gray-900 mb-4">
           <span className="text-pink-600">Mamabot.de</span> — Pricing Plans
         </h1>
 
-        <p className="max-w-2xl text-gray-500">
+        <p className="max-w-2xl text-sm md:text-lg text-gray-500">
           Whether you’re expecting, a new mom, or exploring expert advice —
           Mamabot grows with you. Start free, and upgrade anytime for unlimited
           AI support and exclusive features.
@@ -75,21 +76,21 @@ export default function PricingPricing() {
       </div>
 
       {/* Pricing Cards */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8">
         {plans.map((plan: any, index: number) => (
           <div
             key={plan.id}
-            className={`relative bg-white rounded-2xl border flex flex-col p-8 mt-16 transition-transform duration-300
+            className={`relative bg-white rounded-2xl border flex flex-col p-3 md:p-8 mt-6 md:mt-16 transition-transform duration-300
               ${
                 index === 1
-                  ? "scale-110 z-10 shadow-2xl border-pink-500"
+                  ? "md:scale-110 z-10 shadow-2xl border-pink-500"
                   : "scale-100 shadow-lg border-gray-100"
               }`}
           >
             {/* Most Popular */}
             {index === 0 && (
               <>
-                <div className="absolute -top-14 right-15">
+                <div className="absolute -right-15 -top-14 md:-top-14 md:right-15">
                   <svg
                     width="100"
                     height="100"
@@ -112,24 +113,20 @@ export default function PricingPricing() {
                     />
                   </svg>
                 </div>
-                <div className="absolute -top-13 -right-12 font-medium text-pink-600">
+                <div className="absolute md:-top-13 -top-14 right-12 md:-right-12 font-medium text-pink-600">
                   Most popular!
                 </div>
               </>
             )}
 
             {/* Price */}
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-2">
               ${plan.price}/mth
             </h2>
 
-            <h3 className="font-semibold text-gray-800 mb-2">
-              {plan.name}
-            </h3>
+            <h3 className="font-semibold text-gray-800 mb-2">{plan.name}</h3>
 
-            <p className="text-sm text-gray-500 mb-6">
-              {plan.description}
-            </p>
+            <p className="text-sm text-gray-500 mb-6">{plan.description}</p>
 
             {/* Features */}
             <ul className="space-y-3 mb-8 flex-1">

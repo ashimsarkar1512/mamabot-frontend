@@ -22,7 +22,7 @@ const WhatUserSay = () => {
     );
   }
   return (
-    <div className="rounded-xl bg-white p-12">
+    <div className="rounded-xl bg-white p-2 md:p-12">
       <h3 className="text-xl md:text-2xl font-bold mb-8 md:mb-12">
         What <span className="text-primary">Users</span> Says
       </h3>
@@ -31,7 +31,7 @@ const WhatUserSay = () => {
         {data.data.map((testimonial) => (
           <div
             key={testimonial.id}
-            className=" rounded-xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+            className=" rounded-xl p-3 md:p-8 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-[#D9E5E9] mb-4 md:mb-6 overflow-hidden">
