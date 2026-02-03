@@ -175,7 +175,6 @@ export default function SingleArticlePage() {
           </div>
         </div>
 
-<<<<<<< HEAD
         <div className="mt-4 h-0.5 w-full bg-[#BAE1F0]" />
 
         {/* ---------------- RELATED ARTICLES ---------------- */}
@@ -241,9 +240,6 @@ export default function SingleArticlePage() {
             ))}
           </div>
         </div>
-=======
-       
->>>>>>> 0414652f88408c3bf905d3f22b4e7aeb4a33ffcb
       </div>
 
       <div className="pb-20" />
