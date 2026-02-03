@@ -74,10 +74,6 @@ const OurService = () => {
                   <p className="text-base text-[#677381] leading-relaxed max-w-xl">
                     {service.description}
                   </p>
-
-                  <button className="inline-flex w-fit px-6 py-3 bg-white text-primary text-lg font-medium hover:opacity-80 rounded-lg cursor-pointer">
-                    Learn More
-                  </button>
                 </div>
               </div>
             </div>
