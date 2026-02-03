@@ -30,7 +30,7 @@ export default function HeroSection() {
           <Image
             src="/images/home/right.png"
             alt="Pregnancy illustration"
-            width={150} // smaller
+            width={150}
             height={225}
             className="w-full h-auto"
             priority
@@ -51,7 +51,7 @@ export default function HeroSection() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-3xl md:text-5xl font-bold not-italic line-[1.2] mb-10">
+          <h1 className="text-3xl mdtext-5xl font-bold not-italic line-[1.2] mb-10">
             Your AI companion of
             <br className="my-12" />
             Pregnancy & <span className="text-pink-600">Motherhood</span>
@@ -64,11 +64,6 @@ export default function HeroSection() {
             and a supportive community to guide you through every step of your
             journey.
           </p>
-
-          {/* CTA Button */}
-          {/* <button className="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 px-10 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-            Ask Mamabot
-          </button> */}
 
           <CommonButton
             onClick={handleAskMamabot}
