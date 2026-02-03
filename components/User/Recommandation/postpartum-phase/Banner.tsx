@@ -12,13 +12,15 @@ const Banner = () => {
       <h2 className="m-2 absolute top-0 right-0 p-2 md:p-0 w-fit h-8 md:w-44 md:h-11 bg-sky-100/30 rounded-tl-xl rounded-tr-xl rounded-br-md rounded-bl-md z-2 flex items-center justify-center text-xs md:text-sm text-gray-600 border border-white/70!">
         Postpartum 4 weeks
       </h2>
-      <div
-        className="absolute inset-0 z-1  bg-cover bg-bottom bg-no-repeat pointer-events-none"
-        style={{
-          backgroundImage:
-            "url('/images/recommandation/bg-recommandation.png')",
-        }}
-      />
+      <video
+        className="absolute inset-0 z-1 w-full h-full object-cover opacity-40 pointer-events-none"
+        autoPlay
+        loop
+        muted
+        playsInline
+      >
+        <source src="/video/bg-video.mp4" type="video/mp4" />
+      </video>
 
       {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto text-center">
