@@ -41,12 +41,12 @@ export default function SingleArticlePage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <p className="text-red-500">Failed to load article</p>
-        <button
+        {/* <button
           onClick={() => router.push("/user-dashboard")}
           className="mt-4 text-[#229ECF] hover:underline"
         >
           Back to Dashboard
-        </button>
+        </button> */}
       </div>
     );
   }
