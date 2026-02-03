@@ -15,7 +15,7 @@ export default function RecommandationPage() {
   const [active, setActive] = useState<RecommendationTab>("all");
   return (
     <div>
-      <RecommendationBannerPage active={active} setActive={setActive} />
+      <RecommendationBannerPage profile={profile} active={active} setActive={setActive} />
       <ProductAndFoodRecommendationsPage active={active} />
       <WellnessActivities/>
       <RecommendedReading profile={profile}/>

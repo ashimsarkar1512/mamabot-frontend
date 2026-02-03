@@ -23,15 +23,12 @@ export default function BabyMovementModal({
   const [isKickCounterOpen, setIsKickCounterOpen] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [trackingData, setTrackingData] = useState<{
-  week: number;
-  date: string;
-  time:string;
-} | null>(null);
+    week: number;
+    date: string;
+    time: string;
+  } | null>(null);
 
-
-  console.log(profile, "profile fserwerte");
-
-  // Fixed: Check isOpen first, before rendering other modals
+  // Early return if modal is closed
   if (!isOpen) return null;
 
   // Render history modal
@@ -50,18 +47,18 @@ export default function BabyMovementModal({
 
   // Render kick counter modal
   if (isKickCounterOpen && trackingData) {
-  return (
-    <LiveKickCounterModal
-      isOpen={true}
-      onClose={() => {
-        setIsKickCounterOpen(false);
-        onClose();
-      }}
-      trackingData={trackingData} // ✅ pass week + date here
-    />
-  );
-}
-
+    return (
+      <LiveKickCounterModal
+        isOpen={true}
+        onClose={() => {
+          setIsKickCounterOpen(false);
+          setTrackingData(null); // Reset tracking data
+          onClose();
+        }}
+        trackingData={trackingData}
+      />
+    );
+  }
 
   const formatDate = () => {
     return currentDate.toLocaleDateString("en-US", {
@@ -80,15 +77,14 @@ export default function BabyMovementModal({
     });
   };
 
-const handleStartTracking = () => {
-  setTrackingData({
-    week: pregnancyWeek,
-    date: formatDate(),
-    time:formatTime()
-  });
-  setIsKickCounterOpen(true);
-};
-
+  const handleStartTracking = () => {
+    setTrackingData({
+      week: pregnancyWeek,
+      date: formatDate(),
+      time: formatTime(),
+    });
+    setIsKickCounterOpen(true);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -96,6 +92,7 @@ const handleStartTracking = () => {
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-full transition-colors"
+          aria-label="Close modal"
         >
           <X className="h-6 w-6 text-gray-600" />
         </button>
@@ -107,7 +104,7 @@ const handleStartTracking = () => {
                 src="/images/user/baby1.png"
                 width={36}
                 height={36}
-                alt="baby"
+                alt="Baby icon"
               />
             </div>
             <h2 className="text-3xl font-bold text-gray-800">
@@ -180,7 +177,7 @@ const handleStartTracking = () => {
         <div className="flex gap-4">
           <button
             onClick={() => setShowHistory(true)}
-            className="flex-1 py-4 px-6 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3 text-lg cursor-pointer"
+            className="flex-1 py-4 px-6 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3 text-lg"
           >
             <RefreshCw className="h-5 w-5" />
             View Past Logs
@@ -188,7 +185,7 @@ const handleStartTracking = () => {
 
           <button
             onClick={handleStartTracking}
-            className="flex-1 py-4 px-6 bg-linear-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg cursor-pointer"
+            className="flex-1 py-4 px-6 bg-linear-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-xl hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg"
           >
             <Play className="h-5 w-5 fill-white" />
             Start Tracking
