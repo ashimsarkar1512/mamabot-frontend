@@ -1,8 +1,10 @@
+"use client"
 import Banner from "@/components/User/Recommandation/postpartum-phase/Banner";
 import RecoveryDashboardSections from "@/components/User/Recommandation/postpartum-phase/RecoveryDashboardSections";
 import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
 import HangingAlertCard from "@/components/User/Recommandation/postpartum-phase/HangingAlertCard";
 import Guidance from "@/components/User/Recommandation/postpartum-phase/Guidance";
+import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
 
 const ARTICLES_DATA = [
   {
@@ -39,9 +41,10 @@ const ARTICLES_DATA = [
   },
 ];
 const PostpartumPhasePageRecommandation = () => {
+  const {data:profile}=useGetMyProfileQuery(undefined)
   return (
     <div>
-      <Banner />
+      <Banner profile={profile} />
       <Guidance />
       <RecoveryDashboardSections />
       <HangingAlertCard />

@@ -2,8 +2,14 @@
 import React from "react";
 import Image from "next/image";
 import { ChevronRight, ArrowDown } from "lucide-react";
+import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
 
 const ArticleCard = ({ article }: { article: any }) => {
+
+  const {data}=useGetArticlesQuery(undefined)
+  
+  console.log(data,"vaginal")
+  
   return (
     <div className="flex flex-col md:flex-row gap-4 p-4 bg-white border border-sky-100 rounded-[24px] hover:shadow-md transition-shadow">
       {/* Article Image */}

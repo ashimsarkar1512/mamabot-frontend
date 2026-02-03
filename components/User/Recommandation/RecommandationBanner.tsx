@@ -3,18 +3,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import {
-  LayoutGrid,
-  ShoppingBag,
-  Apple,
-  Leaf,
-  BrainCircuit,
-  FileText,
   Baby,
   Droplets,
   Settings,
   Sparkles,
 } from "lucide-react";
 import Image from "next/image";
+import { IProfileResponse } from "@/types/user/profile";
 
 // Interface
 export type RecommendationTab =
@@ -29,6 +24,12 @@ interface Category {
   id: RecommendationTab;
   label: string;
   image?: string;
+}
+
+interface RecommendationBannerProps {
+  active: RecommendationTab;
+  setActive: (value: RecommendationTab) => void;
+  profile?: IProfileResponse;
 }
 
 // Category Data
@@ -64,10 +65,11 @@ const categories: Category[] = [
 export default function RecommendationBannerPage({
   active,
   setActive,
-}: {
-  active: RecommendationTab;
-  setActive: (value: RecommendationTab) => void;
-}) {
+  profile,
+}: RecommendationBannerProps)  {
+
+
+  const week=profile?.data?.current_week
   return (
     <div className="flex flex-col gap-8  min-h-screen">
       {/* Category Selection */}
@@ -152,7 +154,7 @@ export default function RecommendationBannerPage({
                 Pregnancy Week
               </h3>
               <span className="bg-[#E91E63] text-white text-xs px-2 py-0.5 rounded-full font-bold">
-                22
+               {week}
               </span>
             </div>
             <p className="text-gray-400 text-sm">
