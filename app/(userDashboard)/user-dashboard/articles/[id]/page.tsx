@@ -175,7 +175,75 @@ export default function SingleArticlePage() {
           </div>
         </div>
 
+<<<<<<< HEAD
+        <div className="mt-4 h-0.5 w-full bg-[#BAE1F0]" />
+
+        {/* ---------------- RELATED ARTICLES ---------------- */}
+        <div className="pt-12 md:pt-20">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl md:text-[32px] font-bold text-[#229ECF]">
+              Related Articles
+            </h2>
+
+            {relatedArticles.length > 3 && !showAll && (
+              <button
+                onClick={() => setShowAll(true)}
+                className="text-base md:text-lg text-[#229ECF] hover:opacity-80 transition-opacity"
+              >
+                See more
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {visibleArticles.map((item: any) => (
+              <div
+                key={item.id}
+                className="group relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
+              >
+                <div className="aspect-4/3 overflow-hidden relative h-48 md:h-64">
+                  <Image
+                    src={
+                      item.thumb_img ||
+                      item.main_img ||
+                      "/images/blog/blog-details.png"
+                    }
+                    fill
+                    alt={item.title}
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                <div className="p-6 flex flex-col grow">
+                  <div className="flex justify-between mb-4 items-center text-[#229ECF]">
+                    <p className="bg-[#DEF0F8] px-3 py-1 text-xs font-medium rounded-full">
+                      {item.category?.title || "Article"}
+                    </p>
+                    <Bookmark size={20} />
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-[#303030] mb-3 line-clamp-2">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-[#677381] text-sm mb-6 line-clamp-3 grow">
+                    {item.short_description}
+                  </p>
+
+                  <Link href={`/user-dashboard/articles/${item.id}`}>
+                    <button className="w-full bg-[#229ECF] hover:bg-[#1a7bb5] text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                      <BookOpenIcon size={18} />
+                      Read Article
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+=======
        
+>>>>>>> 0414652f88408c3bf905d3f22b4e7aeb4a33ffcb
       </div>
 
       <div className="pb-20" />

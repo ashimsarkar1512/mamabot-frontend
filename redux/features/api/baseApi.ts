@@ -55,6 +55,7 @@ export const baseApi = createApi({
     "YoureNotAlone",
     "BabyCueLogs",
     "MentalHealthLogs",
+    "CommunityGroups",
     "ServiceLanding",
   ],
   endpoints: () => ({}),

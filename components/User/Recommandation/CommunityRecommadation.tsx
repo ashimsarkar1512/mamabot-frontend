@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import {
@@ -7,26 +9,42 @@ import {
 import { Users, Stethoscope, ChevronRight, Crown } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useGetGroupQuery, useJoinGroupMutation } from "@/redux/features/api/user/groups/communityGroup";
+import { IProfileResponse } from "@/types/user/profile";
+interface CommunityRecommendationsProps {
+ profile?: IProfileResponse;
+}
 
-export default function CommunityRecommendations() {
+export default function CommunityRecommendations({
+  profile,
+}: CommunityRecommendationsProps) {
   const { data } = useGetQASessionsQuery(undefined);
   const [registerSession, { isLoading }] = useRegisterQASessionMutation();
 
   const [registeredIds, setRegisteredIds] = useState<number[]>([]); // Track registered sessions
 
+  const { data: groups } = useGetGroupQuery(undefined);
+  const [joinGroup, { isLoading: isJoiningGroup }] = useJoinGroupMutation();
+
+  const week=profile?.data?.current_week
+
+
+  // Filter groups where is_member is false
+  const availableGroup = groups?.data?.find((group: any) => group.is_member === false);
+
   const session = data?.data?.[0]; // first session
 
-  const now = new Date();
+  // const now = new Date();
 
-  const startTime = session ? new Date(session.start_time) : null;
-  const endTime = session ? new Date(session.end_time) : null;
+  // const startTime = session ? new Date(session.start_time) : null;
+  // const endTime = session ? new Date(session.end_time) : null;
 
-  // Button ENABLE only if current time is within session time
-  const isButtonEnabled =
-    session && startTime && endTime
-      ? now.getTime() >= startTime.getTime() &&
-        now.getTime() <= endTime.getTime()
-      : false;
+  // // Button ENABLE only if current time is within session time
+  // const isButtonEnabled =
+  //   session && startTime && endTime
+  //     ? now.getTime() >= startTime.getTime() &&
+  //       now.getTime() <= endTime.getTime()
+  //     : false;
 
   const handleRegister = async (qaSessionId: number) => {
     try {
@@ -43,6 +61,20 @@ export default function CommunityRecommendations() {
     }
   };
 
+  const handleJoinGroup = async (groupId: number) => {
+    try {
+      const res = await joinGroup({
+        group_id: groupId,
+      }).unwrap();
+      toast.success(res.message || "Successfully joined the group!");
+    } catch (err: any) {
+      console.error("Join group failed:", err);
+      toast.error(
+        err?.data?.message || "Failed to join group. Please try again.",
+      );
+    }
+  };
+
   return (
     <section className="py-12 ">
       <div className="container mx-auto">
@@ -53,7 +85,7 @@ export default function CommunityRecommendations() {
             <span className="text-[#00acc1]">Recommendations</span>
           </h2>
           <p className="text-gray-500 text-sm md:text-base">
-            Connect with other moms currently in Week 22 and join helpful events
+            Connect with other moms currently in Week {week} and join helpful events
             designed just for you
           </p>
           <div className="w-full h-px bg-[#229ECF] mt-6"></div>
@@ -61,40 +93,50 @@ export default function CommunityRecommendations() {
 
         {/* Community Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-          {/* Support Circle Card */}
-          <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
-            <div className="flex flex-col items-start gap-3">
-              <div className="bg-[#fce4ec] rounded-xl p-3">
-                <Users size={24} className="text-[#e91e63]" />
+          {/* Support Circle Card - Dynamic from API */}
+          {availableGroup && (
+            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
+              <div className="flex flex-col items-start gap-3">
+                <div className="bg-[#fce4ec] rounded-xl p-3">
+                  <Users size={24} className="text-[#e91e63]" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-800 leading-tight my-4">
+                  {availableGroup.name}
+                </h3>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-800 leading-tight my-4">
-                Second Trimester Support Circle
-              </h3>
+
+              <div className="bg-[#fdf0f5] rounded-xl p-5 mb-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Users size={16} className="text-[#e91e63]" />
+                  <span className="text-gray-700 text-sm font-medium">
+                    {availableGroup.member_count || availableGroup.users_count} members
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-[#e91e63] text-lg">🔥</span>
+                  <span className="text-gray-700 text-sm font-medium">
+                    {availableGroup.is_active ? "Active today" : "Inactive"}
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-gray-500 text-[15px] mb-8">
+                {availableGroup.description}
+              </p>
+
+              <button
+                onClick={() => handleJoinGroup(availableGroup.id)}
+                disabled={isJoiningGroup}
+                className={`mt-auto w-full border font-medium py-3 rounded-xl transition-all ${
+                  isJoiningGroup
+                    ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                    : "border-[#e91e63] text-[#e91e63] hover:bg-[#fce4ec] cursor-pointer"
+                }`}
+              >
+                {isJoiningGroup ? "Joining..." : "Join Group"}
+              </button>
             </div>
-
-            <div className="bg-[#fdf0f5] rounded-xl p-5 mb-6">
-              <div className="flex items-center gap-3 mb-2">
-                <Users size={16} className="text-[#e91e63]" />
-                <span className="text-gray-700 text-sm font-medium">
-                  1,234 members
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-[#e91e63] text-lg">🔥</span>
-                <span className="text-gray-700 text-sm font-medium">
-                  Active today
-                </span>
-              </div>
-            </div>
-
-            <p className="text-gray-500 text-[15px] mb-8">
-              Connect with other moms in your trimester and share experiences
-            </p>
-
-            <button className="mt-auto w-full border border-[#e91e63] text-[#e91e63] hover:bg-[#fce4ec] font-medium py-3 rounded-xl transition-all cursor-pointer">
-              Join Group
-            </button>
-          </div>
+          )}
 
           {/* Live Q&A Card - Dynamic */}
           {session && (
@@ -141,20 +183,14 @@ export default function CommunityRecommendations() {
               <p className="text-gray-500 text-[15px] mb-8">{session.topic}</p>
 
               {/* Register Button - POST API with toast */}
-              <button
-                onClick={() => handleRegister(session.id)}
-                disabled={!isButtonEnabled} // note the NOT (!) here
-                className={`mt-auto w-full border font-medium py-3 rounded-xl transition-all flex items-center justify-center 
-    ${
-      !isButtonEnabled
-        ? "text-gray-400 cursor-not-allowed border-gray-300 bg-gray-50"
-        : "border-[#00acc1] text-[#00acc1] hover:bg-[#e0f7fa] cursor-pointer"
-    }`}
-              >
-                {isButtonEnabled
-                  ? "Register for Live Q&A"
-                  : "Session not active"}
-              </button>
+          <button
+  onClick={() => handleRegister(session.id)}
+  className="mt-auto w-full border font-medium py-3 rounded-xl transition-all flex items-center justify-center 
+    border-[#00acc1] text-[#00acc1] hover:bg-[#e0f7fa]"
+>
+  {session ? "Register for Live Q&A" : "View Session"}
+</button>
+
             </div>
           )}
         </div>
