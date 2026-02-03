@@ -229,7 +229,7 @@ export default function SingleArticlePage() {
                     {item.short_description}
                   </p>
 
-                  <Link href={`/articles/${item.id}`}>
+                  <Link href={`/user-dashboard/articles/${item.id}`}>
                     <button className="w-full bg-[#229ECF] hover:bg-[#1a7bb5] text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
                       <BookOpenIcon size={18} />
                       Read Article

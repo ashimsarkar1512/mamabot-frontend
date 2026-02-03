@@ -41,7 +41,7 @@ export default function DailyTaskCard({
 
       <Dialog>
         <DialogTrigger asChild>
-          <button className="mt-6 w-full border border-[#229ECF]! text-[#229ECF]! py-2 rounded-lg hover:bg-[#229ECF]/10 transition">
+          <button className="mt-6 w-full border border-[#229ECF]! text-[#229ECF]! py-2 rounded-lg hover:bg-[#229ECF]/10 transition cursor-pointer">
             {actionLabel}
           </button>
         </DialogTrigger>

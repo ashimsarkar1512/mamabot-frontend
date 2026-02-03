@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
 import Link from "next/link";
+import { IProfileResponse } from "@/types/user/profile";
 
 interface Article {
   id: number;
@@ -15,10 +16,16 @@ interface Article {
   category: string;
 }
 
+interface CommunityRecommendationsProps {
+ profile?: IProfileResponse;
+}
+
 const placeholderImage =
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop";
 
-export default function RecommendedReading() {
+export default function RecommendedReading({
+  profile,
+}: CommunityRecommendationsProps){
   const [showAll, setShowAll] = useState(false);
   const { data } = useGetArticlesQuery(undefined);
 
@@ -35,6 +42,8 @@ export default function RecommendedReading() {
 
   const displayedArticles = showAll ? articles : articles.slice(0, 3);
 
+  const week=profile?.data?.current_week
+
   return (
     <section className="py-12">
       <div className="container mx-auto">
@@ -42,7 +51,7 @@ export default function RecommendedReading() {
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-bold">
             <span className="text-foreground">Recommended Reading for </span>
-            <span className="text-[#0891b2]">Week 22</span>
+            <span className="text-[#0891b2]">Week {week}</span>
           </h2>
           <button
             onClick={() => setShowAll(!showAll)}
