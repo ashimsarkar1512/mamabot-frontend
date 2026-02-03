@@ -26,7 +26,7 @@ const MeetOurTeam = () => {
 
   const teamMembers = data.data.teams;
   return (
-    <section className="bg-[#ffffff]/25 px-5 py-12 border-2 !border-white rounded-xl md:px-10 md:py-24">
+    <section className="bg-[#ffffff]/25 px-5 py-6 border-2 !border-white rounded-xl md:px-10 md:py-10">
       <div className="text-center">
         <h2 className="text-xl mb-4 md:text-[40px]">
           Let's Meet <span className="text-primary">Our Team</span>
