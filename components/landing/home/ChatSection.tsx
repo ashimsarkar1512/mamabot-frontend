@@ -25,7 +25,7 @@ export default function ChatSection() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen rounded-2xl border border-white/50 bg-white/50 backdrop-blur-md flex-col lg:flex-row pl-4 py-4">
+    <div className="flex md:h-screen rounded-2xl border border-white/50 bg-white/50 backdrop-blur-md flex-col lg:flex-row pl-4 py-4">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -152,14 +152,14 @@ export default function ChatSection() {
       <div className="flex-1 flex flex-col w-full lg:w-auto ">
         {/* Top Badges */}
         <div className="flex justify-center w-full py-2 ">
-          <div className="flex items-center gap-3 px-4 py-1 border border-[#FF9800] bg-orange-50/30 rounded-full shadow-sm">
+          <div className="flex flex-col md:flex-row items-center gap-3 px-2 md:px-4 py-1 md:border md:border-[#FF9800] md:bg-orange-50/30 rounded-full md:shadow-sm">
             {/* Section 1: Not medical advice */}
             <span className="text-[11px] text-[#FF9800] sm:text-xs font-medium  whitespace-nowrap">
               Not medical advice
             </span>
 
             {/* Vertical Divider */}
-            <div className="w-px h-4 bg-[#FF9800] self-center"></div>
+            <div className="md:block hidden w-px h-4 bg-[#FF9800] self-center"></div>
 
             {/* Section 2: In emergencies */}
             <span className="text-[11px] sm:text-xs font-medium text-[#FF9800] whitespace-nowrap">
@@ -168,7 +168,7 @@ export default function ChatSection() {
             </span>
 
             {/* Vertical Divider */}
-            <div className="w-px h-4 bg-[#FF9800] self-center"></div>
+            <div className="md:block hidden w-px h-4 bg-[#FF9800] self-center"></div>
 
             {/* Section 3: Read Disclaimer */}
             <button className="text-[11px] sm:text-xs font-bold text-[#E91E63] transition-colors whitespace-nowrap underline-offset-2">

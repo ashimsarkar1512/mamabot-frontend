@@ -51,7 +51,7 @@ export default function HeroSection() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-5xl font-bold not-italic line-[1.2] mb-10">
+          <h1 className="text-3xl md:text-5xl font-bold not-italic line-[1.2] mb-10">
             Your AI companion of
             <br className="my-12" />
             Pregnancy & <span className="text-pink-600">Motherhood</span>
