@@ -28,10 +28,10 @@ const MeetOurTeam = () => {
   return (
     <section className="bg-[#ffffff]/25 px-5 py-12 border-2 !border-white rounded-xl md:px-10 md:py-24">
       <div className="text-center">
-        <h2 className="text-2xl mb-4 md:text-[40px]">
+        <h2 className="text-xl mb-4 md:text-[40px]">
           Let's Meet <span className="text-primary">Our Team</span>
         </h2>
-        <p className="text-lg text-[#677381]">
+        <p className="text-base md:text-lg text-[#677381]">
           "Pregnant in fermentation and the stress of the difficult task ahead.
           Trouble arises from the scythe, but the education was pleasant."
         </p>

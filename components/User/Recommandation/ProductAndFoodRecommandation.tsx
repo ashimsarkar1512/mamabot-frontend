@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   LayoutGrid,
@@ -24,6 +24,8 @@ import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { useGetPregnancyProductsByWeekQuery } from "@/redux/features/api/user/recommandetion/productRecommandetion";
+import { useSearchParams } from "next/navigation";
+import { foodItems } from "@/lib/data/product&foodRecommend";
 
 interface Category {
   id: string;
@@ -38,76 +40,6 @@ const categories: Category[] = [
   { id: "wellness", label: "Wellness", icon: <Leaf size={28} /> },
   { id: "mental", label: "Mental Health", icon: <BrainCircuit size={28} /> },
   { id: "articles", label: "Articles", icon: <FileText size={28} /> },
-];
-
-interface Product {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  rating: number;
-  reviews: number;
-  price: number;
-}
-
-interface FoodItem {
-  id: string;
-  icon: string;
-  name: string;
-  benefit: string;
-  description: string;
-}
-
-const foodItems: FoodItem[] = [
-  {
-    id: "f1",
-    icon: "🥦",
-    name: "Broccoli",
-    benefit: "High in Folate",
-    description: "Supports fetal growth and maternal health.",
-  },
-  {
-    id: "f2",
-    icon: "🍓",
-    name: "Strawberries",
-    benefit: "Rich in Vitamin C",
-    description: "Boosts immunity and iron absorption.",
-  },
-  {
-    id: "f3",
-    icon: "🥑",
-    name: "Avocado",
-    benefit: "Healthy Fats",
-    description: "Provides essential fatty acids for baby's brain development.",
-  },
-  {
-    id: "f4",
-    icon: "🍊",
-    name: "Oranges",
-    benefit: "Vitamin C & Fiber",
-    description: "Strengthens immune system and aids digestion.",
-  },
-  {
-    id: "f5",
-    icon: "🥕",
-    name: "Carrots",
-    benefit: "Beta-Carotene",
-    description: "Supports eye development in the fetus.",
-  },
-  {
-    id: "f6",
-    icon: "🍌",
-    name: "Bananas",
-    benefit: "Potassium Rich",
-    description: "Helps prevent leg cramps and boosts energy.",
-  },
-  {
-    id: "f7",
-    icon: "🥩",
-    name: "Lean Meat",
-    benefit: "Iron & Protein",
-    description: "Supports hemoglobin levels and overall energy.",
-  },
 ];
 
 export default function ProductAndFoodRecommendationsPage({
@@ -140,6 +72,15 @@ export default function ProductAndFoodRecommendationsPage({
     error,
   } = useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
 
+  const searchParams = useSearchParams();
+  const foodSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scrollTo = searchParams.get("scrollTo");
+    if (scrollTo === "food" && foodSectionRef.current) {
+      foodSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [searchParams]);
   console.log(productData, "product datafg ");
 
   return (
@@ -310,7 +251,7 @@ export default function ProductAndFoodRecommendationsPage({
       )}
       {/*  Today's Recommended Foods  */}
       {(active === "all" || active === "nutrition") && (
-        <section className="">
+        <section className="" ref={foodSectionRef}>
           <div className="flex items-center justify-between p-6 bg-[#ffffff] mb-6 flex-wrap gap-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl">🥗</span>

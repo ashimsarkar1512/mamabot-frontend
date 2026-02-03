@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Clock, BookOpen } from "lucide-react";
+import { Clock, BookOpen, Navigation } from "lucide-react";
 import Image from "next/image";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { useRouter } from "next/navigation";
@@ -33,14 +33,14 @@ export default function LearnAndGrow() {
               src={featuredArticle.main_img || "/images/home/article.png"}
               alt={featuredArticle.title || "Pregnant woman"}
               fill
-              className="object-cover object-center"
+              className="object-cover px-2 md:px-0 object-center"
               priority
             />
           </div>
         </div>
 
         {/* Right - Article Content */}
-        <div className="relative p-8 md:p-14 lg:p-16 flex flex-col justify-center">
+        <div className="relative p-4 md:p-14 lg:p-16 flex flex-col justify-center">
           <div className="relative z-10">
             {/* Top Badge */}
             <div className="inline-flex items-center gap-2 mb-4  px-4 py-1.5 rounded-full w-fit">
@@ -51,7 +51,7 @@ export default function LearnAndGrow() {
             </div>
 
             {/* Titles */}
-            <h2 className="text-xl md:text-2xl  text-[#1A1A1A] mb-4 tracking-tight">
+            <h2 className="text-lg md:text-2xl  text-[#1A1A1A] mb-4 tracking-tight">
               Learn & <span className="text-[#EF2364]">Grow</span>
             </h2>
             {featuredArticle.category && (
@@ -60,11 +60,11 @@ export default function LearnAndGrow() {
               </div>
             )}
 
-            <h3 className="text-2xl md:text-3xl mb-5 leading-tight">
+            <h3 className="text-xl md:text-3xl mb-5 leading-tight">
               {featuredArticle.title}
             </h3>
 
-            <p className="text-gray-600 mb-6 line-clamp-3">
+            <p className="text-gray-600 text-sm md:text-base mb-6 line-clamp-3">
               {featuredArticle.short_description}
             </p>
 
@@ -78,6 +78,8 @@ export default function LearnAndGrow() {
 
             <CommonButton
               text="Read Article"
+              icon={<Navigation size={16} className="fill-white" />}
+              iconPosition="right"
               onClick={() => router.push(`/articles/${featuredArticle.id}`)}
               className="rounded-lg py-2 px-6"
             />
@@ -98,7 +100,7 @@ export default function LearnAndGrow() {
                 src={article.thumb_img || "/placeholder.svg"}
                 alt={article.title}
                 fill
-                className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                className="object-cover w-full h-full px-2 md:px-0 transition-transform duration-300 hover:scale-105"
                 style={{ objectPosition: "center" }}
               />
             </div>
@@ -113,6 +115,8 @@ export default function LearnAndGrow() {
               </p>
               <CommonButton
                 text="Read Article"
+                icon={<Navigation size={16} className="fill-white" />}
+                iconPosition="right"
                 onClick={() => router.push(`/articles/${article.id}`)}
                 className="rounded-lg py-1 px-4 text-sm bg-pink-600 hover:bg-pink-700 text-white"
               />

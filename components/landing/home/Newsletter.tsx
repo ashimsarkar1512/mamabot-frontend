@@ -37,9 +37,9 @@ const Newsletter = () => {
   return (
     <div className="px-0 md:px-30">
       <Toaster position="top-right" reverseOrder={false} />
-      <div className="bg-white p-8 md:p-22 rounded-xl shadow-xl mb-6 md:mb-11">
-        <h2 className="text-[32px] text-center mb-10">
-          Subscribe to our <span className="text-primary">newsletter</span>
+      <div className="bg-white p-4 md:p-22 rounded-xl shadow-xl mb-6 md:mb-11">
+        <h2 className="text-2xl md:text-[32px] text-center mb-10">
+          Subscribe to Our <span className="text-primary">Newsletter</span>
         </h2>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-3">
@@ -66,7 +66,7 @@ const Newsletter = () => {
             type="button"
             onClick={handleSubmit}
             disabled={isLoading}
-            className="h-[44px] px-8 rounded-full bg-primary text-white text-base font-medium hover:opacity-90 transition disabled:opacity-60"
+            className="h-[44px] px-5 md:px-8 rounded-full bg-primary text-white text-sm md:text-base font-medium hover:opacity-90 transition disabled:opacity-60"
           >
             {isLoading ? "Subscribing..." : "Subscribe Now"}
           </button>
