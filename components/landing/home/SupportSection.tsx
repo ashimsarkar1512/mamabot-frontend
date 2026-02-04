@@ -56,7 +56,7 @@ const SupportSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-white/25 rounded-2xl border-2 !border-white  my-10">
+    <section className="py-8 md:py-20 px-4 bg-white/25 rounded-2xl border-2 !border-white  my-10">
       {/* Header */}
       <div className="text-center mb-20">
         <div className="inline-flex items-center gap-1 bg-[#FCE7F3] border border-pink-100 px-3 py-1 rounded-full mb-6">

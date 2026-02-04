@@ -60,15 +60,15 @@ const AboutUs = () => {
           </div>
 
           {/* Right - Images */}
-          <div className="relative flex justify-center lg:justify-end">
+          <div className="relative flex justify-center pb-5 lg:justify-end">
             <div className="relative">
               {/* Main Image */}
               {main_img && (
-                <div className="relative max-w-[420px] md:max-w-[524px] z-10 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative max-w-[420px] md:max-w-[600px] z-10 rounded-2xl overflow-hidden shadow-2xl">
                   <Image
                     src={main_img}
                     alt={title}
-                    width={500}
+                    width={600}
                     height={600}
                     className="w-full h-full object-cover"
                     priority
@@ -79,7 +79,7 @@ const AboutUs = () => {
               {/* Inset Image */}
               {inset_img && (
                 <div className="absolute -bottom-8 -left-4 md:-left-12 lg:-left-16 z-20">
-                  <div className="relative w-32 h-32 md:w-44 md:h-44 lg:w-48 lg:h-48 overflow-hidden shadow-xl">
+                  <div className="relative w-24 h-24 md:w-44 md:h-44 lg:w-48 lg:h-48 overflow-hidden shadow-xl">
                     <Image
                       src={inset_img}
                       alt="About Mamabot"
