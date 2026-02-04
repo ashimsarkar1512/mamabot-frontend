@@ -1,6 +1,7 @@
 "use client";
 
 import { comfortaa } from "@/app/fonts";
+import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { useGetOurJourneyQuery } from "@/redux/features/api/user/OurJourney/OurJourney";
 import { BookOpenIcon } from "lucide-react";
 import Image from "next/image";
@@ -46,9 +47,17 @@ const StoryBehind = () => {
               <p>{journey.description}</p>
             </div>
 
-            <button className="mt-5 md:mt-10 inline-flex items-center gap-2 rounded-xl bg-[#229ECF] px-6 py-3 text-lg font-medium text-white shadow-md transition hover:opacity-80 cursor-pointer">
+            {/* <button className="mt-5 md:mt-10 inline-flex items-center gap-2 rounded-xl bg-[#229ECF] px-6 py-3 text-lg font-medium text-white shadow-md transition hover:opacity-80 cursor-pointer">
               <BookOpenIcon width={24} height={24} /> Read Full Story
-            </button>
+            </button> */}
+            <div className="mt-5 md:mt-10">
+              <CommonButton
+                text="Read Full Story"
+                iconPosition="left"
+                icon={<BookOpenIcon width={24} height={24} />}
+                bgColor="bg-[#229ECF]"
+              />
+            </div>
           </div>
 
           {/* RIGHT GRID */}
