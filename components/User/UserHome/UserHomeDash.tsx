@@ -152,15 +152,15 @@ const hydrationProgress =
             </Card>
 
             {/* Daily Tasks */}
-            <Card className=" sm:p-6 lg:p-6">
+            <Card className="p-4 lg:p-6">
               <div className="flex items-center gap-2 mb-2">
-                <Activity className="h-5 w-5 text-secondary" />
+                <Activity className="h-5 w-5 text-primary" />
                 <h3 className="text-lg font-semibold">Daily Tasks</h3>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 ">
                 {/* Hydration */}
-                <div className="flex flex-col justify-around sm:flex-row sm:items-center gap-3   py-3">
+                <div className="flex flex-col justify-around sm:flex-row sm:items-center gap-3  ">
                   <div className="flex items-center gap-3 flex-1">
                     <span>
                       <svg
