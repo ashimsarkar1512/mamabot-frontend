@@ -1,26 +1,38 @@
 "use client";
 
 import BlogDetails from "@/components/landing/Blog/BlogDetails";
-import { blogPosts } from "@/lib/data/blogData";
-import { useParams } from "next/navigation";
-import { notFound } from "next/navigation";
+import {
+  useGetAllArticlesQuery,
+  Article,
+} from "@/redux/features/api/user/AllArticles";
+import { useParams, notFound } from "next/navigation";
+import React, { useMemo } from "react";
 
 export default function BlogDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  // Find the post by slug
-  const post = blogPosts.find((p) => {
-    const postSlug = p.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-    return postSlug === slug;
-  });
+  // Fetch all articles from the API
+  const { data, isLoading, isError } = useGetAllArticlesQuery();
 
-  if (!post) {
-    notFound();
-  }
+  // Flatten articles from categories
+  const allArticles: Article[] = useMemo(() => {
+    if (!data) return [];
+    return data.data.flatMap((category) => category.articles);
+  }, [data]);
 
-  return <BlogDetails post={post} />;
+  // Find the article by slug
+  const post = allArticles.find((p) => p.slug === slug);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError || !post) notFound();
+
+  return (
+    <BlogDetails
+      post={post}
+      categoryTitle={
+        data?.data.find((c) => c.id === post.category_id)?.title || "Blog"
+      }
+    />
+  );
 }
