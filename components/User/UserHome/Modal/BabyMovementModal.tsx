@@ -80,7 +80,7 @@ export default function BabyMovementModal({
   const handleStartTracking = () => {
     setTrackingData({
       week: pregnancyWeek,
-      date: formatDate(),
+      date: currentDate.toISOString(),
       time: formatTime(),
     });
     setIsKickCounterOpen(true);

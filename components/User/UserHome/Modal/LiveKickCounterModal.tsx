@@ -125,11 +125,8 @@ export default function LiveKickCounterModal({
     const movementStatus = kicks >= 10 ? "normal" : "reduced";
 
     try {
-      // Parse the date string from trackingData
-      const logDate = new Date(trackingData.date);
-      
       const payload = {
-        log_date: logDate.toISOString().split("T")[0], // yyyy-mm-dd
+        log_date: trackingData.date.split("T")[0], // yyyy-mm-dd
         start_time: formatTimeToHHMMSS(startTime), // hh:mm:ss
         end_time: formatTimeToHHMMSS(finalEndTime), // hh:mm:ss
         kick_count: kicks,
