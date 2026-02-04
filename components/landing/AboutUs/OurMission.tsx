@@ -47,7 +47,7 @@ export default function OurMission() {
     <section className={`relative ${comfortaa.className} overflow-hidden`}>
       <div className="container mx-auto">
         {/* Header */}
-        <div className="text-center mb-14">
+        <div className="text-center mb-6 md:mb-14">
           <div className="flex justify-center mb-3">
             <div className="h-16 w-16 rounded-full flex items-center justify-center text-primary text-xl">
               <TargetIcon width={64} height={64} />
@@ -69,7 +69,7 @@ export default function OurMission() {
             return (
               <div
                 key={item.id}
-                className="rounded-2xl bg-white/25 backdrop-blur-md border-2 !border-white shadow-md py-6 md:py-12 px-4 md:px-8 transition hover:shadow-xl"
+                className="rounded-2xl bg-white/25 backdrop-blur-md border-2 !border-white shadow-md py-2 md:py-12 px-2 md:px-8 transition hover:shadow-xl"
               >
                 <div className="flex items-center flex-1 gap-4 mb-4 md:mb-8">
                   <div

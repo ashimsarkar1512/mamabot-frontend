@@ -266,21 +266,21 @@ export default function Navbar() {
                 </div>
 
                 <Link
-                  href="/dashboard"
+                  href="/user-dashboard"
                   onClick={toggleMenu}
                   className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded transition-colors"
                 >
                   <CreditCard size={16} /> Dashboard
                 </Link>
                 <Link
-                  href="/profile"
+                  href="/user-dashboard/profile"
                   onClick={toggleMenu}
                   className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded transition-colors"
                 >
                   <User size={16} /> Profile
                 </Link>
                 <Link
-                  href="/settings"
+                  href="/user-dashboard/settings"
                   onClick={toggleMenu}
                   className="flex items-center gap-2 px-2 py-2 hover:bg-gray-100 rounded transition-colors"
                 >
