@@ -24,10 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-[#F2F4F8] antialiased h-full`}
       >
         {/* Full viewport wrapper with background */}
-        <div className="min-h-screen w-full bg-[#F2F4F8] ">
+        <div className="min-h-screen w-full  ">
           {children}
           <Toaster position="top-right" />
         </div>
