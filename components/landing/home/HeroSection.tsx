@@ -22,7 +22,7 @@ export default function HeroSection() {
   };
 
   return (
-    <main className=" mt-32 mb-20">
+    <main className="pt-18 md:pt-24 lg:pt-28 xl:pt-32 mb-20 overflow-hidden">
       {/* Content Container */}
       <div className="mb-6 flex justify-center  ">
         <p className=" text-xs font-medium text-pink-600 tracking-wide border px-2 py-1 rounded-full flex items-center gap-3 bg-[#FCE7F3]">
