@@ -15,58 +15,8 @@ import MothersWellnessEnergy from "@/components/User/postpartumPhase/MothersWell
 import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
 import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
 import { useRouter } from "next/navigation";
+import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
 
-// mock data for articles
-const ARTICLES_DATA = [
-  {
-    id: 1,
-    title: "How to Speed Up Vaginal Delivery Recovery",
-    description: "Expert tips for faster healing after natural birth...",
-    category: "Recovery",
-    image:
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=400", // Placeholder for Recovery Tips graphic
-  },
-  {
-    id: 2,
-    title: "Pelvic Floor Care After Birth",
-    description: "Essential exercises to strengthen your pelvic floor...",
-    category: "Exercise",
-    image:
-      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400", // Placeholder for Anatomy graphic
-  },
-  {
-    id: 3,
-    title: "Managing Postpartum Bleeding and Cramping",
-    description: "What's normal and when to seek medical help...",
-    category: "Health",
-    image:
-      "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=400", // Placeholder for medical/health context
-  },
-  {
-    id: 4,
-    title: "When to Start Light Exercises",
-    description: "Safe timeline for resuming physical activity...",
-    category: "Fitness",
-    image:
-      "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=400", // Placeholder for yoga/fitness
-  },
-  {
-    id: 5,
-    title: "Understanding Newborn Sleep Patterns",
-    description: "Learn about your baby's sleep cycles and needs...",
-    category: "Baby Care",
-    image:
-      "https://images.unsplash.com/photo-1523294587484-5b553497b2c9?auto=format&fit=crop&q=80&w=400", // Placeholder for baby sleeping
-  },
-  {
-    id: 6,
-    title: "How to Stay Emotionally Balanced",
-    description: "Managing the emotional rollercoaster of new motherhood...",
-    category: "Mental Health",
-    image:
-      "https://images.unsplash.com/photo-1494173853114-8a1768853a47?auto=format&fit=crop&q=80&w=400", // Placeholder for emotional support
-  },
-];
 
 export default function UserHomeDashboard() {
   // This value will come from backend in real app
@@ -77,7 +27,7 @@ export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
     const{data:profile}=useGetMyProfileQuery(undefined)
-    console.log(profile,"this is profile")
+     const { data: articlesData, isLoading: articlesLoading } = useGetArticlesQuery(undefined);
     const week=profile?.data?.current_week
     const delivery_type = profile?.data?.delivery_type;
 
@@ -86,6 +36,17 @@ export default function UserHomeDashboard() {
   const handleClick = () => {
     router.push("/user-dashboard/profile");
   };
+
+    const transformedArticles = articlesData?.data?.map((article: any) => ({
+    id: article.id,
+    title: article.title,
+    description: article.short_description || article.long_description,
+    category: article.category?.title || "General",
+    image: article.main_img || article.thumb_img || "https://images.unsplash.com/photo-1628191010210-a59074259b3d?auto=format&fit=crop&q=80&w=400",
+    slug: article.slug,
+    readDuration: article.read_duration,
+    week: article.week,
+  })) || [];
 //   useEffect(() => {
 //   if (delivery_type === "cesarean_delivery") {
 //     setDeliveryType("Cesarean Delivery");
@@ -302,9 +263,10 @@ export default function UserHomeDashboard() {
         </div>
 
         <MothersWellnessEnergy />
-        <VaginalDeliveryArticles
+          <VaginalDeliveryArticles
           title="Top Articles For Vaginal Delivery"
-          articles={ARTICLES_DATA}
+          articles={transformedArticles}
+          isLoading={articlesLoading}
         />
       </main>
 

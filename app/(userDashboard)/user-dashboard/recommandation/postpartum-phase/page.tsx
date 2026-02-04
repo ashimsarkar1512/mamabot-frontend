@@ -5,6 +5,7 @@ import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticl
 import HangingAlertCard from "@/components/User/Recommandation/postpartum-phase/HangingAlertCard";
 import Guidance from "@/components/User/Recommandation/postpartum-phase/Guidance";
 import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
+import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
 
 const ARTICLES_DATA = [
   {
@@ -29,7 +30,7 @@ const ARTICLES_DATA = [
     description: "Learn about your baby's sleep cycles and needs...",
     category: "Baby Care",
     image:
-      "https://images.unsplash.com/photo-1523294587484-5b553497b2c9?auto=format&fit=crop&q=80&w=400", // Placeholder for baby sleeping
+      "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&q=80&w=400", // Placeholder for baby sleeping
   },
   {
     id: 6,
@@ -37,11 +38,23 @@ const ARTICLES_DATA = [
     description: "Managing the emotional rollercoaster of new motherhood...",
     category: "Mental Health",
     image:
-      "https://images.unsplash.com/photo-1494173853114-8a1768853a47?auto=format&fit=crop&q=80&w=400", // Placeholder for emotional support
+      "https://images.unsplash.com/photo-1527137342181-19aab11a8ee1?auto=format&fit=crop&q=80&w=400", // Placeholder for emotional support
   },
 ];
 const PostpartumPhasePageRecommandation = () => {
   const {data:profile}=useGetMyProfileQuery(undefined)
+   const { data: articlesData, isLoading: articlesLoading } = useGetArticlesQuery(undefined);
+
+     const transformedArticles = articlesData?.data?.map((article: any) => ({
+    id: article.id,
+    title: article.title,
+    description: article.short_description || article.long_description,
+    category: article.category?.title || "General",
+    image: article.main_img || article.thumb_img || "https://images.unsplash.com/photo-1628191010210-a59074259b3d?auto=format&fit=crop&q=80&w=400",
+    slug: article.slug,
+    readDuration: article.read_duration,
+    week: article.week,
+  })) || [];
   return (
     <div>
       <Banner profile={profile} />
@@ -49,9 +62,9 @@ const PostpartumPhasePageRecommandation = () => {
       <RecoveryDashboardSections />
       <HangingAlertCard />
       <VaginalDeliveryArticles
-        title="Recommended Articles"
-        articles={ARTICLES_DATA}
-        headingText="colored"
+       title="Recommended Articles"
+        articles={transformedArticles}
+          isLoading={articlesLoading}
       />
     </div>
   );

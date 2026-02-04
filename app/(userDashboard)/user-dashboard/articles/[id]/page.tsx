@@ -18,6 +18,7 @@ import Image from "next/image";
 import Loading from "@/components/Loading";
 import { comfortaa } from "@/app/fonts";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function SingleArticlePage() {
   const params = useParams();

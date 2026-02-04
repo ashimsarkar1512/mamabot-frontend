@@ -158,7 +158,7 @@ export default function MovementHistoryModal({
         {/* History List */}
         {!isLoading && movement?.data && movement.data.length > 0 && (
           <div className="space-y-4 mb-8">
-            {(movement.data as BabyMovementLog[])
+            {[...(movement.data as BabyMovementLog[])]
               .sort((a, b) => new Date(b.log_date).getTime() - new Date(a.log_date).getTime())
               .map((item) => (
                 <div

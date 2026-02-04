@@ -1,3 +1,7 @@
+
+
+
+"use client";
 import Banner from "@/components/User/Recommandation/postpartum-phase/Banner";
 import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
 import HangingAlertCard from "@/components/User/Recommandation/postpartum-phase/HangingAlertCard";
@@ -43,7 +47,7 @@ const ARTICLES_DATA = [
     description: "Learn about your baby's sleep cycles and needs...",
     category: "Baby Care",
     image:
-      "https://images.unsplash.com/photo-1523294587484-5b553497b2c9?auto=format&fit=crop&q=80&w=400", // Placeholder for baby sleeping
+      "https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&q=80&w=400", // Placeholder for baby sleeping
   },
   {
     id: 6,
@@ -51,7 +55,7 @@ const ARTICLES_DATA = [
     description: "Managing the emotional rollercoaster of new motherhood...",
     category: "Mental Health",
     image:
-      "https://images.unsplash.com/photo-1494173853114-8a1768853a47?auto=format&fit=crop&q=80&w=400", // Placeholder for emotional support
+      "https://images.unsplash.com/photo-1527137342181-19aab11a8ee1?auto=format&fit=crop&q=80&w=400", // Placeholder for emotional support
   },
 ];
 const CesareanDeliveryPageRecommandation = () => {

@@ -7,19 +7,21 @@ import RecommendationBannerPage, {
 import RecommendedReading from "@/components/User/Recommandation/RecommandedReading";
 import WellnessActivities from "@/components/User/Recommandation/WellnessActivites";
 import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 export default function RecommandationPage() {
     const {data:profile}=useGetMyProfileQuery(undefined)
    console.log(profile,"profile get")
   const [active, setActive] = useState<RecommendationTab>("all");
   return (
-    <div>
-      <RecommendationBannerPage profile={profile} active={active} setActive={setActive} />
-      <ProductAndFoodRecommendationsPage active={active} />
-      <WellnessActivities/>
-      <RecommendedReading profile={profile}/>
-      <CommunityRecommendations profile={profile}/>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div>
+        <RecommendationBannerPage profile={profile} active={active} setActive={setActive} />
+        <ProductAndFoodRecommendationsPage active={active} />
+        <WellnessActivities/>
+        <RecommendedReading profile={profile}/>
+        <CommunityRecommendations profile={profile}/>
+      </div>
+    </Suspense>
   );
 }
