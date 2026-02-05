@@ -47,6 +47,21 @@ const community = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Community"],
     }),
+     getRelaxationAudiosUserListen: builder.query({
+      query: () => ({
+        url: "/relaxation-audios/user-listen",
+        method: "GET",
+      }),
+      
+    
+    }),
+        getAllRelaxationAudios: builder.query({
+      query: () => ({
+        url: "/relaxation-audios",
+        method: "GET",
+      }),
+      
+    }),
   }),
 });
 
@@ -56,6 +71,8 @@ export const {
   useJoinCommunityGroupMutation,
   useLikeCommunityGroupPostMutation,
   useCommentCommunityGroupPostMutation,
+  useGetRelaxationAudiosUserListenQuery,
+  useGetAllRelaxationAudiosQuery
 } = community;
 
 export default community;
