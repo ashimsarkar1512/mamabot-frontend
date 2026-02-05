@@ -30,7 +30,7 @@ const Subscription = ({ activeTab }: Props) => {
   const subscriptionItems: SubscriptionItem[] = [
     {
       id: "current-plan",
-      title: "Current Plan",
+      title: "Current Subscription Plan",
       value: isLoading ? "Loading..." : (user?.["subscription Plan"] ?? "Free"),
     },
 
@@ -55,7 +55,7 @@ const Subscription = ({ activeTab }: Props) => {
 
     {
       id: "billing-history",
-      title: "Billing History",
+      title: "Payment History",
       description: "View past payments",
       actionLabel: "View Invoices",
       actionVariant: "outline",
