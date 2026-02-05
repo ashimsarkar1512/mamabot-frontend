@@ -70,7 +70,7 @@ const VaginalDeliveryArticles = ({
   isLoading?: boolean;
 }) => {
   return (
-    <section className="w-full bg-[#F8FBFE] px-6 py-10 rounded-[40px] my-8">
+    <section className="w-full bg-[#F8FBFE] px-3 md:px-6 py-5 md:py-10 rounded-[40px] my-4 md:my-8">
       <div className="container mx-auto">
         {headingText === "colored" ? (
           <h2 className="text-sm md:text-xl xl:text-2xl text-[#229ECF] pb-3 border-b border-[#229ECF]/40! mb-6">
