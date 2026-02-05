@@ -49,8 +49,8 @@ const Subscription = ({ activeTab }: Props) => {
     <div className=" ">
       <div className="bg-white/25 border-2  rounded-2xl !border-white mb-8 md:mb-16">
         {/* Header */}
-        <div className=" bg-[#DEF0F8] p-6  rounded-2xl">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 ">
+        <div className=" bg-[#DEF0F8] p-3 md:p-6  rounded-2xl">
+          <h1 className="text-lg mb-1 sm:text-2xl font-semibold text-gray-800 ">
             Subscription & Billing
           </h1>
           <p className="text-sm text-gray-500">
@@ -74,7 +74,7 @@ const Subscription = ({ activeTab }: Props) => {
 
               // Determine button styles
               let buttonClass = `
-              px-4 py-2 rounded-lg text-sm font-medium flex justify-between cursor-pointer hover:bg-gray-100 items-center gap-2
+              px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium flex justify-between cursor-pointer hover:bg-gray-100 items-center gap-2
               ${item.actionVariant === "primary" && "bg-pink-600 text-white hover:bg-pink-700"}
               ${item.actionVariant === "danger" && idx === 1 ? " border " : item.actionVariant === "danger" ? "" : ""}
               ${item.actionVariant === "outline" && "border border-gray-300 text-gray-700 "}
@@ -86,17 +86,17 @@ const Subscription = ({ activeTab }: Props) => {
                 <div
                   key={item.id}
                   className={`
-    px-3 md:px-6 py-5 md:py-10 bg-white/30
+    px-2 md:px-6 py-5 md:py-10 bg-white/30
     ${idx < subscriptionItems.length - 2 ? "border-b-2 !border-b-[#DEF0F8]" : ""}
   `}
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-bold text-base text-gray-800">
+                      <h4 className="font-bold text-sm md:text-base text-gray-800">
                         {item.title}
                       </h4>
                       {item.value && (
-                        <p className="text-base text-[#6A7282] font-semibold mt-1">
+                        <p className="text-sm text-[#6A7282] font-semibold mt-1">
                           {item.value}
                         </p>
                       )}

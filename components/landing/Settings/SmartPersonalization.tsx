@@ -96,8 +96,8 @@ const SmartPersonalization = ({ activeTab }: Props) => {
     <div className=" ">
       <div className="bg-white/25 border-2  rounded-2xl !border-white mb-8 md:mb-16">
         {/* Header */}
-        <div className=" bg-[#DEF0F8] p-6  rounded-2xl">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 ">
+        <div className=" bg-[#DEF0F8] p-3 md:p-6  rounded-2xl">
+          <h1 className="text-lg mb-1 sm:text-2xl font-semibold text-gray-800 ">
             Smart Personalization
           </h1>
           <p className="text-sm text-gray-500">
@@ -114,7 +114,7 @@ const SmartPersonalization = ({ activeTab }: Props) => {
               return (
                 <div
                   key={key}
-                  className="flex justify-between items-center px-3 md:px-6 py-5 md:py-10 border-b !border-[#DEF0F8]"
+                  className="flex justify-between items-center px-2 md:px-6 py-5 md:py-10 border-b !border-[#DEF0F8]"
                 >
                   <p className="text-base font-bold text-gray-800">
                     {key.replace(/_/g, " ")}
@@ -142,19 +142,19 @@ const SmartPersonalization = ({ activeTab }: Props) => {
               return (
                 <div
                   key={key}
-                  className="flex justify-between items-center px-3 md:px-6 py-5 md:py-10 border-b !border-[#DEF0F8]"
+                  className="flex flex-col md:flex-row justify-between md:items-center px-2 md:px-6 py-5 md:py-10 border-b !border-[#DEF0F8]"
                 >
                   <p className="text-base font-bold text-gray-800">
                     {key.replace(/_/g, " ")}
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col md:flex-row gap-2">
                     {selectKeys[typedKey].map((option) => {
                       const isActive = value === option;
                       return (
                         <button
                           key={option}
                           onClick={() => handleSelect(typedKey, option)}
-                          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                          className={`px-2 md:px-4 py-2 flex items-start md:items-center rounded-lg text-xs md:text-sm font-medium transition ${
                             isActive
                               ? "bg-white/25 text-[#229ECF] border-2 border-white"
                               : "text-gray-600"

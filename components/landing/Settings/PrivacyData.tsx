@@ -80,8 +80,8 @@ const PrivacyData = ({ activeTab }: Props) => {
     <div>
       <div className="bg-white/25 border-2 rounded-2xl !border-white mb-8 md:mb-16">
         {/* Header */}
-        <div className="bg-[#DEF0F8] p-6 rounded-2xl">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
+        <div className="bg-[#DEF0F8] p-3 md:p-6 rounded-2xl">
+          <h1 className="text-lg sm:text-2xl mb-1 font-semibold text-gray-800">
             Privacy & Data
           </h1>
           <p className="text-sm text-gray-500">
@@ -89,11 +89,11 @@ const PrivacyData = ({ activeTab }: Props) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2  md:gap-6">
           {PRIVACY_UI.map((item, index) => (
             <div
               key={item.id}
-              className="px-3 md:px-6 py-5 md:py-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="px-2 md:px-6 py-4 md:py-10 flex flex-row sm:items-center justify-between gap-4"
             >
               <div>
                 <h3 className="text-base font-medium text-gray-800">
