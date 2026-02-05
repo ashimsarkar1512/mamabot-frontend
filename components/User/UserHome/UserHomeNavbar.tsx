@@ -23,6 +23,7 @@ import { toast } from "sonner";
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isMobileAuthOpen, setIsMobileAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -293,44 +294,132 @@ const filteredNotifications =
         </div>
 
         {/* Mobile Menu Overlay */}
-        {isMenuOpen && (
-          <div className="mt-4 flex flex-col gap-2 rounded-3xl border border-gray-100 bg-white p-6 shadow-xl lg:hidden">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0, y: -20 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -20 }}
+              className="mt-4 flex flex-col gap-2 rounded-3xl border border-gray-100 bg-white p-6 shadow-xl lg:hidden overflow-hidden"
+            >
+              <div className="space-y-2">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href;
 
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`text-lg font-medium transition-colors
-            ${
-              isActive
-                ? "text-[#0ea5e9]" // active
-                : "text-gray-600 hover:text-[#D82479]"
-            }
-          `}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-
-            <div className="mt-4 flex items-center gap-3 border-t border-gray-100 pt-4">
-              <Image
-                src="/images/avatar.png"
-                alt="User"
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-              <div>
-                <p className="font-bold text-[#0ea5e9]">{user.name}</p>
-                <p className="text-xs text-gray-400">{user.email}</p>
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`block text-lg font-medium transition-colors
+                ${
+                  isActive
+                    ? "text-[#0ea5e9]" // active
+                    : "text-gray-600 hover:text-[#D82479]"
+                }
+              `}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
               </div>
-            </div>
-          </div>
-        )}
+
+              {isAuthenticated && (
+                <div className="mt-4 border-t border-gray-100 pt-4">
+                  <button
+                    onClick={() => setIsMobileAuthOpen(!isMobileAuthOpen)}
+                    className="flex w-full items-center gap-3 cursor-pointer group"
+                  >
+                    <div className="relative h-10 w-10 shrink-0">
+                      <Image
+                        src="/images/avatar.png"
+                        alt="User"
+                        width={40}
+                        height={40}
+                        className="rounded-full border border-pink-100"
+                      />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <p className="font-bold text-[#0ea5e9] group-hover:text-[#D82479] transition-colors leading-tight">
+                        {profile ? `${profile.first_name} ${profile.last_name}` : user.name}
+                      </p>
+                      <p className="text-xs text-gray-400">{profile?.email || user.email}</p>
+                    </div>
+                    <motion.div
+                      animate={{ rotate: isMobileAuthOpen ? 180 : 0 }}
+                      className="text-gray-400"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </motion.div>
+                  </button>
+
+                  <AnimatePresence>
+                    {isMobileAuthOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-3 space-y-1 pl-4 overflow-hidden"
+                      >
+                        {links.map((link) => {
+                          const isActive = pathname === link.href;
+
+                          return (
+                            <Link
+                              key={link.name}
+                              href={link.href}
+                              onClick={() => {
+                                setIsMenuOpen(false);
+                                setIsMobileAuthOpen(false);
+                              }}
+                              className={`flex items-center gap-3 px-4 py-3 text-[15px] transition-colors rounded-2xl
+                        ${
+                          isActive
+                            ? "font-bold text-[#D82479] bg-pink-50/50"
+                            : "font-medium text-gray-700 hover:bg-pink-50/30"
+                        }
+                      `}
+                            >
+                              {link.icon && (
+                                <span className={isActive ? "text-[#D82479]" : "text-gray-500"}>
+                                  {link.icon}
+                                </span>
+                              )}
+                              {link.label}
+                            </Link>
+                          );
+                        })}
+
+                        <button
+                          onClick={() => {
+                            handleLogout();
+                            setIsMenuOpen(false);
+                          }}
+                          className="cursor-pointer flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
+                        >
+                          Logout
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* NOTIFICATIONS MODAL */}
