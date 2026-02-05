@@ -109,7 +109,7 @@ const CommunityPage = () => {
       <div className="p-2 md:p-3 border-3 border-white! rounded-3xl bg-[#FBE9F2] grid grid-cols-1 md:grid-cols-5 gap-1 lg:gap-3">
         {buttons.map((item) => (
           <div
-            className={`flex md:flex-col lg:flex-row items-center justify-center gap-3 border border-white! rounded-xl  hover:bg-[#fbb9da] transition-all duration-500 cursor-pointer py-2 md:py-4 text-md md:text-sm xl:text-md ${item.label === selectedBtn ? "bg-[#fbb9da]" : "bg-[#fdf2f7]"}`}
+            className={`flex md:flex-col lg:flex-row md:items-center md:justify-center gap-3 border border-white! rounded-xl  hover:bg-[#fbb9da] transition-all duration-500 cursor-pointer py-2 md:py-4 text-md md:text-sm xl:text-md ${item.label === selectedBtn ? "bg-[#fbb9da]" : "bg-[#fdf2f7]"}`}
             key={item.name}
             onClick={() => setSelectedBtn(item.label)}
           >

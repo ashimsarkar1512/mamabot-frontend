@@ -51,15 +51,15 @@ const SuggestedGroups = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 overflow-x-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 md:p-6 overflow-x-auto">
         {communityGroups?.data?.map((group: any) => (
           <div
             key={group.id}
-            className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow"
+            className="bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow"
           >
             <div className="flex items-start gap-3">
               <div
-                className={`w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0`}
+                className={`w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0`}
               >
                 <Baby className={`w-6 h-6 text-blue-600`} />
               </div>

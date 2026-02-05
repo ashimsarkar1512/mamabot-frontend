@@ -12,7 +12,7 @@ const ArticleCard = ({ article }: { article: any }) => {
   return (
     <div className="flex flex-col md:flex-row gap-4 p-4 bg-white border border-sky-100 rounded-[24px] hover:shadow-md transition-shadow">
       {/* Article Image */}
-      <div className="relative w-full md:w-[160px] h-[140px] flex-shrink-0 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
+      <div className="relative w-full md:w-40 h-35 shrink-0 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
         <Image
           src={imgSrc}
           alt={article.title}
@@ -87,7 +87,7 @@ const VaginalDeliveryArticles = ({
                 key={i}
                 className="flex flex-col md:flex-row gap-4 p-4 bg-white border border-sky-100 rounded-[24px] animate-pulse"
               >
-                <div className="w-full md:w-[160px] h-[140px] bg-gray-200 rounded-2xl" />
+                <div className="w-full md:w-40 h-35 bg-gray-200 rounded-2xl" />
                 <div className="flex-1 space-y-3 py-1">
                   <div className="h-6 bg-gray-200 rounded w-20" />
                   <div className="h-5 bg-gray-200 rounded w-3/4" />
