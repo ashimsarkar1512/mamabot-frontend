@@ -1,6 +1,6 @@
 "use client";
 
-import React, { JSX, useState } from "react";
+import { JSX, useState } from "react";
 
 import {
   AlertTriangleIcon,
@@ -88,7 +88,7 @@ const Subscription = ({ activeTab }: Props) => {
             if (idx === 3) buttonIcon = <Smartphone className="w-4 h-4" />;
             if (idx === 4) buttonIcon = <Download className="w-4 h-4" />;
 
-            // Determine button styles
+            // button styles
             let buttonClass = `
               px-2 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium flex justify-between cursor-pointer hover:bg-gray-100 items-center gap-2
               ${item.actionVariant === "primary" && "bg-pink-600 text-white hover:bg-pink-700"}
