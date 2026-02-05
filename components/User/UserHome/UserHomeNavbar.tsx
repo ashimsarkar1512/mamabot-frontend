@@ -163,7 +163,7 @@ const filteredNotifications =
         `}
                 >
                   {item.label}
-                </Link>
+                </Link> 
               );
             })}
           </div>
