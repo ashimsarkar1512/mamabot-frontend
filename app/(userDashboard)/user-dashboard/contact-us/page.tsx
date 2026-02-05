@@ -6,8 +6,24 @@ import SendMessage from "@/components/landing/Contact/SendMessage";
 import SupportCards from "@/components/landing/Contact/SupportCards";
 import { Footer } from "@/components/layout/Footer";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const Page = () => {
+   const searchParams = useSearchParams();
+    const section = searchParams.get("section");
+
+  useEffect(() => {
+    if (!section) return;
+
+    const el = document.getElementById(section);
+    if (el) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [section]);
   return (
     <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-24`}>
       <ContactBanner />
