@@ -12,11 +12,10 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
-import { 
- 
-  useGetMyProfileQuery, 
-  useGetUserDashboardQuery, 
-  usePostMyProfileMutation 
+import {
+  useGetMyProfileQuery,
+  useGetUserDashboardQuery,
+  usePostMyProfileMutation,
 } from "@/redux/features/api/user/profile";
 import { toast } from "sonner"; // Assuming you use sonner or similar for feedback
 import Loading from "@/components/Loading";
@@ -36,9 +35,13 @@ const MamabotProfile: React.FC = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
-  const {data:userProfile}=useGetUserDashboardQuery(undefined)
+  const { data: userProfile } = useGetUserDashboardQuery(undefined);
   // RTK Query Hooks
-  const { data: profileResponse, isLoading,refetch } = useGetMyProfileQuery(undefined);
+  const {
+    data: profileResponse,
+    isLoading,
+    refetch,
+  } = useGetMyProfileQuery(undefined);
   const [updateProfile, { isLoading: isUpdating }] = usePostMyProfileMutation();
   const [toggles, setToggles] = useState<ToggleState>({
     kickReminders: true,
@@ -68,74 +71,74 @@ const MamabotProfile: React.FC = () => {
     postpartumDay: 0,
   });
   useEffect(() => {
-  if (userProfile?.data) {
-    const u = userProfile.data;
-    setFormData(prev => ({
-      ...prev,
-      firstName: u.first_name || "",
-      lastName: u.last_name || "",
-      email: u.email || "",
-      phone: u.phone || "",
-    }));
-  }
-}, [userProfile]);
-
+    if (userProfile?.data) {
+      const u = userProfile.data;
+      setFormData((prev) => ({
+        ...prev,
+        firstName: u.first_name || "",
+        lastName: u.last_name || "",
+        email: u.email || "",
+        phone: u.phone || "",
+      }));
+    }
+  }, [userProfile]);
 
   // Sync state with API data
-useEffect(() => {
-  if (profileResponse?.success && profileResponse.data) {
-    const d = profileResponse.data;
-    const u = d.user;
-    if (!u) return;
+  useEffect(() => {
+    if (profileResponse?.success && profileResponse.data) {
+      const d = profileResponse.data;
+      const u = d.user;
+      if (!u) return;
 
-    setFormData(prev => ({
-      ...prev,
-      firstName: u.first_name || prev.firstName,
-      lastName: u.last_name || prev.lastName,
-      email: u.email || prev.email,
-      phone: u.phone || prev.phone,
-      address: d.address || prev.address,
-      language: d.language || prev.language,
-      pregnancyStatus: d.pregnancy_status || prev.pregnancyStatus,
-      dueDate: d.due_date || prev.dueDate,
-      currentWeek: `Week ${d.current_week || 1}`,
-      babyNickname: d.baby_nickname || prev.babyNickname,
-      doctor: d.doctor_name || prev.doctor,
-      clinic: d.hospital_name || prev.clinic,
-      toneOfAI: d.AI_tone || prev.toneOfAI,
-      supportType: d.support_type || prev.supportType,
-      productInterest: d.product_interest || prev.productInterest,
-      dietaryPreferences: d.dietary_preferences || prev.dietaryPreferences,
-      deliveryType: d.delivery_type || prev.deliveryType,
-      postpartumDay: d.postpartum_day || prev.postpartumDay,
-    }));
+      setFormData((prev) => ({
+        ...prev,
+        firstName: u.first_name || prev.firstName,
+        lastName: u.last_name || prev.lastName,
+        email: u.email || prev.email,
+        phone: u.phone || prev.phone,
+        address: d.address || prev.address,
+        language: d.language || prev.language,
+        pregnancyStatus: d.pregnancy_status || prev.pregnancyStatus,
+        dueDate: d.due_date || prev.dueDate,
+        currentWeek: `Week ${d.current_week || 1}`,
+        babyNickname: d.baby_nickname || prev.babyNickname,
+        doctor: d.doctor_name || prev.doctor,
+        clinic: d.hospital_name || prev.clinic,
+        toneOfAI: d.AI_tone || prev.toneOfAI,
+        supportType: d.support_type || prev.supportType,
+        productInterest: d.product_interest || prev.productInterest,
+        dietaryPreferences: d.dietary_preferences || prev.dietaryPreferences,
+        deliveryType: d.delivery_type || prev.deliveryType,
+        postpartumDay: d.postpartum_day || prev.postpartumDay,
+      }));
 
-    setToggles({
-      kickReminders: d.isKickRemind ?? true,
-      hydrationGoals: d.isHydrationGoal ?? true,
-      weightTracking: d.isWeightTrack ?? false,
-      twoFactor: d.two_factor_auth ?? false,
+      setToggles({
+        kickReminders: d.isKickRemind ?? true,
+        hydrationGoals: d.isHydrationGoal ?? true,
+        weightTracking: d.isWeightTrack ?? false,
+        twoFactor: d.two_factor_auth ?? false,
+      });
+
+      setProfileImage("/images/avatar.png"); // Replace if real profile image exists
+    }
+  }, [profileResponse]);
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return ""; // Handle invalid date
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
-
-    setProfileImage("/images/avatar.png"); // Replace if real profile image exists
-  }
-}, [profileResponse]);
-
-const formatDate = (dateStr: string) => {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return ""; // Handle invalid date
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
-
+  };
 
   const profileRef = useRef<HTMLInputElement | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
   };
@@ -154,51 +157,56 @@ const formatDate = (dateStr: string) => {
   };
 
   // --- SAVE LOGIC ---
- const handleSave = async () => {
-  try {
-    // 1. Clean the week string "Week 5" -> 5
-    const weekNumber = parseInt(formData.currentWeek.replace("Week ", ""), 10);
+  const handleSave = async () => {
+    try {
+      // 1. Clean the week string "Week 5" -> 5
+      const weekNumber = parseInt(
+        formData.currentWeek.replace("Week ", ""),
+        10,
+      );
 
-    // 2. Build the payload carefully
-    const payload: IUpdateProfilePayload = {
-      first_name: formData.firstName,
-      last_name: formData.lastName,
-      phone: formData.phone || undefined, // Send undefined instead of ""
-      address: formData.address,
-      language: formData.language,
-      pregnancy_status: formData.pregnancyStatus,
-      // Ensure date is in YYYY-MM-DD format for the server
-      due_date: formData.dueDate ? new Date(formData.dueDate).toISOString() : undefined,
-      current_week: isNaN(weekNumber) ? 1 : weekNumber,
-      baby_nickname: formData.babyNickname,
-      doctor_name: formData.doctor,
-      hospital_name: formData.clinic,
-      AI_tone: formData.toneOfAI,
-      support_type: formData.supportType,
-      product_interest: formData.productInterest,
-      dietary_preferences: formData.dietaryPreferences,
-      delivery_type: formData.deliveryType as any,
-      postpartum_day: Number(formData.postpartumDay) || 0,
-      isKickRemind: toggles.kickReminders,
-      isHydrationGoal: toggles.hydrationGoals,
-      isWeightTrack: toggles.weightTracking,
-      two_factor_auth: toggles.twoFactor,
-    };
+      // 2. Build the payload carefully
+      const payload: IUpdateProfilePayload = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        phone: formData.phone || undefined, // Send undefined instead of ""
+        address: formData.address,
+        language: formData.language,
+        pregnancy_status: formData.pregnancyStatus,
+        // Ensure date is in YYYY-MM-DD format for the server
+        due_date: formData.dueDate
+          ? new Date(formData.dueDate).toISOString()
+          : undefined,
+        current_week: isNaN(weekNumber) ? 1 : weekNumber,
+        baby_nickname: formData.babyNickname,
+        doctor_name: formData.doctor,
+        hospital_name: formData.clinic,
+        AI_tone: formData.toneOfAI,
+        support_type: formData.supportType,
+        product_interest: formData.productInterest,
+        dietary_preferences: formData.dietaryPreferences,
+        delivery_type: formData.deliveryType as any,
+        postpartum_day: Number(formData.postpartumDay) || 0,
+        isKickRemind: toggles.kickReminders,
+        isHydrationGoal: toggles.hydrationGoals,
+        isWeightTrack: toggles.weightTracking,
+        two_factor_auth: toggles.twoFactor,
+      };
 
-    console.log("Sending Payload:", payload); // Debug this!
+      console.log("Sending Payload:", payload); // Debug this!
 
-    await updateProfile(payload).unwrap();
-    setIsEditing(false);
-    toast.success("Profile updated!");
-    refetch()
-  } catch (error: any) {
-    // This will help you see the server's specific error message
-    const errorMsg = error?.data?.message || "Internal Server Error";
-    toast.error(`Update Failed: ${errorMsg}`);
-    console.error("Server Error Detail:", error);
-  }
-};
-  if (isLoading) return <Loading/>;
+      await updateProfile(payload).unwrap();
+      setIsEditing(false);
+      toast.success("Profile updated!");
+      refetch();
+    } catch (error: any) {
+      // This will help you see the server's specific error message
+      const errorMsg = error?.data?.message || "Internal Server Error";
+      toast.error(`Update Failed: ${errorMsg}`);
+      console.error("Server Error Detail:", error);
+    }
+  };
+  if (isLoading) return <Loading />;
 
   if (isDeleted) {
     return (
@@ -216,7 +224,9 @@ const formatDate = (dateStr: string) => {
           <h1 className="text-[#E91E63] text-2xl md:text-3xl font-bold mb-2">
             Your Profile Is Permanently Deleted
           </h1>
-          <p className="text-gray-400 font-semibold text-lg">No Longer Available</p>
+          <p className="text-gray-400 font-semibold text-lg">
+            No Longer Available
+          </p>
         </div>
       </div>
     );
@@ -226,15 +236,15 @@ const formatDate = (dateStr: string) => {
     <div className="py-10 text-gray-700">
       <div className="container mx-auto space-y-6">
         {/* HEADER SECTION */}
-        <div className="bg-white/25 rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-5">
+        <div className="bg-white/25 rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-6">
+          <div className="flex md:items-center gap-5">
             <div className="relative">
               <Image
                 src={profileImage}
                 alt="profile"
                 width={96}
                 height={96}
-                className="rounded-full h-24 w-24 object-cover shadow-sm"
+                className="rounded-full h-14 w-14 md:h-24 md:w-24 object-cover shadow-sm"
                 priority
               />
               {isEditing && (
@@ -254,14 +264,14 @@ const formatDate = (dateStr: string) => {
               />
             </div>
             <div className="text-center md:text-left">
-              <h1 className="text-2xl font-bold text-gray-800 leading-tight">
+              <h1 className="text-lg md:text-2xl font-bold text-gray-800 leading-tight">
                 {formData.firstName} {formData.lastName}
               </h1>
               <p className="text-[#E91E63] font-semibold text-sm">
                 {formData.currentWeek} of Pregnancy
               </p>
               <p className="text-gray-400 text-xs mt-1">
-               Due Date: {formatDate(formData.dueDate)}
+                Due Date: {formatDate(formData.dueDate)}
               </p>
             </div>
           </div>
@@ -269,7 +279,7 @@ const formatDate = (dateStr: string) => {
           <button
             disabled={isUpdating}
             onClick={isEditing ? handleSave : () => setIsEditing(true)}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl border border-pink-100 bg-[#FFF5F8] text-gray-700 font-semibold text-sm cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-2 px-3 md:px-6 py-2.5 rounded-xl border border-pink-100 bg-[#FFF5F8] text-gray-700 font-semibold text-sm cursor-pointer disabled:opacity-50"
           >
             {isUpdating ? (
               <Loader2 size={18} className="animate-spin text-pink-500" />
@@ -455,7 +465,14 @@ const formatDate = (dateStr: string) => {
               value={formData.toneOfAI}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Friendly Mama", "Empathetic", "Clinical", "Motivational", "Calm & Reassuring", "Spiritual & Mindful"]}
+              options={[
+                "Friendly Mama",
+                "Empathetic",
+                "Clinical",
+                "Motivational",
+                "Calm & Reassuring",
+                "Spiritual & Mindful",
+              ]}
             />
             <Select
               label="Support Type"
@@ -463,7 +480,14 @@ const formatDate = (dateStr: string) => {
               value={formData.supportType}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Medical Focused", "Balanced", "Emotional Support", "Lifestyle-Focused", "Holistic/Wellness", "Natural Remedies First"]}
+              options={[
+                "Medical Focused",
+                "Balanced",
+                "Emotional Support",
+                "Lifestyle-Focused",
+                "Holistic/Wellness",
+                "Natural Remedies First",
+              ]}
             />
             <Select
               label="Product Interest"
@@ -471,7 +495,15 @@ const formatDate = (dateStr: string) => {
               value={formData.productInterest}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["Eco-Friendly", "Budget-Friendly", "Premium & Luxury Brands", "Doctor-Recommended", "Organic / Chemical-Free", "Vegan", "Minimalist Essentials"]}
+              options={[
+                "Eco-Friendly",
+                "Budget-Friendly",
+                "Premium & Luxury Brands",
+                "Doctor-Recommended",
+                "Organic / Chemical-Free",
+                "Vegan",
+                "Minimalist Essentials",
+              ]}
             />
             <Select
               label="Dietary Preferences"
@@ -479,7 +511,19 @@ const formatDate = (dateStr: string) => {
               value={formData.dietaryPreferences}
               onChange={handleChange}
               disabled={!isEditing}
-              options={["No Restriction", "Vegetarian", "Vegan", "Pescatarian", "Gluten-Free", "Lactose-Free", "Halal", "Kosher", "Low-Sodium", "Show All", "Gestational"]}
+              options={[
+                "No Restriction",
+                "Vegetarian",
+                "Vegan",
+                "Pescatarian",
+                "Gluten-Free",
+                "Lactose-Free",
+                "Halal",
+                "Kosher",
+                "Low-Sodium",
+                "Show All",
+                "Gestational",
+              ]}
             />
           </div>
         </Section>
