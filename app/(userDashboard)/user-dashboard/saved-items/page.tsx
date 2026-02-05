@@ -4,12 +4,13 @@ import { useState } from "react";
 import { comfortaa } from "@/app/fonts";
 import SavedRecommendation from "@/components/landing/SavedItems/SavedRecommendation";
 import { items, tabs } from "@/lib/data/savedData";
-import { BookmarkIcon } from "lucide-react";
+import { BookmarkIcon, Menu, X } from "lucide-react";
 import CommunityPosts from "@/components/landing/SavedItems/CommunityPosts";
 import SavedArticles from "@/components/landing/SavedItems/SavedArticles";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("All(24)");
+  const [isOpen, setIsOpen] = useState(false);
   const filteredItems =
     activeTab === "All(24)"
       ? items
@@ -28,20 +29,56 @@ const Page = () => {
           </p>
         </div>
       </div>
+
       {/* Tabs */}
-      <div className="">
-        <div className="mb-8 md:mb-16 grid grid-cols-4 overflow-hidden border-2 !border-white bg-white/25">
+      <div className="mb-8 md:mb-16">
+        {/* Mobile Hamburger */}
+
+        <div className="md:hidden relative">
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between px-4 py-3 border rounded-lg bg-white"
+          >
+            <span className="font-medium">{activeTab}</span>
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
+          {isOpen && (
+            <div className="absolute z-20 mt-2 w-full bg-white border rounded-lg shadow-md overflow-hidden">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 text-sm transition
+            ${
+              activeTab === tab
+                ? "bg-[#229ECF] text-white"
+                : "hover:bg-gray-100 text-gray-700"
+            }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Tabs */}
+        <div className="hidden md:grid grid-cols-6 overflow-hidden border-2 border-white! bg-white/25">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-3 text-sm cursor-pointer border-r-2 !border-r-white font-medium transition
-                ${
-                  activeTab === tab
-                    ? "bg-pink-600 text-white"
-                    : "text-gray-600 hover:bg-gray-50"
-                }
-              `}
+              className={`py-3 text-sm cursor-pointer border-r-2 border-r-white! font-medium transition
+          ${
+            activeTab === tab
+              ? "bg-[#229ECF] text-white"
+              : "text-gray-600 hover:bg-gray-50"
+          }
+        `}
             >
               {tab}
             </button>

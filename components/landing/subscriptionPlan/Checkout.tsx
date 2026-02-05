@@ -1,6 +1,6 @@
 "use client";
 
-const paymentOptions = ["Stripe", "PayPal", "Visa", "MasterCard", "Apple Pay"];
+const paymentOptions = ["Stripe", "Visa", "MasterCard"];
 
 const CheckOut = () => {
   return (
@@ -19,7 +19,7 @@ const CheckOut = () => {
           {paymentOptions.map((option, index) => (
             <button
               key={index}
-              className="text-[#677381] text-lg md:text-2xl border-2 !border-[#229ECF] rounded-lg hover:bg-[#229ECF] hover:text-white cursor-pointer px-8 py-2"
+              className="text-[#677381] text-sm md:text-2xl border-2 !border-[#229ECF] rounded-lg hover:bg-[#229ECF] hover:text-white cursor-pointer px-4 md:px-8 py-2"
             >
               {option}
             </button>

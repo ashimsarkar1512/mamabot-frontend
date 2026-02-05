@@ -30,12 +30,12 @@ const Page = () => {
           </p>
         </div>
       </div>
-      {/* Tabs */}
 
+      {/* Tabs */}
       <div className="mb-8 md:mb-16">
         {/* Mobile Hamburger */}
 
-        <div className="md:hidden relative">
+        <div className="md:hidden block relative">
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             className="w-full flex items-center justify-between px-4 py-3 border rounded-lg bg-white"
@@ -51,7 +51,7 @@ const Page = () => {
                   key={tab}
                   onClick={() => {
                     setActiveTab(tab);
-                    setIsOpen(false); // ✅ auto close on select
+                    setIsOpen(false);
                   }}
                   className={`w-full text-left px-4 py-3 text-sm transition
             ${
@@ -68,12 +68,12 @@ const Page = () => {
         </div>
 
         {/* Desktop Tabs */}
-        <div className="hidden md:grid grid-cols-6 overflow-hidden border-2 border-white! bg-white/25">
+        <div className="md:flex justify-around hidden border-r-2 !border-r-white !bg-white/25">
           {settingsTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-3 text-sm cursor-pointer border-r-2 border-r-white! font-medium transition
+              className={`py-3 px-16 text-sm cursor-pointer border-r-2 !border-r-white font-medium transition
           ${
             activeTab === tab
               ? "bg-[#229ECF] text-white"

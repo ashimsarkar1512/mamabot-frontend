@@ -2,7 +2,6 @@
 
 import React, { JSX, useState } from "react";
 
-import { privacySettings, subscriptionItems } from "@/lib/data/SettingsData";
 import {
   AlertTriangleIcon,
   CrownIcon,
@@ -10,20 +9,75 @@ import {
   MonitorSmartphoneIcon,
   Smartphone,
 } from "lucide-react";
+import DeviceModal from "./UserDevicesModal";
 type Props = {
   activeTab: string;
 };
+interface SubscriptionItem {
+  id: string;
+  title: string;
+  value?: string;
+  description?: string;
+  actionLabel?: string;
+  actionVariant?:
+    | "primary"
+    | "secondary"
+    | "danger"
+    | "outline"
+    | "text"
+    | "upgrade";
+  icon?: string;
+  isHighlighted?: boolean;
+}
+
+const subscriptionItems: SubscriptionItem[] = [
+  {
+    id: "current-plan",
+    title: "Current Plan",
+    value: "Free",
+    // actionLabel: "Upgrade Plan",
+    //  actionVariant: "upgrade",
+    isHighlighted: true,
+  },
+
+  {
+    id: "payment-method",
+    title: "Payment Method",
+    value: "Visa****4213",
+    // actionLabel: "Update",
+    actionVariant: "outline",
+  },
+  {
+    id: "device-management",
+    title: "Device Management",
+    description: "Manage logged-in devices",
+    actionLabel: "View Devices",
+    actionVariant: "outline",
+    icon: "MonitorSmartphone",
+  },
+
+  {
+    id: "billing-history",
+    title: "Billing History",
+    description: "View past payments",
+    actionLabel: "View Invoices",
+    actionVariant: "outline",
+    icon: "Download",
+  },
+];
 const Subscription = ({ activeTab }: Props) => {
-  const iconMap: Record<string, JSX.Element> = {
-    "upgrade-plan": <CrownIcon className="w-5 h-5 text-[#677381]" />,
-    "cancel-subscription": (
-      <AlertTriangleIcon className="w-5 h-5 text-[#677381]" />
-    ),
-    "device-management": (
-      <MonitorSmartphoneIcon className="w-5 h-5 text-[#677381]" />
-    ),
-    "billing-history": <Download className="w-5 h-5 text-[#677381]" />,
-  };
+  const [showDevices, setShowDevices] = useState(false);
+
+  // const iconMap: Record<string, JSX.Element> = {
+  //   "upgrade-plan": <CrownIcon className="w-5 h-5 text-[#677381]" />,
+  //   "cancel-subscription": (
+  //     <AlertTriangleIcon className="w-5 h-5 text-[#677381]" />
+  //   ),
+  //   "device-management": (
+  //     <MonitorSmartphoneIcon className="w-5 h-5 text-[#677381]" />
+  //   ),
+  //   "billing-history": <Download className="w-5 h-5 text-[#677381]" />,
+  // };
 
   // Toggle state only for items that are toggles
   const [toggles, setToggles] = useState<Record<string, boolean>>(
@@ -108,18 +162,16 @@ const Subscription = ({ activeTab }: Props) => {
                     </div>
 
                     {item.actionLabel && (
-                      <button className={buttonClass}>
-                        {idx === 1 ? (
-                          <>
-                            <span>{item.actionLabel}</span>
-                            {buttonIcon && <span>{buttonIcon}</span>}
-                          </>
-                        ) : (
-                          <>
-                            {buttonIcon && <span>{buttonIcon}</span>}
-                            <span>{item.actionLabel}</span>
-                          </>
-                        )}
+                      <button
+                        className={buttonClass}
+                        onClick={() => {
+                          if (item.id === "device-management") {
+                            setShowDevices(true);
+                          }
+                        }}
+                      >
+                        {buttonIcon && <span>{buttonIcon}</span>}
+                        <span>{item.actionLabel}</span>
                       </button>
                     )}
                   </div>
@@ -129,6 +181,7 @@ const Subscription = ({ activeTab }: Props) => {
           </div>
         </div>
       </div>
+      {showDevices && <DeviceModal onClose={() => setShowDevices(false)} />}
     </div>
   );
 };
