@@ -42,7 +42,7 @@ const wetCount = diaper?.data?.wet_count ?? 0;
       {/* Content Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-px ">
         {/* Feeding Time */}
-        <div className=" p-5 flex">
+        <div className=" p-3 md:p-5 flex">
           <div className="flex items-center gap-3 mb-3">
             <div className="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center">
               <Droplet className="h-5 w-5 text-pink-600" />
@@ -60,7 +60,7 @@ const wetCount = diaper?.data?.wet_count ?? 0;
         </div>
 
         {/* Sleep Time */}
-        <div className=" p-5 flex flex-col">
+        <div className=" p-3 md:p-5 flex flex-col">
           <div className="flex items-center gap-3 mb-3">
             <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
               <Moon className="h-5 w-5 text-indigo-600" />
@@ -78,7 +78,7 @@ const wetCount = diaper?.data?.wet_count ?? 0;
         </div>
 
         {/* Diapers Used */}
-        <div className=" p-5 flex flex-col">
+        <div className=" p-3 md:p-5 flex flex-col">
           <div className="flex items-center gap-3 mb-3">
             <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center">
               <span className="text-2xl">🍼</span>
@@ -95,7 +95,7 @@ const wetCount = diaper?.data?.wet_count ?? 0;
         </div>
 
         {/* Baby Growth Rate */}
-        <div className=" p-5 flex flex-col">
+        <div className=" p-3 md:p-5 flex flex-col">
           <div className="flex items-center gap-3 mb-3">
             <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
               <BabyIcon className="h-5 w-5 text-green-600" />

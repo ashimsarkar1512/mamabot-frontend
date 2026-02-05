@@ -33,7 +33,7 @@ export default function DailyTaskGrid({
               </h2>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <DailyTaskCard
               title="Recovery Check"
               description="Log today's pain, bleeding level, and energy."

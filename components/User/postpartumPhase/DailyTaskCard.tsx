@@ -30,18 +30,20 @@ export default function DailyTaskCard({
         {status === "info" && <Info className="w-5 h-5 text-gray-500" />}
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="text-3xl">{icon}</div>
+      <div className="flex md:items-center gap-2 md:gap-4">
+        <div className="text-xl md:text-3xl">{icon}</div>
 
         <div>
-          <h3 className="text-lg font-semibold">{title}</h3>
-          <p className="text-sm text-gray-500 mt-1">{description}</p>
+          <h3 className="text-base md:text-lg font-semibold">{title}</h3>
+          <p className="text-sm md:text-base text-gray-500 mt-1">
+            {description}
+          </p>
         </div>
       </div>
 
       <Dialog>
         <DialogTrigger asChild>
-          <button className="mt-6 w-full border border-[#229ECF]! text-[#229ECF]! py-2 rounded-lg hover:bg-[#229ECF]/10 transition cursor-pointer">
+          <button className="mt-3 md:mt-6 text-sm md:text-base w-full border border-[#229ECF]! text-[#229ECF]! py-2 rounded-lg hover:bg-[#229ECF]/10 transition cursor-pointer">
             {actionLabel}
           </button>
         </DialogTrigger>
