@@ -4,7 +4,7 @@ const community = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCommunityPosts: builder.query({
       query: () => ({
-        url: "/community/posts/1",
+        url: "/community/posts",  
         method: "GET",
       }),
       providesTags: ["Community"],

@@ -71,8 +71,15 @@ export const subscriptionApi = baseApi.injectEndpoints({
         },
       }),
     }),
+
+    successPayment:builder.query({
+     query:()=>({
+      url:"/payment-info-by-user",
+      method:"GET"
+     }) 
+    })
   }),
   overrideExisting: false,
 });
 
-export const { useGetPlansQuery, useCreateCheckoutMutation } = subscriptionApi;
+export const { useGetPlansQuery, useCreateCheckoutMutation, useSuccessPaymentQuery, } = subscriptionApi;

@@ -1,15 +1,6 @@
 "use client";
 import React, { useState, useRef, ChangeEvent, useEffect } from "react";
-import {
-  Camera,
-  Upload,
-  Save,
-  Trash2,
-  X,
-  ChevronDown,
-  SquarePen,
-  ArrowLeft,
-  Loader2,
+import {Camera, Upload,Save,Trash2, X,ChevronDown,SquarePen,ArrowLeft, Loader2,
 } from "lucide-react";
 import Image from "next/image";
 import {
@@ -20,6 +11,10 @@ import {
 import { toast } from "sonner"; // Assuming you use sonner or similar for feedback
 import Loading from "@/components/Loading";
 import { IUpdateProfilePayload } from "@/types/user/profile";
+import ChangePasswordModal from "./ChangePasswordModal";
+import { useChangePasswordMutation, useDeleteUserMutation } from "@/redux/features/api/user/PasswordAndUserdelete";
+import { handleError, handleSuccess } from "@/lib/data/handdleError";
+import Swal from "sweetalert2";
 
 type ToggleState = {
   kickReminders: boolean;
@@ -36,13 +31,12 @@ const MamabotProfile: React.FC = () => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const { data: userProfile } = useGetUserDashboardQuery(undefined);
+
+  const [deleteUser]=useDeleteUserMutation()
   // RTK Query Hooks
-  const {
-    data: profileResponse,
-    isLoading,
-    refetch,
-  } = useGetMyProfileQuery(undefined);
+  const {data: profileResponse,isLoading,refetch,} = useGetMyProfileQuery(undefined);
   const [updateProfile, { isLoading: isUpdating }] = usePostMyProfileMutation();
+  const [changePassword] = useChangePasswordMutation();
   const [toggles, setToggles] = useState<ToggleState>({
     kickReminders: true,
     hydrationGoals: true,
@@ -208,29 +202,80 @@ const MamabotProfile: React.FC = () => {
   };
   if (isLoading) return <Loading />;
 
-  if (isDeleted) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-white/25 rounded-xl p-10 md:p-16 max-w-3xl w-full shadow-sm border border-gray-100 text-center relative">
-          <button
-            onClick={() => window.location.reload()}
-            className="absolute top-8 left-8 flex items-center gap-2 text-gray-500 font-semibold hover:text-gray-800 transition-colors cursor-pointer"
-          >
-            <ArrowLeft size={20} /> Back to Home
-          </button>
-          <div className="w-24 h-24 bg-[#E91E63] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
-            <X size={48} className="text-white stroke-[3px]" />
-          </div>
-          <h1 className="text-[#E91E63] text-2xl md:text-3xl font-bold mb-2">
-            Your Profile Is Permanently Deleted
-          </h1>
-          <p className="text-gray-400 font-semibold text-lg">
-            No Longer Available
+  const handlePasswordChange = async (passwords: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
+    try {
+
+const payload = {
+  current_password: passwords.currentPassword,
+  new_password: passwords.newPassword,
+  new_password_confirmation: passwords.confirmPassword, // Backend needs this!
+};
+
+      const res = await changePassword(payload).unwrap();
+      handleSuccess(res.message || "Password changed successfully!");
+    } catch (error: any) {
+      handleError(error, "Failed to change password");
+    }
+  };
+  const handleDeleteAccount = async () => {
+    const result = await Swal.fire({
+      title: "Delete Account?",
+      html: `
+        <div style="text-align: left; padding: 20px;">
+          <p style="color: #666; margin-bottom: 20px;">
+            Are you sure you want to permanently delete your account? This action cannot be undone.
           </p>
+          <div style="background: #FFF5F5; border-left: 4px solid #E91E63; padding: 15px; border-radius: 8px;">
+            <p style="color: #E91E63; font-weight: 600; margin: 0;">
+              ⚠️ Warning: All your data will be permanently deleted
+            </p>
+            <ul style="color: #666; margin: 10px 0 0 20px; font-size: 14px;">
+              <li>Profile information</li>
+              <li>Pregnancy tracking data</li>
+              <li>Chat history</li>
+              <li>Saved preferences</li>
+            </ul>
+          </div>
         </div>
-      </div>
-    );
-  }
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#E91E63",
+      cancelButtonColor: "#6B7280",
+      confirmButtonText: "Yes, Delete My Account",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+      customClass: {
+        popup: "rounded-2xl",
+        confirmButton: "px-6 py-3 rounded-lg font-semibold",
+        cancelButton: "px-6 py-3 rounded-lg font-semibold",
+      },
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await deleteUser(undefined).unwrap();
+      localStorage.clear();
+      window.location.replace("/login");
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error!",
+        text: error?.data?.message || "Failed to delete account.",
+        icon: "error",
+        confirmButtonColor: "#E91E63",
+        confirmButtonText: "OK",
+        customClass: {
+          popup: "rounded-2xl",
+          confirmButton: "px-6 py-3 rounded-lg font-semibold",
+        },
+      });
+    }
+  };
 
   return (
     <div className="py-10 text-gray-700">
@@ -538,7 +583,7 @@ const MamabotProfile: React.FC = () => {
               Change Password
             </button>
             <button
-              onClick={() => setIsDeleteModalOpen(true)}
+             onClick={handleDeleteAccount}
               className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-red-50 bg-[#FFF5F5] text-[#E91E63] font-semibold text-sm hover:bg-red-50 transition-colors cursor-pointer"
             >
               <Trash2 size={16} /> Delete My Account
@@ -552,6 +597,11 @@ const MamabotProfile: React.FC = () => {
           />
         </Section>
       </div>
+      <ChangePasswordModal
+  isOpen={isPasswordModalOpen}
+  onClose={() => setIsPasswordModalOpen(false)}
+  onSubmit={handlePasswordChange}
+/>
     </div>
   );
 };

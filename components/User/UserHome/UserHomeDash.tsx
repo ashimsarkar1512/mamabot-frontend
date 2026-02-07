@@ -422,7 +422,7 @@ export default function UserHomeDashboard() {
           {/* ========== Right Column ========== */}
           <div className="space-y-3">
             {/* AI Usage */}
-            {/* <Card className="p-4">
+            <Card className="p-4">
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-5 w-5 text-primary" />
                 <h3 className="font-semibold">AI Chat Usage</h3>
@@ -441,7 +441,7 @@ export default function UserHomeDashboard() {
                   Upgrade for Unlimited
                 </p>
               </div>
-            </Card> */}
+            </Card>
 
             {/* Profile */}
             <Card className="p-6">

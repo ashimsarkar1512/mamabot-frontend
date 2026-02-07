@@ -102,6 +102,7 @@ const CommunityPage = () => {
   const [selectedBtn, setSelectedBtn] = useState<string>("");
 
   const { data: communityPosts } = useGetCommunityPostsQuery({});
+  console.log(communityPosts,"comunnity")
 
   return (
     <div className="flex flex-col justify-between gap-5 py-8">
