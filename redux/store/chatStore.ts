@@ -74,20 +74,7 @@ export function useChatStore() {
   ]);
 
   // Standalone chats (History)
-  const [history, setHistory] = useState<Chat[]>([
-    {
-      id: "h1",
-      title: "You Could Use Some of Your Equity...",
-      messages: [],
-      createdAt: 1737517000000,
-    },
-    {
-      id: "h2",
-      title: "More Homes for Sale Isn't a Warning...",
-      messages: [],
-      createdAt: 1737417000000,
-    },
-  ]);
+  const [history, setHistory] = useState<Chat[]>([]);
 
   // Loading state for messages
   const [isLoading, setIsLoading] = useState(false);
@@ -371,6 +358,93 @@ export function useChatStore() {
     }
   }
 
+  /**
+   * Fetch chat history from API
+   */
+  async function fetchHistory() {
+    const token = Cookies.get("token");
+    if (!token) return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ai-chat-logs/user-history`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch history");
+
+      const data = await res.json();
+      if (data.success && data.data) {
+        const parsedHistory: Chat[] = Object.entries(data.data).map(
+          ([chatId, messages]: [string, any]) => {
+            // Sort messages by time if needed, but API usually sends in order.
+            // Map API messages to our Message type
+            const mappedMessages: Message[] = messages.map((m: any) => ({
+              id: uid(), // API doesn't seem to return message ID in this view, generate one
+              role: m.user_message ? "user" : "ai", // This structure is flat [user_msg, ai_response] paired? 
+              // Wait, the example shows "user_message" AND "ai_response" in the SAME object.
+              // We need to split them into two messages for our UI if that's how we display it.
+              // OR our UI expects interleaved. 
+              // Standard chat UI usually expects separate message objects.
+              // Let's split them.
+            }));
+            
+            // Actually, let's re-parse correctly based on the user provided JSON.
+            // The JSON shows an array of objects, each containing both `user_message` and `ai_response`.
+            // We should split this into a flat array of Message objects.
+            
+            const flatMessages: Message[] = [];
+            
+            messages.forEach((m: any) => {
+              const timestamp = new Date(m.created_at).getTime();
+              
+              if (m.user_message) {
+                flatMessages.push({
+                  id: uid(),
+                  role: "user",
+                  text: m.user_message,
+                  createdAt: timestamp,
+                });
+              }
+              
+              if (m.ai_response) {
+                flatMessages.push({
+                  id: uid(),
+                  role: "ai",
+                  text: m.ai_response,
+                  createdAt: timestamp + 1000, // Add slight delay to keep order if mostly same time
+                });
+              }
+            });
+
+            // Title is first user message or default
+            const title = flatMessages.find(m => m.role === "user")?.text.slice(0, 50) || "New Chat";
+            // CreatedAt is timestamp of first message
+            const createdAt = flatMessages.length > 0 ? flatMessages[0].createdAt : Date.now();
+
+            return {
+              id: chatId,
+              title,
+              messages: flatMessages,
+              createdAt,
+            };
+          }
+        );
+
+        // Sort by newest first
+        parsedHistory.sort((a, b) => b.createdAt - a.createdAt);
+        
+        setHistory(parsedHistory);
+      }
+    } catch (error) {
+      console.error("Error fetching history:", error);
+    }
+  }
+
   return {
     projects,
     history,
@@ -388,5 +462,6 @@ export function useChatStore() {
     deleteChat,
     sendMessage,
     updateChatSettings,
+    fetchHistory,
   };
 }

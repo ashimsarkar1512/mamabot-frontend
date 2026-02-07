@@ -53,15 +53,15 @@ export default function SignUpPage() {
     const payload = {
       first_name: formData.firstName,
       last_name: formData.lastName,
-      phone: formData.phone,
+      phone_number: formData.phone,
       email: formData.email,
       password: formData.password,
       password_confirmation: formData.confirmPassword,
-      accepted_terms: checkboxes.privacyPolicy,
-      consent_health_data: checkboxes.healthData,
-      newsletter_opt_in: checkboxes.newsletter,
-      accepted_withdrawal_waiver: checkboxes.rightOfWithdrawal,
-      accepted_auto_renewal: checkboxes.autoRenewal,
+      accepted_terms: checkboxes.privacyPolicy ? 1 : 0,
+      consent_health_data: checkboxes.healthData ? 1 : 0,
+      newsletter_opt_in: checkboxes.newsletter ? 1 : 0,
+      accepted_withdrawal_waiver: checkboxes.rightOfWithdrawal ? 1 : 0,
+      accepted_auto_renewal: checkboxes.autoRenewal ? 1 : 0,
     };
 
     try {
@@ -99,7 +99,7 @@ export default function SignUpPage() {
           />
         </Link>
         <h1 className="text-2xl font-semibold text-gray-800">
-          Login to Momabot
+          Sign Up for Momabot
         </h1>
       </div>
 

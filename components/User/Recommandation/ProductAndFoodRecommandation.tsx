@@ -26,6 +26,7 @@ import { RootState } from "@/redux/store/store";
 import { useGetPregnancyProductsByWeekQuery } from "@/redux/features/api/user/recommandetion/productRecommandetion";
 import { useSearchParams } from "next/navigation";
 import { foodItems } from "@/lib/data/product&foodRecommend";
+import { useGetPregnancyFoodWeeklyLogsQuery } from "@/redux/features/api/user/recommandetion/weeklyFoodSuggestion";
 
 interface Category {
   id: string;
@@ -72,6 +73,9 @@ export default function ProductAndFoodRecommendationsPage({
     error,
   } = useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
 
+  const { data: food } = useGetPregnancyFoodWeeklyLogsQuery(undefined);
+  console.log(food, "get all food in week");
+
   const searchParams = useSearchParams();
   const foodSectionRef = useRef<HTMLDivElement>(null);
 
@@ -89,7 +93,7 @@ export default function ProductAndFoodRecommendationsPage({
       {(active === "all" || active === "product") && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-4">
               <h2 className="text-2xl font-bold text-gray-900">
                 Product Recommendations
               </h2>
@@ -249,72 +253,282 @@ export default function ProductAndFoodRecommendationsPage({
           )}
         </section>
       )}
-      {/*  Today's Recommended Foods  */}
-      {(active === "all" || active === "nutrition") && (
-        <section className="" ref={foodSectionRef}>
-          <div className="flex items-center justify-between p-6 bg-[#ffffff] mb-6 flex-wrap gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🥗</span>
-              <h2 className="text-2xl font-bold text-pink-600">
-                Today&apos;s Recommended Foods
-              </h2>
+
+      <div className="flex flex-col gap-12 min-h-fit border  rounded-xl">
+        {/* Today's Recommended Foods */}
+        {(active === "all" || active === "nutrition") && (
+          <section className="" ref={foodSectionRef}>
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 p-5 rounded-t-xl bg-white">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl sm:text-4xl">🥗</span>
+                <div>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#E91E8C]">
+                    Today's Recommended Foods
+                  </h2>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    Personalized nutrition for Week {week}
+                  </p>
+                </div>
+              </div>
+              <span className="bg-green-500 text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-semibold flex items-center gap-2">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="sm:w-4 sm:h-4"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Fresh
+              </span>
             </div>
-            <span className="bg-green-200 text-green-700 text-xs px-3 py-1 rounded-full font-semibold">
-              {foodItems.length} Food
-            </span>
-          </div>
-          {/* 32px  padding foods er baire, gap-y-2, proti food er card e p-4 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-150">
-                <tbody>
-                  {foodItems.map((item, index) => (
-                    <tr
-                      key={item.id}
-                      className={`border-b border-gray-100 last:border-b-0 ${
-                        index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      }`}
+
+            {/* Food Items List */}
+            <div className="space-y-3 sm:space-y-4 bg-white/25 px-6 pb-6">
+              {(() => {
+                // Get current day of week (1-7)
+                const todayIndex = new Date().getDay(); // 0-6 (Sun-Sat)
+                const currentDay = todayIndex === 0 ? 7 : todayIndex;
+
+                // Extract daily plan
+                const weeklyLogs = food?.data?.[0]?.daily_plan || [];
+                const todaysPlan =
+                  weeklyLogs.find((d: any) => d.day === currentDay) ||
+                  weeklyLogs[0];
+                const dynamicItems = todaysPlan?.items || [];
+
+                // Fallback to static items if no API data yet, or render nothing/message
+                // The user wants "proper set", so we should use API data.
+                const itemsToRender =
+                  dynamicItems.length > 0 ? dynamicItems : [];
+
+                if (itemsToRender.length === 0 && !isLoading) {
+                  return (
+                    <div className="text-center p-4 text-gray-500">
+                      No food recommendations available for today.
+                    </div>
+                  );
+                }
+
+                return itemsToRender.map((item: any, index: number) => {
+                  // Helper to assign icon based on name
+                  const getIcon = (name: string) => {
+                    const lower = name?.toLowerCase() || "";
+                    if (
+                      lower.includes("spinach") ||
+                      lower.includes("salad") ||
+                      lower.includes("kale") ||
+                      lower.includes("broccoli") ||
+                      lower.includes("bok choy") ||
+                      lower.includes("vegetable")
+                    )
+                      return "🥗";
+                    if (
+                      lower.includes("fruit") ||
+                      lower.includes("apple") ||
+                      lower.includes("orange") ||
+                      lower.includes("berry") ||
+                      lower.includes("strawberries") ||
+                      lower.includes("banana")
+                    )
+                      return "🍎";
+                    if (lower.includes("soup") || lower.includes("stew"))
+                      return "🥣";
+                    if (
+                      lower.includes("chicken") ||
+                      lower.includes("meat") ||
+                      lower.includes("beef") ||
+                      lower.includes("steak")
+                    )
+                      return "🍗";
+                    if (
+                      lower.includes("fish") ||
+                      lower.includes("salmon") ||
+                      lower.includes("tuna")
+                    )
+                      return "🐟";
+                    if (lower.includes("egg") || lower.includes("omelet"))
+                      return "🥚";
+                    if (
+                      lower.includes("yogurt") ||
+                      lower.includes("milk") ||
+                      lower.includes("cheese") ||
+                      lower.includes("dairy")
+                    )
+                      return "🥛";
+                    if (
+                      lower.includes("toast") ||
+                      lower.includes("bread") ||
+                      lower.includes("wrap") ||
+                      lower.includes("sandwich") ||
+                      lower.includes("grain")
+                    )
+                      return "🍞";
+                    if (
+                      lower.includes("rice") ||
+                      lower.includes("quinoa") ||
+                      lower.includes("oat") ||
+                      lower.includes("cereal")
+                    )
+                      return "🍚";
+                    if (
+                      lower.includes("avocado") ||
+                      lower.includes("guacamole")
+                    )
+                      return "🥑";
+                    if (
+                      lower.includes("nut") ||
+                      lower.includes("almond") ||
+                      lower.includes("walnut")
+                    )
+                      return "🥜";
+                    return "🍽️";
+                  };
+
+                  const icon = getIcon(item.name);
+
+                  return (
+                    <div
+                      key={index}
+                      className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 p-4 sm:p-5 md:p-6 hover:shadow-sm transition-shadow"
                     >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">{item.icon}</span>
-                          <span className="font-semibold text-gray-900">
+                      {/* Desktop Layout (lg and up) */}
+                      <div className="hidden lg:grid lg:grid-cols-[minmax(240px,1.2fr)_minmax(220px,1fr)_2fr_auto] gap-6 items-center">
+                        {/* Food Name & Icon */}
+                        <div className="flex items-center gap-4 min-w-0">
+                          <span className="text-2xl sm:text-3xl shrink-0">
+                            {icon}
+                          </span>
+
+                          <span className="font-medium text-gray-900 text-sm sm:text-base whitespace-nowrap overflow-hidden text-ellipsis block">
                             {item.name}
                           </span>
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-semibold">
-                          {item.benefit}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-gray-600">
-                        {item.description}
-                      </td>
-                      <td className="px-6 py-4 text-right flex gap-2 justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-cyan-600 border-cyan-200 hover:bg-cyan-50 bg-transparent"
-                        >
-                          View Nutrition Plan
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-cyan-600 border-cyan-200 hover:bg-cyan-50 bg-transparent"
-                        >
-                          Add to Recipe
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+
+                        {/* Benefit Badge */}
+                        <div className="min-w-0">
+                          <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium whitespace-nowrap">
+                            <svg
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              className="sm:w-4 sm:h-4 shrink-0"
+                            >
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+
+                            {item.nutrient && (
+                              <span className="text-xs text-gray-500 mt-0.5 whitespace-nowrap">
+                                {item.nutrient}
+                              </span>
+                            )}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        <div className="min-w-0">
+                          <p className="text-gray-600 text-sm">
+                            {item.benefit}
+                          </p>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-2 whitespace-nowrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-cyan-600 border-cyan-200 hover:bg-cyan-50 bg-transparent rounded-lg text-xs sm:text-sm px-3 sm:px-4"
+                          >
+                            View Full Meal Plan
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-gray-700 border-gray-200 hover:bg-gray-50 bg-transparent rounded-lg text-xs sm:text-sm px-3 sm:px-4"
+                          >
+                            Ask AI for Recipes
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Mobile & Tablet Layout (below lg) */}
+                      <div className="lg:hidden space-y-3 sm:space-y-4">
+                        {/* Food Name & Icon */}
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <span className="text-2xl sm:text-3xl">{icon}</span>
+                          <div className="flex flex-col">
+                            <span className="font-medium text-gray-900 text-sm sm:text-base">
+                              {item.name}
+                            </span>
+                            {item.nutrient && (
+                              <span className="text-xs text-gray-500">
+                                {item.nutrient}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Benefit Badge */}
+                        <div>
+                          <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium">
+                            <svg
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              className="sm:w-4 sm:h-4"
+                            >
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            {item.benefit}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        <div>
+                          <p className="text-gray-600 text-xs sm:text-sm">
+                            {item.nutrient
+                              ? `Rich in ${item.nutrient.toLowerCase().replace("high in ", "")}`
+                              : "Recommended for healthy pregnancy."}
+                          </p>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-cyan-600 border-cyan-200 hover:bg-cyan-50 bg-transparent rounded-lg w-full sm:w-auto text-xs sm:text-sm px-3 sm:px-4"
+                          >
+                            View Full Meal Plan
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-gray-700 border-gray-200 hover:bg-gray-50 bg-transparent rounded-lg w-full sm:w-auto text-xs sm:text-sm px-3 sm:px-4"
+                          >
+                            Ask AI for Recipes
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
+      </div>
     </div>
   );
 }
