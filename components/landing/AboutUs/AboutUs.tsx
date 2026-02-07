@@ -23,6 +23,16 @@ const AboutUs = () => {
     );
   }
 
+// check if data present or not
+
+  if (isError || !data?.success || !data?.data) {
+    return (
+      <section className="w-full py-12 text-center">
+        <p>Failed to load About Us data</p>
+      </section>
+    );
+  }
+
   const { title, subtitle, content, main_img, inset_img } = data.data;
 
   return (

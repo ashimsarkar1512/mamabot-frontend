@@ -68,7 +68,7 @@ const GetInTouch = () => {
 
           {/* Main Form Container */}
           <div className="bg-white/25 max-w-6xl mx-auto   overflow-hidden">
-            <form onSubmit={handleSubmit} className="">
+            <form onSubmit={handleSubmit} className="" suppressHydrationWarning>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm font-medium mb-1.5">
