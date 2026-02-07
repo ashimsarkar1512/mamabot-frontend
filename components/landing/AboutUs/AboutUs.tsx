@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { beauRivage, comfortaa } from "@/app/fonts";
 import { useGetAboutUsQuery } from "@/redux/features/api/user/aboutUs/AboutUs";
-import CommonButton from "@/components/ui/Reusable/CommonButton";
-import { ArrowRight } from "lucide-react";
 
 const AboutUs = () => {
   const { data, isLoading, isError } = useGetAboutUsQuery();
@@ -24,8 +22,6 @@ const AboutUs = () => {
       </section>
     );
   }
-
-// check if data present or not
 
   if (isError || !data?.success || !data?.data) {
     return (
