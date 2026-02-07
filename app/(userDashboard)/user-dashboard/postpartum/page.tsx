@@ -14,7 +14,7 @@ const PostpartumCard: React.FC = () => {
       {/* Main Card Container */}
       <div className="w-full max-w-4xl rounded-xl border border-white bg-white/25 px-6 py-10 text-center shadow-lg shadow-blue-100/50 backdrop-blur-sm">
         {/* Header Section */}
-        <h1 className="mb-4 text-3xl font-semibold text-[#38b6ff]">
+        <h1 className="mb-4 text-xl md:text-3xl font-semibold text-[#38b6ff]">
           Congratulations on Your Baby! 🎉
         </h1>
 
@@ -25,7 +25,7 @@ const PostpartumCard: React.FC = () => {
 
         {/* Action Button */}
         <button
-          className="inline-block rounded-xl bg-secondary px-12 py-4 font-medium text-white transition-all  cursor-pointer"
+          className="inline-block rounded-xl text-xs md:text-base bg-secondary px-4 md:px-12 py-4 font-medium text-white transition-all  cursor-pointer"
           onClick={handleStartPostpartum}
         >
           Start Postpartum Period

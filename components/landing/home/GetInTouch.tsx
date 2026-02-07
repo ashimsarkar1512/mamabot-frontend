@@ -55,8 +55,8 @@ const GetInTouch = () => {
     }
   };
   return (
-    <section className="bg-[#ffffff]/25 rounded-3xl shadow-lg px-6 my-7 md:my-24 py-10 md:px-16 md:py-14">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+    <section className="bg-[#ffffff]/25 rounded-3xl shadow-lg px-6 my-7 md:my-24 py-5 md:px-16 md:py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-10 items-center">
         {/* LEFT – FORM */}
         <div>
           <h2 className="text-[26px] md:text-[36px] font-semibold text-gray-900 mb-2 md:mb-5">
@@ -172,7 +172,7 @@ const GetInTouch = () => {
 
         {/* RIGHT – IMAGE */}
         <div className="flex justify-center lg:justify-end">
-          <div className=" w-173.5 h-200 rounded-2xl">
+          <div className=" w-173.5 md:h-200 h-100 rounded-2xl">
             <Image
               src="/images/getInTouch.png"
               alt="Get in touch"

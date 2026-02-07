@@ -1,34 +1,21 @@
 "use client";
 
 import React from "react";
-import { Clock, BookOpen } from "lucide-react";
+import { Clock, BookOpen, Navigation } from "lucide-react";
 import Image from "next/image";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
+import { useRouter } from "next/navigation";
+import { useGetLatestArticlesQuery } from "@/redux/features/api/GuestLanding/ArticlesLanding";
 
 export default function LearnAndGrow() {
-  const articles = [
-    {
-      id: 1,
-      title: "Essential Guide to Newborn Sleep Patterns",
-      description:
-        "Understanding your baby's sleep cycle and creating healthy sleep habits from day one. Learn about sleep progression, soft sleep practices, and...",
-      image: "/images/home/articleCard.png",
-    },
-    {
-      id: 2,
-      title: "10 Inspiring Parenting Stories That Changed Lives",
-      description:
-        "In the world of parenting, certain heartwarming stories stand out for their extraordinary twists, overwhelming emotions, profound influence on the industry.",
-      image: "/images/home/articleCard1.png",
-    },
-    {
-      id: 3,
-      title: "Nurturing Creativity in Early Childhood Development",
-      description:
-        "Creativity lies at the heart of child development. Nurturing creativity is not always easy. It requires a delicate balance of guidance, preservation and...",
-      image: "/images/home/articleCard3.png",
-    },
-  ];
+  const router = useRouter();
+
+  const { data, isLoading, isError } = useGetLatestArticlesQuery();
+
+  if (isLoading) return <p>Loading articles...</p>;
+  if (isError || !data?.data?.length) return <p>Failed to load articles</p>;
+
+  const [featuredArticle, ...otherArticles] = data.data;
 
   return (
     <section className="">
@@ -43,17 +30,17 @@ export default function LearnAndGrow() {
 
           <div className="relative w-full h-full min-h-125 flex items-end">
             <Image
-              src="/images/home/article.png" // Path to your actual photo
-              alt="Pregnant woman"
+              src={featuredArticle.main_img || "/images/home/article.png"}
+              alt={featuredArticle.title || "Pregnant woman"}
               fill
-              className="object-cover object-center"
+              className="object-cover px-2 md:px-0 object-center"
               priority
             />
           </div>
         </div>
 
         {/* Right - Article Content */}
-        <div className="relative p-8 md:p-14 lg:p-16 flex flex-col justify-center">
+        <div className="relative p-4 md:p-14 lg:p-16 flex flex-col justify-center">
           <div className="relative z-10">
             {/* Top Badge */}
             <div className="inline-flex items-center gap-2 mb-4  px-4 py-1.5 rounded-full w-fit">
@@ -64,61 +51,37 @@ export default function LearnAndGrow() {
             </div>
 
             {/* Titles */}
-            <h2 className="text-xl md:text-2xl  text-[#1A1A1A] mb-4 tracking-tight">
+            <h2 className="text-lg md:text-2xl  text-[#1A1A1A] mb-4 tracking-tight">
               Learn & <span className="text-[#EF2364]">Grow</span>
             </h2>
-            <p className="text-[#6B7280] text-base md:text-lg mb-3 font-medium">
-              Evidence-based articles from medical experts and experienced
-              parents
-            </p>
+            {featuredArticle.category && (
+              <div className="bg-[#E0F2FE] text-[#3FB1D3] text-xs px-4 py-1 rounded-full w-fit mb-3 uppercase">
+                {featuredArticle.category.title}
+              </div>
+            )}
 
-            {/* Article Category Tag */}
-            <div className="inline-block bg-[#E0F2FE] text-[#3FB1D3] text-sm  px-4 py-1.5 rounded-full mb-3 w-fit uppercase tracking-widest">
-              Wellbeing
-            </div>
-
-            {/* Article Heading */}
-            <h3 className="text-xl md:text-3xl  text-[#1A1A1A] mb-6 leading-[1.1] tracking-tight">
-              Coping with Stress During <br />
-              <span className="text-[#EF2364]">Pregnancy</span> – Tips from
-              Experts
+            <h3 className="text-xl md:text-3xl mb-5 leading-tight">
+              {featuredArticle.title}
             </h3>
 
-            {/* Article Excerpt */}
-            <p className="text-[#6B7280] text-base md:text-lg mb-8 leading-relaxed font-medium">
-              Discover evidence-based techniques to manage pregnancy stress and
-              anxiety, recommended by healthcare professionals and experienced
-              mothers.
+            <p className="text-gray-600 text-sm md:text-base mb-6 line-clamp-3">
+              {featuredArticle.short_description}
             </p>
 
-            {/* Meta Data */}
-            <div className="flex items-center gap-5 mb-6 text-[15px] text-[#6B7280] font-medium">
-              <span>— Dr. Sarah Müller</span>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" />
-                <span>8 min read</span>
+            <div className="flex items-center gap-4 mb-6 text-sm text-gray-500">
+              <span>— {featuredArticle.author_name}</span>
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                <span>{featuredArticle.read_duration}</span>
               </div>
             </div>
 
-            {/* Action Button */}
-            {/* <button className="bg-[#EF2364] hover:bg-[#D41F58] text-white font-bold py-4 px-10 rounded-2xl w-fit transition-all duration-300 shadow-lg shadow-pink-100 text-lg">
-              Read Article
-            </button> */}
-
             <CommonButton
-              className="rounded-lg py-2 px-5 "
               text="Read Article"
-            />
-          </div>
-
-          {/* Bottom Right Decorative Illustration */}
-          <div className="absolute right-0 bottom-0 w-50 h-50 md:w-70 md:h-70 pointer-events-none select-none opacity-40 lg:opacity-100 py-10">
-            <Image
-              src="/images/home/articleBottom.png"
-              alt="Pregnancy Illustration"
-              width={250}
-              height={250}
-              className="object-contain object-bottom-right"
+              icon={<Navigation size={16} className="fill-white" />}
+              iconPosition="right"
+              onClick={() => router.push(`/articles/${featuredArticle.id}`)}
+              className="rounded-lg py-2 px-6"
             />
           </div>
         </div>
@@ -126,7 +89,7 @@ export default function LearnAndGrow() {
 
       {/* Articles Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-        {articles.map((article) => (
+        {otherArticles.map((article) => (
           <div
             key={article.id}
             className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
@@ -134,10 +97,10 @@ export default function LearnAndGrow() {
             {/* Article Image */}
             <div className="relative w-full h-64 md:h-80 overflow-hidden">
               <Image
-                src={article.image || "/placeholder.svg"}
+                src={article.thumb_img || "/placeholder.svg"}
                 alt={article.title}
                 fill
-                className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                className="object-cover w-full h-full px-2 md:px-0 transition-transform duration-300 hover:scale-105"
                 style={{ objectPosition: "center" }}
               />
             </div>
@@ -148,10 +111,13 @@ export default function LearnAndGrow() {
                 {article.title}
               </h4>
               <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-                {article.description}
+                {article.short_description}
               </p>
               <CommonButton
                 text="Read Article"
+                icon={<Navigation size={16} className="fill-white" />}
+                iconPosition="right"
+                onClick={() => router.push(`/articles/${article.id}`)}
                 className="rounded-lg py-1 px-4 text-sm bg-pink-600 hover:bg-pink-700 text-white"
               />
             </div>

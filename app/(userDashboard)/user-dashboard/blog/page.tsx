@@ -3,7 +3,6 @@
 import BlogContent from "@/components/landing/Blog/BlogContent";
 import BlogCover from "@/components/landing/Blog/BlogCover";
 import { Footer } from "@/components/layout/Footer";
-import Image from "next/image";
 
 const Page = () => {
   return (

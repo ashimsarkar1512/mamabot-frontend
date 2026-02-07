@@ -97,8 +97,8 @@ const Notifications = ({ activeTab }: Props) => {
     <div className=" ">
       <div className="bg-white/25 border-2  rounded-2xl !border-white mb-8 md:mb-16">
         {/* Header */}
-        <div className=" bg-[#DEF0F8] p-6  rounded-2xl">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 ">
+        <div className=" bg-[#DEF0F8] p-3 md:p-6  rounded-2xl">
+          <h1 className="text-lg mb-1 sm:text-2xl font-semibold text-gray-800 ">
             Notifications & Alerts
           </h1>
           <p className="text-sm text-gray-500">
@@ -111,7 +111,7 @@ const Notifications = ({ activeTab }: Props) => {
             (key) => (
               <div
                 key={key}
-                className="flex justify-between px-3 md:px-6 py-5 md:py-10"
+                className="flex justify-between px-2 md:px-6 py-5 md:py-10"
               >
                 <span className="capitalize">{key.replaceAll("_", " ")}</span>
 

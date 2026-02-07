@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DialogClose,
   DialogContent,
@@ -23,6 +23,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { resetBabyCareStep } from "@/redux/features/slice/babyCareModalSlice";
+import { 
+  useCreateBabyCueLogMutation, 
+  useGetBabyCueLogsQuery 
+} from "@/redux/features/api/user/postpurtum/babyCare";
+import { toast } from "sonner";
 
 type FormData = {
   streak: number;
@@ -60,6 +65,7 @@ const STEPS = [
     stepNumber: 8,
   },
 ];
+
 const cuesSTEPS = [
   {
     title: "Hold baby close",
@@ -78,6 +84,7 @@ const cuesSTEPS = [
     icon: <Apple className="text-blue-300" />,
   },
 ];
+
 const babyFeedingBasicsData: {
   icon: React.ReactNode;
   title: string;
@@ -102,6 +109,7 @@ const babyFeedingBasicsData: {
     ],
   },
 ];
+
 const babySleepPatternsData: {
   icon: React.ReactNode;
   title: string;
@@ -126,6 +134,7 @@ const babySleepPatternsData: {
     ],
   },
 ];
+
 const babyDiaperExpectationsData: {
   icon: React.ReactNode;
   title: string;
@@ -146,7 +155,7 @@ const babyDiaperExpectationsData: {
   },
   {
     icon: <Apple size={15} className="text-blue-300" />,
-    title: "Dirty Diapers",
+    title: "When to Call Doctor",
     description: [
       "Very few wet diapers",
       "Hard stools or blood",
@@ -154,6 +163,7 @@ const babyDiaperExpectationsData: {
     ],
   },
 ];
+
 const babyCuesData: {
   icon: React.ReactNode;
   title: string;
@@ -177,14 +187,16 @@ const babyCuesData: {
   },
 ];
 
-// in this modal there will be 3 steps
 export default function BabyCareModal() {
+  const { data, isLoading, error } = useGetBabyCueLogsQuery(undefined);
+  const [createBabyCueLog, { isLoading: isSubmitting }] = useCreateBabyCueLogMutation();
+
   const babyCareStep = useSelector(
     (state: RootState) => state.babyCareModal.step,
   );
   const dispatch = useDispatch();
   const [step, setStep] = useState(babyCareStep);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [shouldClose, setShouldClose] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     streak: 0,
@@ -192,42 +204,92 @@ export default function BabyCareModal() {
     tip: "Consistency strengthens your core and speeds recovery.",
   });
 
+  // Check if today's log exists
+  const todayLog = data?.data?.[0];
+  const todayDate = new Date().toISOString().split("T")[0];
+  const hasLoggedToday = todayLog?.log_date === todayDate;
+
+  // Show error toast if GET request fails
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to load baby care logs");
+    }
+  }, [error]);
+
+  // Show info toast if already logged today
+  // useEffect(() => {
+  //   if (hasLoggedToday && !isLoading) {
+  //     toast.info("You've already logged baby care today!");
+  //   }
+  // }, [hasLoggedToday, isLoading]);
+
   const next = () => setStep((s) => s + 1);
   const customNext = (num: number) => setStep(num);
   const back = () => setStep((s) => s - 1);
 
-  const handleFinish = () => {
-    dispatch(resetBabyCareStep());
-    setFormData({
-      streak: 0,
-      time: 0,
-      tip: "Consistency strengthens your core and speeds recovery.",
-    });
-    close();
+  const handleFinish = async () => {
+    // Don't create log if already logged today
+    if (hasLoggedToday) {
+      toast.info("Already completed for today");
+      setTimeout(() => {
+        setShouldClose(true);
+        dispatch(resetBabyCareStep());
+        setFormData({
+          streak: 0,
+          time: 0,
+          tip: "Consistency strengthens your core and speeds recovery.",
+        });
+      }, 1000);
+      return;
+    }
+
+    try {
+      await createBabyCueLog({
+        log_date: todayDate,
+        notes: "Completed baby care basics guide",
+        tip: "Try gentle rocking and soothing techniques",
+      }).unwrap();
+
+      // Success toast
+      toast.success("Baby care guide completed successfully!");
+
+      // Wait for 1.5 seconds before closing modal
+      setTimeout(() => {
+        setShouldClose(true);
+        dispatch(resetBabyCareStep());
+        setFormData({
+          streak: 0,
+          time: 0,
+          tip: "Consistency strengthens your core and speeds recovery.",
+        });
+      }, 1500);
+    } catch (error: any) {
+      // Error toast
+      const errorMessage = error?.data?.message || error?.message || "Failed to save baby care log";
+      toast.error(errorMessage);
+      console.error("Baby care log error:", error);
+    }
   };
 
   function renderStep() {
     switch (step) {
-      // STEP 0 — INTRO
       case 0:
         return (
           <FirstStep
             Icon={RotateCw}
             title="Baby Care Basics"
-            description="The first few weeks with your baby can feel overwhelming. Understanding what’s normal helps you feel more confident and calm."
-            buttonText="Choose a Topic"
+            description="The first few weeks with your baby can feel overwhelming. Understanding what's normal helps you feel more confident and calm."
+            buttonText={hasLoggedToday ? "Review Baby Care" : "Choose a Topic"}
             onNext={next}
           />
         );
 
-      // STEP 1 — PAIN
       case 1:
         return (
           <div className="space-y-6 min-h-[550px] flex flex-col justify-center">
             <h1 className="text-lg font-semibold t">
-              What Would You Like To Learn About?{" "}
+              What Would You Like To Learn About?
             </h1>
-
             <Step steps={STEPS} onNext={customNext} />
           </div>
         );
@@ -252,14 +314,14 @@ export default function BabyCareModal() {
           </div>
         );
 
-      // STEP 3
       case 3:
         return (
           <>
-            <BabyFeedingModal />;
+            <BabyFeedingModal />
             <DialogClose />
           </>
         );
+
       case 4:
         return (
           <div className="space-y-2 min-h-[550px] flex flex-col justify-between">
@@ -279,6 +341,7 @@ export default function BabyCareModal() {
             />
           </div>
         );
+
       case 5:
         return (
           <>
@@ -286,6 +349,7 @@ export default function BabyCareModal() {
             <DialogClose />
           </>
         );
+
       case 6:
         return (
           <div className="space-y-2 min-h-[550px] flex flex-col justify-between">
@@ -301,6 +365,7 @@ export default function BabyCareModal() {
             />
           </div>
         );
+
       case 7:
         return (
           <>
@@ -308,6 +373,7 @@ export default function BabyCareModal() {
             <DialogClose />
           </>
         );
+
       case 8:
         return (
           <div className="space-y-2 min-h-[550px] flex flex-col justify-between">
@@ -323,24 +389,52 @@ export default function BabyCareModal() {
             />
           </div>
         );
+
       case 9:
         return (
           <div className="space-y-6 min-h-[550px] flex flex-col justify-center">
             <h1 className="text-lg font-semibold t">Soothing Your Baby</h1>
-
             <Step steps={cuesSTEPS} />
-            <DialogClose asChild>
+            
+            {shouldClose ? (
+              <DialogClose asChild>
+                <Button
+                  variant="primary"
+                  className="w-full text-md bg-[#229ECF]! mx-auto text-white py-2 rounded-lg hover:bg-[#1b8ab6]"
+                >
+                  Done
+                </Button>
+              </DialogClose>
+            ) : (
               <Button
                 variant="primary"
                 className="w-full text-md bg-[#229ECF]! mx-auto text-white py-2 rounded-lg hover:bg-[#1b8ab6]"
                 onClick={handleFinish}
+                disabled={isSubmitting}
               >
-                Done
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Saving...
+                  </span>
+                ) : (
+                  "Done"
+                )}
               </Button>
-            </DialogClose>
+            )}
           </div>
         );
     }
+  }
+
+  if (isLoading) {
+    return (
+      <DialogContent className="max-w-md">
+        <div className="flex items-center justify-center min-h-[200px]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#229ECF]"></div>
+        </div>
+      </DialogContent>
+    );
   }
 
   return (

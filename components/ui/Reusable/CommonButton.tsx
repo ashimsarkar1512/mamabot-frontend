@@ -7,6 +7,7 @@ interface CommonButtonProps {
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   onClick?: () => void;
+  bgColor?: string;
   className?: string;
   disabled?: boolean;
 }
@@ -16,6 +17,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   icon,
   iconPosition = "right",
   onClick,
+  bgColor,
   className = "",
   disabled = false,
 }) => {
@@ -24,35 +26,52 @@ const CommonButton: React.FC<CommonButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        // base
-        "group inline-flex items-center justify-center gap-2",
+        "group inline-flex items-center justify-center",
         "px-6 py-3 rounded-full cursor-pointer",
         "text-sm sm:text-base md:text-lg font-semibold",
         "transition-all duration-300 ease-out",
-
-        // colors (can override later)
         "bg-primary text-primary-foreground",
-
-        // hover + focus
         "hover:shadow-lg hover:scale-[1.02]",
         "disabled:opacity-50 disabled:cursor-not-allowed",
-
         className,
+        bgColor,
       )}
     >
       {/* Left Icon */}
       {icon && iconPosition === "left" && (
-        <span className="transition-transform duration-300 group-hover:-translate-x-1">
+        <span
+          className="
+            w-0 overflow-hidden
+            opacity-0
+            -translate-x-4
+            transition-all duration-300 ease-out
+            group-hover:w-auto
+            group-hover:opacity-100
+            group-hover:-translate-x-1
+            group-hover:mr-2
+          "
+        >
           {icon}
         </span>
       )}
 
       {/* Text */}
-      <span className="relative z-10">{text}</span>
+      <span className="relative z-10 whitespace-nowrap">{text}</span>
 
       {/* Right Icon */}
       {icon && iconPosition === "right" && (
-        <span className="transition-transform duration-300 group-hover:translate-x-1">
+        <span
+          className="
+            w-0 overflow-hidden
+            opacity-0
+            translate-x-4
+            transition-all duration-300 ease-out
+            group-hover:w-auto
+            group-hover:opacity-100
+            group-hover:translate-x-1
+            group-hover:ml-2
+          "
+        >
           {icon}
         </span>
       )}

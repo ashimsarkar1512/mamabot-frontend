@@ -84,9 +84,9 @@ export default function PelvicFloorExerciseModal() {
         });
 
         // If already completed today, show success message
-        if (existingLog.completed) {
-          toast.info("You've already completed today's exercise!");
-        }
+        // if (existingLog.completed) {
+        //   toast.info("You've already completed today's exercise!");
+        // }
       } else {
         // No log for today, but we have streak from previous logs
         setHasExistingLog(false);
@@ -100,11 +100,14 @@ export default function PelvicFloorExerciseModal() {
 
   // Initialize audio on component mount
   useEffect(() => {
-    // You can use a royalty-free meditation/relaxation music URL
-    // For now, using a placeholder - replace with your music file
-    audioRef.current = new Audio("/sounds/meditation-music.mp3");
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
+    // Only create Audio in the browser environment
+    if (typeof window !== 'undefined') {
+      // You can use a royalty-free meditation/relaxation music URL
+      // For now, using a placeholder - replace with your music file
+      audioRef.current = new Audio("/sounds/meditation-music.mp3");
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.3;
+    }
 
     return () => {
       if (audioRef.current) {

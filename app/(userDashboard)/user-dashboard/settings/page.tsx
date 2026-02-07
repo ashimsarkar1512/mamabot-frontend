@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { comfortaa } from "@/app/fonts";
 
-import { Settings2 } from "lucide-react";
+import { Menu, Settings2, X } from "lucide-react";
 
 import { settingsTabs } from "@/lib/data/SettingsData";
 import Personalization from "@/components/landing/Settings/Personalization";
@@ -15,38 +15,71 @@ import HelpSupport from "@/components/landing/Settings/HelpSupport";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState(settingsTabs[0]);
-  // const filteredItems =
-  //   activeTab === "All(24)"
-  //     ? items
-  //     : items.filter((item) => item.type === activeTab);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-16`}>
-      <div className="flex items-center gap-3 ">
-        <div className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center">
-          <Settings2 size={24} />
+      <div className="flex md:items-center gap-3 ">
+        <div className="w-5 md:w-14 h-5 md:h-14 bg-primary text-white rounded-full flex items-center justify-center">
+          <Settings2 />
         </div>
         <div>
-          <h1 className="text-3xl mb-1">Settings</h1>
-          <p className="text-lg text-[#4A5565]">
+          <h1 className="text-xl md:text-3xl mb-1">Settings</h1>
+          <p className="text-sm md:text-lg text-[#4A5565]">
             Fine-tune your Mamabot experience — your comfort, your control.
           </p>
         </div>
       </div>
+
       {/* Tabs */}
-      <div className="">
-        <div className="mb-8 md:mb-16 grid grid-cols-6 overflow-hidden border-2 !border-white bg-white/25">
+      <div className="mb-8 md:mb-16">
+        {/* Mobile Hamburger */}
+
+        <div className="md:hidden block relative">
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between px-4 py-3 border rounded-lg bg-white"
+          >
+            <span className="font-medium">{activeTab}</span>
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
+          {isOpen && (
+            <div className="absolute z-20 mt-2 w-full bg-white border rounded-lg shadow-md overflow-hidden">
+              {settingsTabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 text-sm transition
+            ${
+              activeTab === tab
+                ? "bg-[#229ECF] text-white"
+                : "hover:bg-gray-100 text-gray-700"
+            }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Tabs */}
+        <div className="md:flex justify-around hidden border-r-2 !border-r-white !bg-white/25">
           {settingsTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-3 text-sm cursor-pointer border-r-2 !border-r-white font-medium transition
-                ${
-                  activeTab === tab
-                    ? "bg-[#229ECF] text-white"
-                    : "text-gray-600 hover:bg-gray-50"
-                }
-              `}
+              className={`py-3 px-16 text-sm cursor-pointer border-r-2 !border-r-white font-medium transition
+          ${
+            activeTab === tab
+              ? "bg-[#229ECF] text-white"
+              : "text-gray-600 hover:bg-gray-50"
+          }
+        `}
             >
               {tab}
             </button>

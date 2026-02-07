@@ -211,7 +211,7 @@ import { useCreateHydrationLogMutation, useGetHydrationLogsQuery } from "@/redux
 import { IProfileResponse } from "@/types/user/profile";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 
 interface HydrationModalProps {
@@ -235,6 +235,18 @@ const todayLog = hydrationLogs?.data ?? null;
   
 
     console.log(todayLog,"fkjlatfg")
+    
+    // Lazy initialization of Audio to avoid SSR issues
+    const waterSoundRef = useRef<HTMLAudioElement | null>(null);
+    
+    const getWaterSound = () => {
+      if (typeof window === 'undefined') return null;
+      if (!waterSoundRef.current) {
+        waterSoundRef.current = new Audio("/sounds/drinkwater1.mp3");
+        waterSoundRef.current.preload = "auto";
+      }
+      return waterSoundRef.current;
+    };
 
   // State
  const [glasses, setGlasses] = useState<number>(todayLog?.glass_count || 0);
@@ -270,6 +282,11 @@ useEffect(() => {
     if (glasses < maxGlasses) {
       setGlasses(prev => prev + 1);
       setIsRunning(true);
+      const sound = getWaterSound();
+      if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(err => console.log("Sound play failed:", err));
+      }
     }
   };
 

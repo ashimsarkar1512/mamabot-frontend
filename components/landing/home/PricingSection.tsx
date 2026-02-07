@@ -4,74 +4,71 @@ import Link from "next/link";
 import { ArrowLeft, Check, CircleDollarSign } from "lucide-react";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { useRouter } from "next/navigation";
-
-const plans = [
-  {
-    price: "$10/mth",
-    title: "Basic plan",
-    description: "Perfect for first-time users who want to explore Mamabot.",
-    features: [
-      "10 AI chatbot questions per day",
-      "Personalized answers based on your pregnancy stage",
-      "Access to selected blog articles",
-      "Weekly newsletter with tips & updates",
-      "GDPR-compliant data control",
-    ],
-  },
-  {
-    price: "$20/mth",
-    title: "Business plan",
-    description:
-      "Unlimited AI conversations, deep personalization, and full community access.",
-    features: [
-      "Unlimited AI chats (GPT-4)",
-      "Extended memory & personalization",
-      "Pregnancy & baby milestone tracking",
-      "Full community access (post, reply, badges)",
-      "Smart product recommendations",
-      "Save & export chat history",
-    ],
-  },
-  {
-    price: "$40/mth",
-    title: "Enterprise plan",
-    description:
-      "Your full motherhood companion — 12 months of unlimited support.",
-    features: [
-      "Everything in Premium Monthly",
-      "Exclusive early access to new features",
-      "Priority community badges",
-      "Yearly wellness summary report (PDF)",
-      "Lifetime access to milestone tracker",
-    ],
-  },
-];
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  useCreateCheckoutMutation,
+  useGetPlansQuery,
+} from "@/redux/features/api/user/subscription";
+import Loading from "@/components/Loading";
 
 export default function PricingPricing() {
   const router = useRouter();
+  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
+
+  // ✅ Fetch plans
+  const { data: response, isLoading, isFetching } = useGetPlansQuery();
+
+  // ✅ Checkout mutation
+  const [createCheckout] = useCreateCheckoutMutation();
+
   const handleBack = () => {
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.push("/");
+    if (window.history.length > 1) router.back();
+    else router.push("/");
+  };
+
+  const handleCheckout = async (planId: number) => {
+    try {
+      setProcessingPlan(String(planId));
+
+      const result = await createCheckout({
+        plan_id: String(planId),
+      }).unwrap();
+
+      if (result?.url) {
+        window.location.href = result.url;
+      } else {
+        toast.error("Failed to start checkout. Please try again.");
+      }
+    } catch (err: any) {
+      console.error("Checkout error:", err);
+      toast.error(
+        err?.data?.errors?.plan_id?.[0] ??
+          "You already have an active subscription for this plan.",
+      );
+    } finally {
+      setProcessingPlan(null);
     }
   };
+
+  if (isLoading || isFetching) return <Loading />;
+
+  const plans = response?.data ?? [];
+
   return (
     <div className="py-20 px-4 bg-white/25 rounded-2xl border border-white shadow-lg my-10">
       {/* Header */}
-      <div className="max-w-6xl mx-auto  my-10">
-        <span className="inline-flex items-center  gap-2 text-xs font-medium text-pink-600 bg-pink-100 px-4 py-2 rounded-full mb-4">
-          <span>
-            <CircleDollarSign size={20} />
-          </span>{" "}
+      <div className="max-w-6xl mx-auto my-10">
+        <span className="inline-flex items-center gap-2 text-xs font-medium text-pink-600 bg-pink-100 px-4 py-2 rounded-full mb-4">
+          <CircleDollarSign size={20} />
           Pricing
         </span>
 
-        <h1 className="text-3xl md:text-4xl  text-gray-900 mb-4">
+        <h1 className="text-xl md:text-4xl text-gray-900 mb-4">
           <span className="text-pink-600">Mamabot.de</span> — Pricing Plans
         </h1>
 
-        <p className="max-w-2xl  text-gray-500">
+        <p className="max-w-2xl text-sm md:text-lg text-gray-500">
           Whether you’re expecting, a new mom, or exploring expert advice —
           Mamabot grows with you. Start free, and upgrade anytime for unlimited
           AI support and exclusive features.
@@ -79,22 +76,21 @@ export default function PricingPricing() {
       </div>
 
       {/* Pricing Cards */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 ">
-        {plans.map((plan, index) => (
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8">
+        {plans.map((plan: any, index: number) => (
           <div
-            key={index}
-            className={`relative bg-white rounded-2xl border flex flex-col p-8 mt-16 transition-transform duration-300
-    ${
-      index === 1
-        ? "scale-110 z-10 shadow-2xl border-pink-500"
-        : "scale-100 shadow-lg border-gray-100"
-    }
-  `}
+            key={plan.id}
+            className={`relative bg-white rounded-2xl border flex flex-col p-3 md:p-8 mt-6 md:mt-16 transition-transform duration-300
+              ${
+                index === 1
+                  ? "md:scale-110 z-10 shadow-2xl border-pink-500"
+                  : "scale-100 shadow-lg border-gray-100"
+              }`}
           >
-            {/* Most Popular Badge + Arrow on First Plan */}
+            {/* Most Popular */}
             {index === 0 && (
-              <div className="">
-                <div className="absolute -top-14 right-15 flex items-center gap-2">
+              <>
+                <div className="absolute -right-15 -top-14 md:-top-14 md:right-15">
                   <svg
                     width="100"
                     height="100"
@@ -117,24 +113,24 @@ export default function PricingPricing() {
                     />
                   </svg>
                 </div>
-                <div className="absolute -top-13 -right-12 font-medium text-pink-600">
+                <div className="absolute md:-top-13 -top-14 right-12 md:-right-12 font-medium text-pink-600">
                   Most popular!
                 </div>
-              </div>
+              </>
             )}
 
             {/* Price */}
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              {plan.price}
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-2">
+              ${plan.price}/mth
             </h2>
 
-            <h3 className="font-semibold text-gray-800 mb-2">{plan.title}</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">{plan.name}</h3>
 
             <p className="text-sm text-gray-500 mb-6">{plan.description}</p>
 
             {/* Features */}
             <ul className="space-y-3 mb-8 flex-1">
-              {plan.features.map((feature, i) => (
+              {(plan.features ?? []).map((feature: string, i: number) => (
                 <li key={i} className="flex items-start gap-3 text-sm">
                   <span className="flex items-center justify-center w-5 h-5 rounded-full bg-green-100 text-green-600">
                     <Check size={14} />
@@ -145,10 +141,16 @@ export default function PricingPricing() {
             </ul>
 
             {/* Button */}
-            {/* <button className="w-full mt-auto bg-pink-600 text-white py-3 rounded-lg font-medium hover:bg-pink-700 transition">
-              Get started
-            </button> */}
-            <CommonButton className="w-full rounded-md" text="Get started" />
+            <CommonButton
+              className="w-full rounded-md"
+              text={
+                processingPlan === String(plan.id)
+                  ? "Processing..."
+                  : "Get started"
+              }
+              disabled={processingPlan === String(plan.id)}
+              onClick={() => handleCheckout(plan.id)}
+            />
           </div>
         ))}
       </div>

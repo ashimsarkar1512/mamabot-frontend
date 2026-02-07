@@ -32,7 +32,7 @@ const Faq = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
   return (
-    <section className="w-full py-3 md:py-6 ">
+    <section id="faq" className="w-full py-3 md:py-6 scroll-mt-5">
       <div className="mx-auto">
         <div className="">
           <h2 className="text-xl text-center md:text-[32px] font-semibold ">

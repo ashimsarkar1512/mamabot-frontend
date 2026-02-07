@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircleIcon, Mail, MessageCircleMore } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   activeTab: string;
@@ -26,12 +27,27 @@ const helpSupport = [
   },
 ];
 const HelpSupport = ({ activeTab }: Props) => {
+  const router = useRouter();
+  const handleNavigation = (id: string) => {
+    if (id === "1") {
+      router.push("/user-dashboard/subscription-plan#faq");
+    }
+
+    if (id === "2") {
+      router.push("/user-dashboard/contact-us?section=support");
+    }
+
+    if (id === "3") {
+      router.push("/user-dashboard/contact-us?section=feedback");
+    }
+  };
+
   return (
     <div className="bg-white/25 border-2  rounded-2xl !border-white mb-8 md:mb-1 ">
       <div className="6">
         {/* Header */}
-        <div className=" bg-[#DEF0F8] p-6  rounded-2xl">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 ">
+        <div className=" bg-[#DEF0F8] p-3 md:p-6  rounded-2xl">
+          <h1 className="text-lg mb-1 sm:text-2xl font-semibold text-gray-800 ">
             Help & Support
           </h1>
           <p className="text-sm text-gray-500">
@@ -44,7 +60,15 @@ const HelpSupport = ({ activeTab }: Props) => {
         {helpSupport.map((item, idx) => (
           <div
             key={item.id}
-            className={`flex items-start gap-4 px-3 md:px-6 py-5 md:py-10  ${idx < helpSupport.length - 1 ? "border-b-2 !border-b-[#DEF0F8]" : ""}`}
+            onClick={() => handleNavigation(item.id)}
+            className={`flex items-start gap-2 md:gap-4 px-2 md:px-6 py-5 md:py-10
+              cursor-pointer hover:opacity-80 transition
+              ${
+                idx < helpSupport.length - 1
+                  ? "border-b-2 !border-b-[#DEF0F8]"
+                  : ""
+              }
+            `}
           >
             <div className="mt-1">{item.icon}</div>
             <div>

@@ -1,5 +1,4 @@
 "use client";
-
 import { useParams, useRouter } from "next/navigation";
 import {
   useGetArticleByIdQuery,
@@ -15,10 +14,11 @@ import {
   BookOpenIcon,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+
 import Loading from "@/components/Loading";
 import { comfortaa } from "@/app/fonts";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function SingleArticlePage() {
   const params = useParams();
@@ -27,7 +27,6 @@ export default function SingleArticlePage() {
 
   const [showAll, setShowAll] = useState(false);
 
-  /* ---------------- API CALLS ---------------- */
   const {
     data: articleData,
     isLoading,
@@ -42,17 +41,10 @@ export default function SingleArticlePage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <p className="text-red-500">Failed to load article</p>
-        <button
-          onClick={() => router.push("/user-dashboard")}
-          className="mt-4 text-[#229ECF] hover:underline"
-        >
-          Back to Dashboard
-        </button>
       </div>
     );
   }
 
-  /* ---------------- CURRENT ARTICLE ---------------- */
   const article = Array.isArray(articleData.data)
     ? articleData.data[0]
     : articleData.data;
@@ -66,18 +58,15 @@ export default function SingleArticlePage() {
     : "";
   // handle data or data.data
   const allArticles =
-    pregnancyArticle?.data?.data ||
-    pregnancyArticle?.data ||
-    [];
+    pregnancyArticle?.data?.data || pregnancyArticle?.data || [];
 
   const relatedArticles = allArticles.filter(
-    (item: any) => item.id !== article.id
+    (item: any) => item.id !== article.id,
   );
 
   const visibleArticles = showAll
     ? relatedArticles
     : relatedArticles.slice(0, 3);
-
 
   return (
     <div className={`${comfortaa.className} min-h-screen pt-16`}>
@@ -132,9 +121,7 @@ export default function SingleArticlePage() {
               By {article.author.first_name}
             </span>
           )}
-          {article.read_duration && (
-            <span>• {article.read_duration} read</span>
-          )}
+          {article.read_duration && <span>• {article.read_duration} read</span>}
           {formattedDate && <span>• {formattedDate}</span>}
         </div>
       </div>
@@ -230,7 +217,7 @@ export default function SingleArticlePage() {
                     {item.short_description}
                   </p>
 
-                  <Link href={`/articles/${item.id}`}>
+                  <Link href={`/user-dashboard/articles/${item.id}`}>
                     <button className="w-full bg-[#229ECF] hover:bg-[#1a7bb5] text-white font-medium py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
                       <BookOpenIcon size={18} />
                       Read Article

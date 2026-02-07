@@ -1,6 +1,8 @@
 "use client";
 
 import { comfortaa } from "@/app/fonts";
+import CommonButton from "@/components/ui/Reusable/CommonButton";
+import { Article } from "@/redux/features/api/user/AllArticles";
 import { BlogPost } from "@/lib/data/blogData";
 import { Bookmark, BookOpenIcon } from "lucide-react";
 import Image from "next/image";
@@ -8,59 +10,67 @@ import Link from "next/link";
 import React from "react";
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: Article | BlogPost;
+  categoryTitle: string;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
-  const slug = post.slug || post.title.toLowerCase().replace(/\s+/g, "-");
-  const id = post.id;
+const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
+  const title = "title" in post ? post.title : "";
+  const description =
+    "short_description" in post
+      ? post.short_description
+      : "description" in post
+        ? post.description
+        : "";
+  const image =
+    "thumb_img" in post
+      ? post.thumb_img
+      : "image" in post
+        ? post.image
+        : "/placeholder.jpg";
+  const slug = post.slug || "";
+
   return (
     <div
       className={`group relative ${comfortaa.className} bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col`}
     >
       {/* Image */}
-      <div className="w-80 h-40 md:w-131 md:h-80 aspect-4/3 overflow-hidden">
+      <div className="w-full h-40 md:h-80 overflow-hidden">
         <Image
-          src={post.image}
+          src={image || "/placeholder.jpg"}
           width={524}
           height={320}
-          alt={post.title}
+          alt={title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
         />
       </div>
 
       {/* Content */}
       <div className="p-6 flex flex-col grow">
-        {/* Category badge */}
+        {/* Category */}
         <div className="flex justify-between mb-4 items-center text-[#229ECF]">
-          <p className=" bg-[#DEF0F8] px-3 py-2 backdrop-blur-sm text-[#229ECF] text-xs font-medium  rounded-full">
-            {post.category}
-          </p>
-          <Bookmark width={24} height={24} />
+          <span className="bg-[#DEF0F8] px-3 py-2 text-xs font-medium rounded-full">
+            {categoryTitle}
+          </span>
+          <Bookmark width={22} height={22} />
         </div>
+
         <h3 className="text-xl md:text-2xl font-semibold text-[#303030] mb-3 line-clamp-2">
-          {post.title}
+          {title}
         </h3>
 
-        <p className="text-[#677381] text-base md:text-lg mb-5 md:mb-8 line-clamp-3 grow">
-          {post.description}
+        <p className="text-[#677381] text-base md:text-lg mb-6 line-clamp-3 grow">
+          {description}
         </p>
 
-        <div className="mt-auto">
-          {/* <button className="inline-flex text-base md:text-lg items-center justify-center w-full bg-[#229ECF] hover:opacity-80 cursor-pointer text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300">
-           <BookOpenIcon className="mr-3"/> {post.buttonText}
-          </button> */}
-          <Link
-            href={`/user-dashboard/blog/${slug}`}
-            // href={`/blog/blog-details/${id}`}
-          >
-            <button className="w-full bg-[#229ECF] hover:bg-[#1a7bb5] text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2.5">
-              <BookOpenIcon size={20} />
-              {post.buttonText}
-            </button>
-          </Link>
-        </div>
+        <Link href={`/user-dashboard/blog/${slug}`} className="mt-auto">
+          <CommonButton
+            text="Read Article"
+            icon={<BookOpenIcon size={22} />}
+            iconPosition="left"
+            bgColor="bg-[#229ECF]"
+          />
+        </Link>
       </div>
     </div>
   );

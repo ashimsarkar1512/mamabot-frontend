@@ -20,8 +20,8 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className={`${comfortaa.className}`}>
-      <section id="home" className="scroll-mt-28">
+    <main className={`${comfortaa.className} `}>
+      <section id="home" className="scroll-mt-28 ">
         <HeroSection />
       </section>
 

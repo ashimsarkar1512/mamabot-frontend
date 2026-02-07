@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { beauRivage, comfortaa } from "@/app/fonts";
 import { useGetAboutUsQuery } from "@/redux/features/api/user/aboutUs/AboutUs";
+import CommonButton from "@/components/ui/Reusable/CommonButton";
+import { ArrowRight } from "lucide-react";
 
 const AboutUs = () => {
   const { data, isLoading, isError } = useGetAboutUsQuery();
@@ -36,7 +38,7 @@ const AboutUs = () => {
   const { title, subtitle, content, main_img, inset_img } = data.data;
 
   return (
-    <section className="w-full bg-[#E9F5FA]/80 border-2 rounded-lg !border-white px-7 md:px-14 py-6 md:py-12">
+    <section className="w-full bg-[#E9F5FA]/80 border-2 rounded-xl !border-white px-7 md:px-14 py-6 md:py-12">
       <div className="mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
           {/* Left - Text Content */}
@@ -60,25 +62,26 @@ const AboutUs = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 lg:justify-start">
-              <a
+              {/* <a
                 href="#"
                 className="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-white bg-pink-600 hover:bg-pink-700 rounded-full transition-colors duration-300 shadow-md hover:shadow-lg"
               >
                 Read More →
-              </a>
+              </a> */}
+              {/* <CommonButton text="Read More" icon={<ArrowRight size={20} />} /> */}
             </div>
           </div>
 
           {/* Right - Images */}
-          <div className="relative flex justify-center lg:justify-end">
+          <div className="relative flex justify-center pb-5 lg:justify-end">
             <div className="relative">
               {/* Main Image */}
               {main_img && (
-                <div className="relative max-w-[420px] md:max-w-[524px] z-10 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative max-w-105 md:max-w-163 z-10 rounded-2xl overflow-hidden shadow-2xl">
                   <Image
                     src={main_img}
                     alt={title}
-                    width={500}
+                    width={650}
                     height={600}
                     className="w-full h-full object-cover"
                     priority
@@ -89,7 +92,7 @@ const AboutUs = () => {
               {/* Inset Image */}
               {inset_img && (
                 <div className="absolute -bottom-8 -left-4 md:-left-12 lg:-left-16 z-20">
-                  <div className="relative w-32 h-32 md:w-44 md:h-44 lg:w-48 lg:h-48 overflow-hidden shadow-xl">
+                  <div className="relative w-24 h-24 md:w-44 md:h-44 lg:w-48 lg:h-48 overflow-hidden shadow-xl">
                     <Image
                       src={inset_img}
                       alt="About Mamabot"

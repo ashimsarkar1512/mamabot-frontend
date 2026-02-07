@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   LayoutGrid,
@@ -13,6 +13,7 @@ import {
   Bookmark,
   AlertCircleIcon,
   X,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -23,6 +24,8 @@ import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { useGetPregnancyProductsByWeekQuery } from "@/redux/features/api/user/recommandetion/productRecommandetion";
+import { useSearchParams } from "next/navigation";
+import { foodItems } from "@/lib/data/product&foodRecommend";
 
 interface Category {
   id: string;
@@ -39,98 +42,46 @@ const categories: Category[] = [
   { id: "articles", label: "Articles", icon: <FileText size={28} /> },
 ];
 
-interface Product {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  rating: number;
-  reviews: number;
-  price: number;
-}
-
-interface FoodItem {
-  id: string;
-  icon: string;
-  name: string;
-  benefit: string;
-  description: string;
-}
-
-const foodItems: FoodItem[] = [
-  {
-    id: "f1",
-    icon: "🥦",
-    name: "Broccoli",
-    benefit: "High in Folate",
-    description: "Supports fetal growth and maternal health.",
-  },
-  {
-    id: "f2",
-    icon: "🍓",
-    name: "Strawberries",
-    benefit: "Rich in Vitamin C",
-    description: "Boosts immunity and iron absorption.",
-  },
-  {
-    id: "f3",
-    icon: "🥑",
-    name: "Avocado",
-    benefit: "Healthy Fats",
-    description: "Provides essential fatty acids for baby's brain development.",
-  },
-  {
-    id: "f4",
-    icon: "🍊",
-    name: "Oranges",
-    benefit: "Vitamin C & Fiber",
-    description: "Strengthens immune system and aids digestion.",
-  },
-  {
-    id: "f5",
-    icon: "🥕",
-    name: "Carrots",
-    benefit: "Beta-Carotene",
-    description: "Supports eye development in the fetus.",
-  },
-  {
-    id: "f6",
-    icon: "🍌",
-    name: "Bananas",
-    benefit: "Potassium Rich",
-    description: "Helps prevent leg cramps and boosts energy.",
-  },
-  {
-    id: "f7",
-    icon: "🥩",
-    name: "Lean Meat",
-    benefit: "Iron & Protein",
-    description: "Supports hemoglobin levels and overall energy.",
-  },
-];
-
 export default function ProductAndFoodRecommendationsPage({
   active,
 }: {
   active: "all" | "product" | "nutrition" | "mental" | "wellness" | "articles";
 }) {
   const [showDisclosure, setShowDisclosure] = useState(false);
+  const [bookmarkedProducts, setBookmarkedProducts] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const toggleBookmark = (productId: string) => {
+    setBookmarkedProducts((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
 
   const userInfo = useSelector((state: RootState) => state.auth.userFullInfo);
-  console.log(userInfo,"rwertert435")
-  const {data:profile}=useGetMyProfileQuery(undefined)
-  console.log(profile)
+  console.log(userInfo, "rwertert435");
+  const { data: profile } = useGetMyProfileQuery(undefined);
+  console.log(profile);
 
   const week = profile?.data?.current_week;
 
-  const { data: productData, isLoading, error } =
-    useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
+  const {
+    data: productData,
+    isLoading,
+    error,
+  } = useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
 
-    console.log(productData,"product data ")
+  const searchParams = useSearchParams();
+  const foodSectionRef = useRef<HTMLDivElement>(null);
 
-
-
-  console.log(productData,"product")
+  useEffect(() => {
+    const scrollTo = searchParams.get("scrollTo");
+    if (scrollTo === "food" && foodSectionRef.current) {
+      foodSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [searchParams]);
+  console.log(productData, "product datafg ");
 
   return (
     <div className="flex flex-col gap-12 min-h-fit">
@@ -138,12 +89,12 @@ export default function ProductAndFoodRecommendationsPage({
       {(active === "all" || active === "product") && (
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <h2 className="text-2xl font-bold text-gray-900">
                 Product Recommendations
               </h2>
-              <span className="bg-[#BAE1F0] text-[#229ECF] text-xs px-3 py-1 rounded-full font-semibold">
-                of {productData?.data[0]?.products?.length} Products
+              <span className="bg-[#BAE1F0] text-[#229ECF] text-sm  px-3 py-1 rounded-full font-semibold flex items-center gap-3">
+                <Sparkles size={16} /> Ai powwered
               </span>
             </div>
             <p className="text-sm flex gap-2 items-start px-4 py-2 bg-white max-w-md rounded-full text-gray-500">
@@ -163,59 +114,71 @@ export default function ProductAndFoodRecommendationsPage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {productData?.data[0]?.products?.map(
-              (product: any, index: number) => (
-                <div
-                  key={index}
-                  className="group rounded-2xl border bg-white shadow-sm hover:shadow-md transition overflow-hidden"
-                >
-                  <div className="relative h-34 md:h-68 w-full">
-                    <Image
-                      src={
-                        product.image_url ? product.image_url : items[0].image
-                      }
-                      alt={product.title}
-                      fill
-                      className="object-cover transition-transform duration-500 ease-out hover:scale-105"
-                    />
+            {productData?.data?.products?.map((product: any, index: number) => (
+              <div
+                key={index}
+                className="group rounded-2xl border bg-white shadow-sm hover:shadow-md transition overflow-hidden"
+              >
+                <div className="relative h-34 md:h-68 w-full">
+                  <Image
+                    src={
+                      product.image_url ||
+                      items[0]?.image ||
+                      "/placeholder-product.jpg"
+                    }
+                    alt={product.title || "Product"}
+                    fill
+                    className="object-cover transition-transform duration-500 ease-out hover:scale-105"
+                  />
+                </div>
+
+                <div className="p-5 flex flex-col">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-semibold text-[#229ECF] text-lg">
+                      {product.title}
+                    </h3>
+                    <button
+                      onClick={() => toggleBookmark(product.id)}
+                      className="p-1"
+                    >
+                      {bookmarkedProducts[product.id] ? (
+                        <Bookmark
+                          className="text-[#229ECF] fill-[#229ECF]"
+                          size={18}
+                        />
+                      ) : (
+                        <Bookmark size={18} />
+                      )}
+                    </button>
                   </div>
 
-                  <div className="p-5 flex flex-col">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-[#229ECF] text-lg">
-                        {product.title}
-                      </h3>
-                      <Bookmark
-                        className="text-[#229ECF] fill-[#229ECF]"
-                        size={18}
-                      />
-                    </div>
+                  <p className="text-sm text-gray-500 mb-3">{product.reason}</p>
 
-                    <p className="text-sm text-gray-500 mb-3">
-                      {product.reason}
-                    </p>
+                  <div className="flex items-center gap-2 text-sm mb-4">
+                    <span className="px-2 py-1 rounded-full bg-green-100 text-green-600 text-xs capitalize">
+                      {product.category}
+                    </span>
+                    {/* <span className="text-yellow-500">★ 5</span>
+                      <span className="text-gray-400">(5)</span> */}
+                  </div>
 
-                    <div className="flex items-center gap-2 text-sm mb-4">
-                      <span className="px-2 py-1 rounded-full bg-green-100 text-green-600 text-xs">
-                        Eco-friendly
-                      </span>
-                      <span className="text-yellow-500">★ 5</span>
-                      <span className="text-gray-400">(5)</span>
-                    </div>
-
-                    {/* New Price & Button Section */}
-                    <div className="mt-auto flex items-center justify-between">
-                      <span className="text-lg font-semibold text-[#229ECF]">
-                        3242
-                      </span>
-                      <button className="rounded-lg border-2 cursor-pointer border-[#229ECF] px-4 py-2 text-sm text-[#229ECF] hover:text-white hover:border-white bg-[#DEF0F8] hover:bg-[#229ECF] transition">
-                        View In Shop
-                      </button>
-                    </div>
+                  {/* New Price & Button Section */}
+                  <div className="mt-auto flex items-center justify-between">
+                    <span className="text-lg font-semibold text-[#229ECF]">
+                      {product.price || ""}
+                    </span>
+                    <a
+                      href={product.affiliate_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-lg border-2 cursor-pointer border-[#229ECF] px-4 py-2 text-sm text-[#229ECF] hover:text-white hover:border-white bg-[#DEF0F8] hover:bg-[#229ECF] transition"
+                    >
+                      View In Shop
+                    </a>
                   </div>
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </div>
 
           {showDisclosure && (
@@ -288,7 +251,7 @@ export default function ProductAndFoodRecommendationsPage({
       )}
       {/*  Today's Recommended Foods  */}
       {(active === "all" || active === "nutrition") && (
-        <section className="">
+        <section className="" ref={foodSectionRef}>
           <div className="flex items-center justify-between p-6 bg-[#ffffff] mb-6 flex-wrap gap-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl">🥗</span>

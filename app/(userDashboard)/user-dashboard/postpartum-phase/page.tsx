@@ -13,60 +13,12 @@ import TodaysInsight from "@/components/User/postpartumPhase/TodaysInsight";
 import DailyTaskGrid from "@/components/User/postpartumPhase/DailyTaskGrid";
 import MothersWellnessEnergy from "@/components/User/postpartumPhase/MothersWellnessEnergy";
 import VaginalDeliveryArticles from "@/components/User/postpartumPhase/TopArticlesVaginalDelivery";
-import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
+import {
+  useGetMyProfileQuery,
+  useGetUserDashboardQuery,
+} from "@/redux/features/api/user/profile";
 import { useRouter } from "next/navigation";
-
-// mock data for articles
-const ARTICLES_DATA = [
-  {
-    id: 1,
-    title: "How to Speed Up Vaginal Delivery Recovery",
-    description: "Expert tips for faster healing after natural birth...",
-    category: "Recovery",
-    image:
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=400", // Placeholder for Recovery Tips graphic
-  },
-  {
-    id: 2,
-    title: "Pelvic Floor Care After Birth",
-    description: "Essential exercises to strengthen your pelvic floor...",
-    category: "Exercise",
-    image:
-      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400", // Placeholder for Anatomy graphic
-  },
-  {
-    id: 3,
-    title: "Managing Postpartum Bleeding and Cramping",
-    description: "What's normal and when to seek medical help...",
-    category: "Health",
-    image:
-      "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=400", // Placeholder for medical/health context
-  },
-  {
-    id: 4,
-    title: "When to Start Light Exercises",
-    description: "Safe timeline for resuming physical activity...",
-    category: "Fitness",
-    image:
-      "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&q=80&w=400", // Placeholder for yoga/fitness
-  },
-  {
-    id: 5,
-    title: "Understanding Newborn Sleep Patterns",
-    description: "Learn about your baby's sleep cycles and needs...",
-    category: "Baby Care",
-    image:
-      "https://images.unsplash.com/photo-1523294587484-5b553497b2c9?auto=format&fit=crop&q=80&w=400", // Placeholder for baby sleeping
-  },
-  {
-    id: 6,
-    title: "How to Stay Emotionally Balanced",
-    description: "Managing the emotional rollercoaster of new motherhood...",
-    category: "Mental Health",
-    image:
-      "https://images.unsplash.com/photo-1494173853114-8a1768853a47?auto=format&fit=crop&q=80&w=400", // Placeholder for emotional support
-  },
-];
+import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
 
 export default function UserHomeDashboard() {
   // This value will come from backend in real app
@@ -76,23 +28,39 @@ export default function UserHomeDashboard() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
-    const{data:profile}=useGetMyProfileQuery(undefined)
-    console.log(profile,"this is profile")
-    const week=profile?.data?.current_week
-    const delivery_type = profile?.data?.delivery_type;
+  const { data: profile } = useGetMyProfileQuery(undefined);
+  const { data: articlesData, isLoading: articlesLoading } =
+    useGetArticlesQuery(undefined);
+  const week = profile?.data?.current_week;
+  const delivery_type = profile?.data?.delivery_type;
 
-       const router = useRouter();
+  const router = useRouter();
 
   const handleClick = () => {
     router.push("/user-dashboard/profile");
   };
-//   useEffect(() => {
-//   if (delivery_type === "cesarean_delivery") {
-//     setDeliveryType("Cesarean Delivery");
-//   } else {
-//     setDeliveryType("Vaginal Delivery");
-//   }
-// }, [delivery_type]);
+
+  const transformedArticles =
+    articlesData?.data?.map((article: any) => ({
+      id: article.id,
+      title: article.title,
+      description: article.short_description || article.long_description,
+      category: article.category?.title || "General",
+      image:
+        article.main_img ||
+        article.thumb_img ||
+        "https://images.unsplash.com/photo-1628191010210-a59074259b3d?auto=format&fit=crop&q=80&w=400",
+      slug: article.slug,
+      readDuration: article.read_duration,
+      week: article.week,
+    })) || [];
+  //   useEffect(() => {
+  //   if (delivery_type === "cesarean_delivery") {
+  //     setDeliveryType("Cesarean Delivery");
+  //   } else {
+  //     setDeliveryType("Vaginal Delivery");
+  //   }
+  // }, [delivery_type]);
 
   // Mock data – in real app this would come from backend based on deliveryType
   const mockProfile = {
@@ -108,8 +76,7 @@ export default function UserHomeDashboard() {
 
   // Mock data - in real app, this would come from backend/user tracking
   const mockDataForInsight = {
-    lineText:
-      `At ${week} weeks postpartum, it's normal to feel emotional changes. Gentle daily walks and proper hydration can ease recovery. Your baby may also begin making early eye contact.`,
+    lineText: `At ${week} weeks postpartum, it's normal to feel emotional changes. Gentle daily walks and proper hydration can ease recovery. Your baby may also begin making early eye contact.`,
     lastFeeding: "1 hour ago",
     totalSleepHours: "3.8",
     diapers: {
@@ -141,16 +108,16 @@ export default function UserHomeDashboard() {
           {deliveryType === "Vaginal Delivery" ? (
             <div className="col-span-1 lg:col-span-2 space-y-6">
               {/* Insight */}
-              <Card className="px-5 py-7 sm:px-7 lg:px-9 shadow-sm border-2 border-white! bg-sky-50/50">
-                <div className="flex gap-5 items-start">
+              <Card className="px-3 md:px-5 py-4 md:py-7 lg:px-9 shadow-sm border-2 border-white! bg-sky-50/50">
+                <div className="flex gap-2 md:gap-5 items-start">
                   <div className="h-11 w-11 rounded-full bg-[#229ECF] flex items-center justify-center shrink-0">
-                    <Heart className="h-6 w-6 text-white" />
+                    <Heart className="h-4 md:h-6 w-4 md:w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2">
+                    <h3 className="font-semibold text-base md:text-lg mb-2">
                       Today&apos;s Insight
                     </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">
+                    <p className="text-xs md:text-sm text-gray-600 leading-relaxed">
                       {mockDataForInsight.lineText}
                     </p>
                   </div>
@@ -188,7 +155,7 @@ export default function UserHomeDashboard() {
           {/*    Right Column - Updated to match screenshot style    */}
           <div className="space-y-5 lg:space-y-6 ">
             {/* Delivery Type Selector */}
-            <Card className="p-5 shadow-sm border-2 border-white! bg-sky-50/50 flex flex-row justify-between items-center">
+            <Card className="p-3 md:p-5 shadow-sm border-2 border-white! bg-sky-50/50 flex flex-col md:flex-row md:justify-between md:items-center">
               <div className="flex items-center gap-3">
                 <div className="text-[#229ECF]">
                   <MessageCircle className="h-5 w-5" />
@@ -197,26 +164,26 @@ export default function UserHomeDashboard() {
               </div>
 
               <div className="relative">
-            <select
-  value={deliveryType}
-  onChange={(e) =>
-    setDeliveryType(
-      e.target.value as "Vaginal Delivery" | "Cesarean Delivery"
-    )
-  }
-  className="w-full appearance-none bg-sky-50/50 border-2 border-sky-100! text-gray-800 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent cursor-pointer"
->
-  <option value="Vaginal Delivery">
-    Vaginal Delivery
-  </option>
+                <select
+                  value={deliveryType}
+                  onChange={(e) =>
+                    setDeliveryType(
+                      e.target.value as
+                        | "Vaginal Delivery"
+                        | "Cesarean Delivery",
+                    )
+                  }
+                  className="w-full text-sm appearance-none bg-sky-50/50 border-2 border-sky-100! text-gray-800 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent cursor-pointer"
+                >
+                  <option value="Vaginal Delivery">Vaginal Delivery</option>
 
-  <option
-    value="Cesarean Delivery"
-    disabled={delivery_type !== "cesarean_delivery"}
-  >
-    Cesarean Delivery
-  </option>
-</select>
+                  <option
+                    value="Cesarean Delivery"
+                    disabled={delivery_type !== "cesarean_delivery"}
+                  >
+                    Cesarean Delivery
+                  </option>
+                </select>
 
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
                   <ChevronDown size={18} />
@@ -256,7 +223,7 @@ export default function UserHomeDashboard() {
             </Card> */}
 
             {/* Profile Summary */}
-            <Card className="p-6 shadow-sm border-2 border-white! bg-sky-50/50 ">
+            <Card className="p-3 md:p-6 shadow-sm border-2 border-white! bg-sky-50/50 ">
               <div className="flex items-center gap-3 mb-5">
                 <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-pink-200! hover:border-pink-400 transition-all">
                   <Image
@@ -273,26 +240,30 @@ export default function UserHomeDashboard() {
               <div className="space-y-4 text-sm">
                 <div className="flex justify-between items-center border-b-2 border-white! pb-2">
                   <span className="text-gray-600">Name:</span>
-                  <span className="font-medium">{profile?.data.user.first_name}</span>
+                  <span className="font-medium">
+                    {profile?.data.user.first_name}
+                  </span>
                 </div>
 
                 <div className="flex justify-between items-center border-b-2 border-white! pb-2">
                   <span className="text-gray-600">Stage:</span>
-                  <span className="font-medium">{profile?.data.current_week}</span>
+                  <span className="font-medium">
+                    {profile?.data.current_week}
+                  </span>
                 </div>
 
                 <div className="flex justify-between items-center border-b-2 border-white! pb-2">
                   <span className="text-gray-600">Plan:</span>
                   <span className="font-medium bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs">
-                   {profile?.data?.user?.subscription_plan}
+                    {profile?.data?.user?.subscription_plan}
                   </span>
                 </div>
               </div>
 
               <Button
-              onClick={handleClick} 
+                onClick={handleClick}
                 variant="outline"
-                className="w-full mt-6 bg-transparent rounded-lg border border-[#229ECF]! text-[#229ECF]  flex items-center gap-2"
+                className="w-full mt-3 md:mt-6 bg-transparent text-sm md:text-base rounded-lg border border-[#229ECF]! text-[#229ECF]  flex items-center gap-2"
               >
                 <UserCircle size={18} />
                 Edit Profile
@@ -304,7 +275,8 @@ export default function UserHomeDashboard() {
         <MothersWellnessEnergy />
         <VaginalDeliveryArticles
           title="Top Articles For Vaginal Delivery"
-          articles={ARTICLES_DATA}
+          articles={transformedArticles}
+          isLoading={articlesLoading}
         />
       </main>
 
@@ -315,7 +287,6 @@ export default function UserHomeDashboard() {
       <BabyMovementModal
         isOpen={isMovementModalOpen}
         onClose={() => setIsMovementModalOpen(false)}
-       
       />
     </div>
   );

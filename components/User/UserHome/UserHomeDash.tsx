@@ -20,7 +20,10 @@ import { useState } from "react";
 import HydrationModal from "./Modal/HydrationModal";
 import BabyMovementModal from "./Modal/BabyMovementModal";
 import { motion } from "framer-motion";
-import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
+import {
+  useGetMyProfileQuery,
+  useGetUserDashboardQuery,
+} from "@/redux/features/api/user/profile";
 import { useGetHydrationLogsQuery } from "@/redux/features/api/user/hydration";
 import { useRouter } from "next/navigation";
 import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
@@ -29,20 +32,19 @@ export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMovementModalOpen, setIsMovementModalOpen] = useState(false);
 
-const{data:profile}=useGetMyProfileQuery(undefined)
-const{data:user}=useGetUserDashboardQuery(undefined)
-const {data:hydration}=useGetHydrationLogsQuery(undefined)
-const {data:pregnancyArticle}=useGetArticlesQuery(undefined)
-console.log(pregnancyArticle,"pregnancyArticle")
+  const { data: profile } = useGetMyProfileQuery(undefined);
+  const { data: user } = useGetUserDashboardQuery(undefined);
+  const { data: hydration } = useGetHydrationLogsQuery(undefined);
+  const { data: pregnancyArticle } = useGetArticlesQuery(undefined);
+  console.log(pregnancyArticle, "pregnancyArticle");
 
-const week=profile?.data?.current_week
-const totalGlass = hydration?.data?.glass_count ?? 0;
+  const week = profile?.data?.current_week;
+  const totalGlass = hydration?.data?.glass_count ?? 0;
 
-const total = 10
-const hydrationProgress =
-  totalGlass ? (totalGlass / total) * 100 : 0
+  const total = 10;
+  const hydrationProgress = totalGlass ? (totalGlass / total) * 100 : 0;
 
-    const router = useRouter();
+  const router = useRouter();
 
   const handleClick = () => {
     router.push("/user-dashboard/profile");
@@ -70,8 +72,11 @@ const hydrationProgress =
 
             <div>
               <h1 className="text-xl md:text-2xl font-medium text-slate-800">
-                Hi <span className="text-sky-500 font-semibold">{user?.data.first_name}</span>,
-                Welcome back to{" "}
+                Hi{" "}
+                <span className="text-sky-500 font-semibold">
+                  {user?.data.first_name}
+                </span>
+                , Welcome back to{" "}
                 <span className="text-pink-500 font-semibold">Mamabot!</span> 👋
               </h1>
               <p className="text-sm md:text-base text-slate-400 mt-1">
@@ -136,7 +141,7 @@ const hydrationProgress =
           {/* ========== Left Column ========== */}
           <div className="col-span-1 lg:col-span-2 space-y-3">
             {/* Insight */}
-            <Card className="px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-11">
+            <Card className="px-4 py-6  md:py-8 lg:px-8 lg:py-11">
               <div className="flex gap-4">
                 <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center shrink-0">
                   <Heart className="h-6 w-6 text-white" />
@@ -144,23 +149,23 @@ const hydrationProgress =
                 <div>
                   <h3 className="font-semibold mb-2">Today&apos;s Insight</h3>
                   <p className="text-sm text-muted-foreground">
-                    At week {week}, your baby&apos;s senses are developing rapidly.
-                    They can now hear your voice and respond to sounds!
+                    At week {week}, your baby&apos;s senses are developing
+                    rapidly. They can now hear your voice and respond to sounds!
                   </p>
                 </div>
               </div>
             </Card>
 
             {/* Daily Tasks */}
-            <Card className=" sm:p-6 lg:p-6">
+            <Card className="p-4 lg:p-6">
               <div className="flex items-center gap-2 mb-2">
-                <Activity className="h-5 w-5 text-secondary" />
+                <Activity className="h-5 w-5 text-primary" />
                 <h3 className="text-lg font-semibold">Daily Tasks</h3>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 ">
                 {/* Hydration */}
-                <div className="flex flex-col justify-around sm:flex-row sm:items-center gap-3   py-3">
+                <div className="flex flex-col justify-around sm:flex-row sm:items-center gap-3  ">
                   <div className="flex items-center gap-3 flex-1">
                     <span>
                       <svg
@@ -232,7 +237,7 @@ const hydrationProgress =
                     <div>
                       <p className="font-medium">Mom’s Hydration Goal</p>
                       <p className="text-xs text-muted-foreground">
-                       {totalGlass} of 10 glasses
+                        {totalGlass} of 10 glasses
                       </p>
                     </div>
                   </div>
@@ -460,16 +465,23 @@ const hydrationProgress =
                 </div>
                 <div className="flex justify-between mb-4">
                   <p className="font-medium">Stage</p>
-                  <p className="font-medium">Week {profile?.data.current_week}</p>
+                  <p className="font-medium">
+                    Week {profile?.data.current_week}
+                  </p>
                 </div>
 
                 <div className="flex justify-between">
                   <p className="font-medium">Plan</p>
-                  <p className="font-medium">{profile?.data?.user?.subscription_plan}</p>
+                  <p className="font-medium">
+                    {profile?.data?.user?.subscription_plan}
+                  </p>
                 </div>
               </div>
 
-              <button onClick={handleClick} className="w-full mt-4 flex items-center justify-center gap-2 border border-[#229ECF] text-[#229ECF] bg-white/25 hover:bg-white/40 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer">
+              <button
+                onClick={handleClick}
+                className="w-full mt-4 flex items-center justify-center gap-2 border border-[#229ECF] text-[#229ECF] bg-white/25 hover:bg-white/40 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer"
+              >
                 <UserCircle size={18} />
                 <span>Edit Profile</span>
               </button>
@@ -477,100 +489,105 @@ const hydrationProgress =
           </div>
         </div>
 
-   
-{/* ================= Articles ================= */}
-<div className="bg-white/25 border border-white p-6 rounded-xl">
-  <h2 className="text-xl sm:text-2xl font-bold mb-6">
-    Top <span className="text-primary">Articles</span> For You Today
-  </h2>
-  
-  {pregnancyArticle?.data && pregnancyArticle.data.length > 0 ? (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {pregnancyArticle.data
-          .filter((article: any) => article.phase_type === "pregnancy")
-          .map((article: any) => (
-            <Card
-              key={article.id}
-              className="hover:shadow-xl transition-shadow duration-300"
-            >
-              <div className="flex flex-col sm:flex-row gap-4 p-4">
-                {/* ================= Article Image ================= */}
-                <div className="relative w-full h-44 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-xl overflow-hidden bg-muted flex items-center justify-center">
-                  <Image
-                    src={article.thumb_img || "/images/user/userarticle.png"}
-                    alt={article.title}
-                    fill
-                    priority
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 144px"
-                  />
-                </div>
+        {/* ================= Articles ================= */}
+        <div className="bg-white/25 border border-white p-6 rounded-xl">
+          <h2 className="text-xl sm:text-2xl font-bold mb-6">
+            Top <span className="text-primary">Articles</span> For You Today
+          </h2>
 
-                {/* ================= Content ================= */}
-                <div className="flex-1 flex flex-col justify-between">
-                  <div>
-                    <p className="text-xs text-primary font-semibold mb-1">
-                      {article.category?.title || "Latest Article"}
-                    </p>
-                    <h3 className="font-semibold text-foreground line-clamp-2">
-                      {article.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-                      {article.short_description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-3">
-                    <Link
-                      href={`/user-dashboard/articles/${article.id}`}
-                      className="text-primary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all"
+          {pregnancyArticle?.data && pregnancyArticle.data.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {pregnancyArticle.data
+                  .filter((article: any) => article.phase_type === "pregnancy")
+                  .map((article: any) => (
+                    <Card
+                      key={article.id}
+                      className="hover:shadow-xl transition-shadow duration-300"
                     >
-                      Read More <ArrowRight className="h-3 w-3" />
-                    </Link>
-                    <span className="text-xs text-muted-foreground">
-                      {article.read_duration}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          ))}
-      </div>
+                      <div className="flex flex-col sm:flex-row gap-4 p-4">
+                        {/* ================= Article Image ================= */}
+                        <div className="relative w-full h-44 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-xl overflow-hidden bg-muted flex items-center justify-center">
+                          <Image
+                            src={
+                              article.thumb_img ||
+                              "/images/user/userarticle.png"
+                            }
+                            alt={article.title}
+                            fill
+                            priority
+                            className="object-cover"
+                            sizes="(max-width: 640px) 100vw, 144px"
+                          />
+                        </div>
 
-      {pregnancyArticle.data.filter((article: any) => article.phase_type === "pregnancy").length > 4 && (
-        <div className="flex justify-center mt-8">
-          <motion.button
-            className="h-14 w-10 rounded-full border hover:bg-muted flex items-center justify-center cursor-pointer"
-            animate={{ y: [0, 8, 0] }}
-            transition={{
-              duration: 1,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <MoveDown className="text-xl text-pink-600" />
-          </motion.button>
+                        {/* ================= Content ================= */}
+                        <div className="flex-1 flex flex-col justify-between">
+                          <div>
+                            <p className="text-xs text-primary font-semibold mb-1">
+                              {article.category?.title || "Latest Article"}
+                            </p>
+                            <h3 className="font-semibold text-foreground line-clamp-2">
+                              {article.title}
+                            </h3>
+                            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                              {article.short_description}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center justify-between mt-3">
+                            <Link
+                              href={`/user-dashboard/articles/${article.id}`}
+                              className="text-primary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all"
+                            >
+                              Read More <ArrowRight className="h-3 w-3" />
+                            </Link>
+                            <span className="text-xs text-muted-foreground">
+                              {article.read_duration}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+              </div>
+
+              {pregnancyArticle.data.filter(
+                (article: any) => article.phase_type === "pregnancy",
+              ).length > 4 && (
+                <div className="flex justify-center mt-8">
+                  <motion.button
+                    className="h-14 w-10 rounded-full border hover:bg-muted flex items-center justify-center cursor-pointer"
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <MoveDown className="text-xl text-pink-600" />
+                  </motion.button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                No articles available at the moment.
+              </p>
+            </div>
+          )}
         </div>
-      )}
-    </>
-  ) : (
-    <div className="text-center py-12">
-      <p className="text-muted-foreground">No articles available at the moment.</p>
-    </div>
-  )}
-</div>
       </main>
       <HydrationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         profile={profile}
-        
       />
       <BabyMovementModal
         isOpen={isMovementModalOpen}
         onClose={() => setIsMovementModalOpen(false)}
-      profile={profile}
+        profile={profile}
       />
     </div>
   );
