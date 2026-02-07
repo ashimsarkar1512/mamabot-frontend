@@ -59,6 +59,7 @@ export const baseApi = createApi({
     "ServiceLanding",
     "UserDevices",
     "SubscriptionPlan",
+    "savedItems",
   ],
   endpoints: () => ({}),
 });
