@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { beauRivage, comfortaa } from "@/app/fonts";
 import { useGetAboutUsQuery } from "@/redux/features/api/user/aboutUs/AboutUs";
-import CommonButton from "@/components/ui/Reusable/CommonButton";
-import { ArrowRight } from "lucide-react";
 
 const AboutUs = () => {
   const { data, isLoading, isError } = useGetAboutUsQuery();
@@ -18,6 +16,14 @@ const AboutUs = () => {
   }
 
   if (isError || !data?.success) {
+    return (
+      <section className="w-full py-12 text-center">
+        <p>Failed to load About Us data</p>
+      </section>
+    );
+  }
+
+  if (isError || !data?.success || !data?.data) {
     return (
       <section className="w-full py-12 text-center">
         <p>Failed to load About Us data</p>
