@@ -58,6 +58,7 @@ export const baseApi = createApi({
     "CommunityGroups",
     "ServiceLanding",
     "UserDevices",
+    "SubscriptionPlan",
   ],
   endpoints: () => ({}),
 });
