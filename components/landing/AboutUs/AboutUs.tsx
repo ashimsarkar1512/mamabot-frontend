@@ -58,7 +58,7 @@ const AboutUs = () => {
               >
                 Read More →
               </a> */}
-              <CommonButton text="Read More" icon={<ArrowRight size={20} />} />
+              {/* <CommonButton text="Read More" icon={<ArrowRight size={20} />} /> */}
             </div>
           </div>
 
