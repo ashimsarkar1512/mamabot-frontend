@@ -31,11 +31,9 @@ const BlogContent: React.FC = () => {
         })),
       );
     }
-    const visibleArticles = showAll
-      ? filteredArticles
-      : filteredArticles.slice(0, VISIBLE_CARDS);
 
     const category = data.data.find((c) => c.title === activeCategory);
+
     return (
       category?.articles.map((article) => ({
         article,
@@ -43,9 +41,11 @@ const BlogContent: React.FC = () => {
       })) || []
     );
   }, [data, activeCategory]);
+
   const visibleArticles = showAll
     ? filteredArticles
     : filteredArticles.slice(0, VISIBLE_CARDS);
+
   if (isLoading) {
     return <p className="text-center py-20">Loading articles...</p>;
   }

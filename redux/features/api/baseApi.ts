@@ -61,6 +61,7 @@ export const baseApi = createApi({
     "SubscriptionPlan",
    "PregnancyFoodWeeklyLogs",
   "WellnessActivities"
+    "savedItems",
   ],
   endpoints: () => ({}),
 });
