@@ -23,6 +23,7 @@ import { RootState } from "@/redux/store/store";
 import { useGetPregnancyProductsByWeekQuery } from "@/redux/features/api/user/recommandetion/productRecommandetion";
 import { useSearchParams } from "next/navigation";
 import { useGetPregnancyFoodWeeklyLogsQuery } from "@/redux/features/api/user/recommandetion/weeklyFoodSuggestion";
+import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/savedItemsPost";
 interface Category {
   id: string;
   label: string;
@@ -43,6 +44,9 @@ export default function ProductAndFoodRecommendationsPage({
 }: {
   active: "all" | "product" | "nutrition" | "mental" | "wellness" | "articles";
 }) {
+  // save product
+  const [saveItem] = useSaveItemMutation();
+
   const [showDisclosure, setShowDisclosure] = useState(false);
   const [bookmarkedProducts, setBookmarkedProducts] = useState<{
     [key: string]: boolean;
@@ -81,6 +85,26 @@ export default function ProductAndFoodRecommendationsPage({
     }
   }, [searchParams]);
   console.log(productData, "product datafg ");
+
+  // save product function
+  const handleSaveProduct = async (productId: number) => {
+    try {
+      await saveItem({
+        item_type: "product",
+        item_id: productId,
+      }).unwrap();
+
+      setBookmarkedProducts((prev) => ({
+        ...prev,
+        [productId]: true,
+      }));
+
+      alert("Product saved");
+    } catch (error) {
+      console.error("Save failed", error);
+      alert("Failed to save product");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-12 min-h-fit">
@@ -136,9 +160,23 @@ export default function ProductAndFoodRecommendationsPage({
                     <h3 className="font-semibold text-[#229ECF] text-lg">
                       {product.title}
                     </h3>
-                    <button
+                    {/* <button
                       onClick={() => toggleBookmark(product.id)}
                       className="p-1"
+                    >
+                      {bookmarkedProducts[product.id] ? (
+                        <Bookmark
+                          className="text-[#229ECF] fill-[#229ECF]"
+                          size={18}
+                        />
+                      ) : (
+                        <Bookmark size={18} />
+                      )}
+                    </button> */}
+
+                    <button
+                      onClick={() => handleSaveProduct(product.id)}
+                      className="p-1 cursor-pointer"
                     >
                       {bookmarkedProducts[product.id] ? (
                         <Bookmark
