@@ -44,7 +44,9 @@ export default function ProductAndFoodRecommendationsPage({
 }: {
   active: "all" | "product" | "nutrition" | "mental" | "wellness" | "articles";
 }) {
-  // const [saveItem] = useSaveItemMutation();
+  // save product
+  const [saveItem] = useSaveItemMutation();
+
   const [showDisclosure, setShowDisclosure] = useState(false);
   const [bookmarkedProducts, setBookmarkedProducts] = useState<{
     [key: string]: boolean;
@@ -84,24 +86,25 @@ export default function ProductAndFoodRecommendationsPage({
   }, [searchParams]);
   console.log(productData, "product datafg ");
 
-  // const handleSaveProduct = async (productId: number) => {
-  //   try {
-  //     await saveItem({
-  //       item_type: "product",
-  //       item_id: productId,
-  //     }).unwrap();
+  // save product function
+  const handleSaveProduct = async (productId: number) => {
+    try {
+      await saveItem({
+        item_type: "product",
+        item_id: productId,
+      }).unwrap();
 
-  //     setBookmarkedProducts((prev) => ({
-  //       ...prev,
-  //       [productId]: true,
-  //     }));
+      setBookmarkedProducts((prev) => ({
+        ...prev,
+        [productId]: true,
+      }));
 
-  //     alert("Product saved");
-  //   } catch (error) {
-  //     console.error("Save failed", error);
-  //     alert("Failed to save product");
-  //   }
-  // };
+      alert("Product saved");
+    } catch (error) {
+      console.error("Save failed", error);
+      alert("Failed to save product");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-12 min-h-fit">
@@ -157,7 +160,7 @@ export default function ProductAndFoodRecommendationsPage({
                     <h3 className="font-semibold text-[#229ECF] text-lg">
                       {product.title}
                     </h3>
-                    <button
+                    {/* <button
                       onClick={() => toggleBookmark(product.id)}
                       className="p-1"
                     >
@@ -169,9 +172,9 @@ export default function ProductAndFoodRecommendationsPage({
                       ) : (
                         <Bookmark size={18} />
                       )}
-                    </button>
+                    </button> */}
 
-                    {/* <button
+                    <button
                       onClick={() => handleSaveProduct(product.id)}
                       className="p-1 cursor-pointer"
                     >
@@ -183,7 +186,7 @@ export default function ProductAndFoodRecommendationsPage({
                       ) : (
                         <Bookmark size={18} />
                       )}
-                    </button> */}
+                    </button>
                   </div>
 
                   <p className="text-sm text-gray-500 mb-3">{product.reason}</p>
