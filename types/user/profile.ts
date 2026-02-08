@@ -12,6 +12,11 @@ export interface IUserDashboardData {
   totalCompletedQuizzes: number;
   upcomingAppointments?: string[];
   recentActivities?: string[];
+  // Added fields based on API response
+  plan_id?: number | null;
+  subscription_plan?: string | null;
+  status?: string | null;
+  last_activity?: string | null;
 }
 
 export interface IUserDashboardResponse {
