@@ -17,7 +17,7 @@ export interface SaveItemResponse {
   };
 }
 
-export const savedItemsApi = baseApi.injectEndpoints({
+export const savedItemsPostApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     saveItem: builder.mutation<SaveItemResponse, SaveItemRequest>({
       query: (body) => ({
@@ -32,6 +32,6 @@ export const savedItemsApi = baseApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useSaveItemMutation } = savedItemsApi;
+export const { useSaveItemMutation } = savedItemsPostApi;
 
-export default savedItemsApi;
+export default savedItemsPostApi;
