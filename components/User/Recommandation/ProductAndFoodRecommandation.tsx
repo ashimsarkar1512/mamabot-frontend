@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-
 import {
   LayoutGrid,
   ShoppingBag,
@@ -16,18 +15,14 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-
 import Image from "next/image";
 import { items } from "@/lib/data/savedData";
-import { useGetPersonalizedRecomendationProductsQuery } from "@/redux/features/api/user/personalizedRecomendation";
 import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { useGetPregnancyProductsByWeekQuery } from "@/redux/features/api/user/recommandetion/productRecommandetion";
 import { useSearchParams } from "next/navigation";
-import { foodItems } from "@/lib/data/product&foodRecommend";
 import { useGetPregnancyFoodWeeklyLogsQuery } from "@/redux/features/api/user/recommandetion/weeklyFoodSuggestion";
-
 interface Category {
   id: string;
   label: string;
@@ -162,8 +157,6 @@ export default function ProductAndFoodRecommendationsPage({
                     <span className="px-2 py-1 rounded-full bg-green-100 text-green-600 text-xs capitalize">
                       {product.category}
                     </span>
-                    {/* <span className="text-yellow-500">★ 5</span>
-                      <span className="text-gray-400">(5)</span> */}
                   </div>
 
                   {/* New Price & Button Section */}
