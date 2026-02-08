@@ -27,10 +27,10 @@ export const ourTeamApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getOurTeam: builder.query<OurTeamResponse, void>({
       query: () => ({
-        url: "/teams",
+        url: "/teams/landing-page",
         method: "GET",
       }),
-      providesTags: ["OurTeam"], 
+      providesTags: ["OurTeam"],
     }),
   }),
 });
