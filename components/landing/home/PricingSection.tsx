@@ -1,26 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Check, CircleDollarSign } from "lucide-react";
+import {Check, CircleDollarSign } from "lucide-react";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
   useCreateCheckoutMutation,
-  useGetPlansQuery,
+  useGetGuestPlansQuery,
 } from "@/redux/features/api/user/subscription";
 import Loading from "@/components/Loading";
+import { useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
+import Cookies from "js-cookie";
 
 export default function PricingPricing() {
   const router = useRouter();
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
 
   // ✅ Fetch plans
-  const { data: response, isLoading, isFetching } = useGetPlansQuery();
+  const { data: response, isLoading, isFetching } = useGetGuestPlansQuery();
 
-  // ✅ Checkout mutation
+  /* ✅ Checkout mutation */
   const [createCheckout] = useCreateCheckoutMutation();
+  const { data: userDashboardData, isLoading: isDashboardLoading } =
+    useGetUserDashboardQuery(undefined, {
+      skip: !isAuthenticated(),
+    });
+
+  function isAuthenticated() {
+    if (typeof window === "undefined") return false;
+    return !!Cookies.get("token");
+  }
 
   const handleBack = () => {
     if (window.history.length > 1) router.back();
@@ -28,6 +39,27 @@ export default function PricingPricing() {
   };
 
   const handleCheckout = async (planId: number) => {
+    // ❌ NOT AUTHENTICATED
+    if (!isAuthenticated()) {
+      toast.error("Please login first to purchase a plan");
+
+      // optional: redirect with callback
+      router.push(`/login?redirect=/pricing`);
+      return;
+    }
+
+    // ❌ PROFILE LOADING CHECK
+    if (isDashboardLoading) {
+      toast.info("Please wait, checking subscription status...");
+      return;
+    }
+
+    // ❌ FREE PLAN CHECK (If user already has a plan)
+    if (userDashboardData?.data?.plan_id) {
+      toast.info("You already have an active subscription.");
+      return;
+    }
+
     try {
       setProcessingPlan(String(planId));
 
@@ -44,12 +76,13 @@ export default function PricingPricing() {
       console.error("Checkout error:", err);
       toast.error(
         err?.data?.errors?.plan_id?.[0] ??
-          "You already have an active subscription for this plan.",
+          "You already have an active subscription for this plan."
       );
     } finally {
       setProcessingPlan(null);
     }
   };
+
 
   if (isLoading || isFetching) return <Loading />;
 
