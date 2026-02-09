@@ -21,11 +21,27 @@ import {
   useJoinCommunityGroupMutation,
   useLikeCommunityGroupPostMutation,
 } from "@/redux/features/api/user/community";
+import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/savedItemsPost";
 
 const PostCard = ({ post }: { post: any }) => {
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [savePost] = useSaveItemMutation();
+  const handleSavePost = async () => {
+    try {
+      await savePost({
+        item_type: "post",
+        item_id: post.id,
+      }).unwrap();
+
+      setIsSaved(true);
+      alert("Post saved");
+    } catch (error) {
+      console.error("Failed to save post", error);
+      alert("Failed to save post");
+    }
+  };
 
   const formatNumber = (num: number) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num;
@@ -99,7 +115,7 @@ const PostCard = ({ post }: { post: any }) => {
               </button> */}
             </div>
             <span className="text-xs text-gray-400">
-              {post.updated_at && !isNaN(new Date(post.updated_at).getTime()) 
+              {post.updated_at && !isNaN(new Date(post.updated_at).getTime())
                 ? formatDistanceToNow(new Date(post.updated_at), {
                     addSuffix: true,
                   })
@@ -119,12 +135,14 @@ const PostCard = ({ post }: { post: any }) => {
             <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden">
               <button
                 onClick={() => {
-                  setIsSaved((prev) => !prev);
+                  if (!isSaved) {
+                    handleSavePost();
+                  }
                   setMenuOpen(false);
                 }}
                 className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition"
               >
-                {isSaved ? "Unsave Post" : "Save Post"}
+                {isSaved ? "Saved" : "Save Post"}
               </button>
 
               <button
