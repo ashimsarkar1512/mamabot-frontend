@@ -12,6 +12,7 @@ import {
   Plus,
   UserPlus,
   BookmarkIcon,
+  Bookmark,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -124,28 +125,38 @@ const PostCard = ({ post }: { post: any }) => {
           </div>
         </div>
         <div className="relative" ref={menuRef}>
-          <button
+          {/* <button
             onClick={() => setMenuOpen((prev) => !prev)}
             className="text-gray-400 hover:text-gray-600"
           >
             <MoreVertical className="w-5 h-5" />
+          </button> */}
+
+          {/* {menuOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden">
+               */}
+
+          <button
+            onClick={() => {
+              if (!isSaved) {
+                handleSavePost();
+              }
+              setMenuOpen(false);
+            }}
+            className="w-full text-left px-4 py-4 rounded-full text-sm hover:bg-gray-100 cursor-pointer transition"
+          >
+            {isSaved ? (
+              <Bookmark
+                width={22}
+                height={22}
+                className="text-[#229ECF] fill-[#229ECF]"
+              />
+            ) : (
+              <Bookmark className="text-[#229ECF]" width={22} height={22} />
+            )}
           </button>
 
-          {menuOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden">
-              <button
-                onClick={() => {
-                  if (!isSaved) {
-                    handleSavePost();
-                  }
-                  setMenuOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition"
-              >
-                {isSaved ? "Saved" : "Save Post"}
-              </button>
-
-              <button
+          {/* <button
                 onClick={() => {
                   setMenuOpen(false);
                 }}
@@ -160,9 +171,9 @@ const PostCard = ({ post }: { post: any }) => {
                 className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition"
               >
                 Report
-              </button>
-            </div>
-          )}
+              </button> */}
+          {/* </div>
+          )} */}
         </div>
       </div>
 
