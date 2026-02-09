@@ -7,7 +7,8 @@ import { BlogPost } from "@/lib/data/blogData";
 import { Bookmark, BookOpenIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/savedItemsPost";
 
 interface BlogCardProps {
   post: Article | BlogPost;
@@ -15,6 +16,25 @@ interface BlogCardProps {
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
+  const [saveArticle] = useSaveItemMutation();
+  const [isSaved, setIsSaved] = useState(false);
+  const handleSaveArticle = async () => {
+    if (!("id" in post)) return;
+
+    try {
+      await saveArticle({
+        item_type: "article",
+        item_id: post.id,
+      }).unwrap();
+
+      setIsSaved(true);
+      alert("Article saved");
+    } catch (error) {
+      console.error("Failed to save article", error);
+      alert("Failed to save article");
+    }
+  };
+
   const title = "title" in post ? post.title : "";
   const description =
     "short_description" in post
@@ -52,7 +72,17 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
           <span className="bg-[#DEF0F8] px-3 py-2 text-xs font-medium rounded-full">
             {categoryTitle}
           </span>
-          <Bookmark width={22} height={22} />
+          <button onClick={handleSaveArticle} className="cursor-pointer">
+            {isSaved ? (
+              <Bookmark
+                width={22}
+                height={22}
+                className="text-[#229ECF] fill-[#229ECF]"
+              />
+            ) : (
+              <Bookmark width={22} height={22} />
+            )}
+          </button>
         </div>
 
         <h3 className="text-xl md:text-2xl font-semibold text-[#303030] mb-3 line-clamp-2">
