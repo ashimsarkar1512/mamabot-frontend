@@ -49,13 +49,13 @@ const OurService = () => {
                 }`}
               >
                 {/* Image */}
-                <div className="w-52 h-52 md:w-56 md:h-56 shrink-0">
+                <div className="w-52 h-52  md:w-56 md:h-56 shrink-0">
                   <Image
                     src={service.main_img || "/images/placeholder.png"}
                     alt={service.title}
                     width={224}
                     height={224}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full rounded-full object-cover"
                   />
                 </div>
 

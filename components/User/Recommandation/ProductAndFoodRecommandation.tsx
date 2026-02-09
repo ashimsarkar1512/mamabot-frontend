@@ -45,7 +45,7 @@ export default function ProductAndFoodRecommendationsPage({
   active: "all" | "product" | "nutrition" | "mental" | "wellness" | "articles";
 }) {
   // save product
-  const [saveItem] = useSaveItemMutation();
+  const [saveProduct] = useSaveItemMutation();
 
   const [showDisclosure, setShowDisclosure] = useState(false);
   const [bookmarkedProducts, setBookmarkedProducts] = useState<{
@@ -89,7 +89,7 @@ export default function ProductAndFoodRecommendationsPage({
   // save product function
   const handleSaveProduct = async (productId: number) => {
     try {
-      await saveItem({
+      await saveProduct({
         item_type: "product",
         item_id: productId,
       }).unwrap();
