@@ -62,6 +62,7 @@ export const baseApi = createApi({
     "PregnancyFoodWeeklyLogs",
     "WellnessActivities",
     "savedItems",
+    "FooterPages",
   ],
   endpoints: () => ({}),
 });
