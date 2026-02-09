@@ -15,10 +15,23 @@ const Page = () => {
   const { data, isLoading } = useGetSavedItemsQuery();
   const [activeTab, setActiveTab] = useState("All(24)");
   const [isOpen, setIsOpen] = useState(false);
+
+  // const filteredItems =
+  //   activeTab === "All(24)"
+  //     ? items
+  //     : items.filter((item) => item.type === activeTab);
   const filteredItems =
     activeTab === "All(24)"
-      ? items
-      : items.filter((item) => item.type === activeTab);
+      ? data?.data || []
+      : data?.data?.filter((item) => {
+          if (activeTab === "Products")
+            return item.savable_type === "AffiliateProduct";
+          if (activeTab === "Articles") return item.savable_type === "Article";
+          if (activeTab === "Community Posts")
+            return item.savable_type === "CommunityPost";
+          return false;
+        }) || [];
+
   const savedProducts = data?.data.filter(
     (item) => item.savable_type === "AffiliateProduct",
   );
@@ -30,8 +43,6 @@ const Page = () => {
   const savedPosts = data?.data.filter(
     (item) => item.savable_type === "CommunityPost",
   );
-  console.log("Saved Products:", savedProducts);
-  console.log("Saved Articles:", savedArticles);
 
   return (
     <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-24`}>
