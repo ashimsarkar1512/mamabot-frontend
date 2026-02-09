@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
       "i.pravatar.cc",
       "images.unsplash.com",
       "nrw.inkleinelevators.com",
+      "images-na.ssl-images-amazon.com",
+      "m.media-amazon.com",
     ],
     remotePatterns: [
       {
@@ -20,6 +22,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "nrw.inkleinelevators.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.amazon.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.media-amazon.com",
       },
     ],
   },
