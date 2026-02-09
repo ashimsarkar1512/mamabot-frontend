@@ -13,6 +13,7 @@ import {
   AlertCircleIcon,
   X,
   Sparkles,
+  CloudCog,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
@@ -24,10 +25,28 @@ import { useGetPregnancyProductsByWeekQuery } from "@/redux/features/api/user/re
 import { useSearchParams } from "next/navigation";
 import { useGetPregnancyFoodWeeklyLogsQuery } from "@/redux/features/api/user/recommandetion/weeklyFoodSuggestion";
 import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/savedItemsPost";
+
 interface Category {
   id: string;
   label: string;
   icon: React.ReactNode;
+}
+
+interface Product {
+  id: number | string;
+  title: string;
+  reason: string;
+  category: string;
+  price: string;
+  image?: string;
+  image_url?: string;
+  affiliate_link: string;
+}
+
+interface FoodItem {
+  name: string;
+  nutrient: string;
+  benefit: string;
 }
 
 const categories: Category[] = [
@@ -38,6 +57,68 @@ const categories: Category[] = [
   { id: "mental", label: "Mental Health", icon: <BrainCircuit size={28} /> },
   { id: "articles", label: "Articles", icon: <FileText size={28} /> },
 ];
+
+const staticProducts: Product[] = [
+  {
+    id: "static-1",
+    title: "Glow Prenatal Vitamins",
+    reason: "Essential nutrients for baby’s development (folate, DHA, vitamins)",
+    category: "supplements",
+    price: "$21.24+",
+    image: "/images/saved-items/saved1.png",
+    image_url: "/images/saved-items/saved1.png",
+    affiliate_link: "https://www.amazon.com/Glow-Prenatal-Vitamins-Folate-DHA/dp/B07QJ839WH",
+  },
+  {
+    id: "static-2",
+    title: "Full‑Body Pregnancy Pillow",
+    reason: "Better sleep and body support during pregnancy",
+    category: "comfort",
+    price: "$40.00+",
+    image: "/images/saved-items/saved2.png",
+    image_url: "/images/saved-items/saved2.png",
+    affiliate_link: "https://www.amazon.com/Best-Sellers-Maternity-Pillows/zgbs/baby-products/382727011",
+  },
+  {
+    id: "static-3",
+    title: "TriLASTIN Stretch Mark Cream",
+    reason: "Helps with skin elasticity and stretch mark prevention",
+    category: "skincare",
+    price: "$25.00+",
+    image: "/images/saved-items/saved3.png",
+    image_url: "/images/saved-items/saved3.png",
+    affiliate_link: "https://www.amazon.com/Best-Sellers-Maternity-Skin-Care/zgbs/beauty/11062371",
+  },
+];
+
+const staticFoodItems: FoodItem[] = [
+  {
+    name: "Spinach Salad",
+    nutrient: "High in Iron",
+    benefit: "Supports healthy blood production for you and baby",
+  },
+  {
+    name: "Greek Yogurt",
+    nutrient: "High in Calcium",
+    benefit: "Essential for baby's bone development",
+  },
+  {
+    name: "Salmon",
+    nutrient: "Rich in Omega-3",
+    benefit: "Supports baby's brain and eye development",
+  },
+  {
+    name: "Avocado Toast",
+    nutrient: "Healthy Fats",
+    benefit: "Provides sustained energy and folate",
+  },
+  {
+    name: "Orange Slices",
+    nutrient: "Vitamin C",
+    benefit: "Helps with iron absorption and immunity",
+  },
+];
+
 
 export default function ProductAndFoodRecommendationsPage({
   active,
@@ -60,9 +141,7 @@ export default function ProductAndFoodRecommendationsPage({
   };
 
   const userInfo = useSelector((state: RootState) => state.auth.userFullInfo);
-  console.log(userInfo, "rwertert435");
   const { data: profile } = useGetMyProfileQuery(undefined);
-  console.log(profile);
 
   const week = profile?.data?.current_week;
 
@@ -72,8 +151,11 @@ export default function ProductAndFoodRecommendationsPage({
     error,
   } = useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
 
+  console.log(productData,"productData")
+
+
   const { data: food } = useGetPregnancyFoodWeeklyLogsQuery(undefined);
-  console.log(food, "get all food in week");
+  console.log(food,"productfood")
 
   const searchParams = useSearchParams();
   const foodSectionRef = useRef<HTMLDivElement>(null);
@@ -84,14 +166,29 @@ export default function ProductAndFoodRecommendationsPage({
       foodSectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [searchParams]);
-  console.log(productData, "product datafg ");
+
+  // Determine which products to display - dynamic or static fallback
+  const displayProducts: Product[] =
+    productData?.data?.products && productData.data.products.length > 0
+      ? productData.data.products
+      : staticProducts;
 
   // save product function
-  const handleSaveProduct = async (productId: number) => {
+  const handleSaveProduct = async (productId: number | string) => {
+    // Skip API call for static products
+    if (typeof productId === "string" && productId.startsWith("static-")) {
+      setBookmarkedProducts((prev) => ({
+        ...prev,
+        [productId]: true,
+      }));
+      alert("Product bookmarked locally");
+      return;
+    }
+
     try {
       await saveProduct({
         item_type: "product",
-        item_id: productId,
+        item_id: productId as number,
       }).unwrap();
 
       setBookmarkedProducts((prev) => ({
@@ -117,7 +214,7 @@ export default function ProductAndFoodRecommendationsPage({
                 Product Recommendations
               </h2>
               <span className="bg-[#BAE1F0] text-[#229ECF] text-sm  px-3 py-1 rounded-full font-semibold flex items-center gap-3">
-                <Sparkles size={16} /> Ai powwered
+                <Sparkles size={16} /> Ai powered
               </span>
             </div>
             <p className="text-sm flex gap-2 items-start px-4 py-2 bg-white max-w-md rounded-full text-gray-500">
@@ -137,21 +234,25 @@ export default function ProductAndFoodRecommendationsPage({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {productData?.data?.products?.map((product: any, index: number) => (
+            {displayProducts.map((product: Product, index: number) => (
               <div
-                key={index}
+                key={product.id || index}
                 className="group rounded-2xl border bg-white shadow-sm hover:shadow-md transition overflow-hidden"
               >
                 <div className="relative h-34 md:h-68 w-full">
                   <Image
                     src={
+                      product.image ||
                       product.image_url ||
-                      items[0]?.image ||
-                      "/placeholder-product.jpg"
+                      items[index % items.length]?.image ||
+                      "/images/saved-items/saved1.png"
                     }
                     alt={product.title || "Product"}
                     fill
                     className="object-cover transition-transform duration-500 ease-out hover:scale-105"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/images/saved-items/saved1.png";
+                    }}
                   />
                 </div>
 
@@ -160,19 +261,6 @@ export default function ProductAndFoodRecommendationsPage({
                     <h3 className="font-semibold text-[#229ECF] text-lg">
                       {product.title}
                     </h3>
-                    {/* <button
-                      onClick={() => toggleBookmark(product.id)}
-                      className="p-1"
-                    >
-                      {bookmarkedProducts[product.id] ? (
-                        <Bookmark
-                          className="text-[#229ECF] fill-[#229ECF]"
-                          size={18}
-                        />
-                      ) : (
-                        <Bookmark size={18} />
-                      )}
-                    </button> */}
 
                     <button
                       onClick={() => handleSaveProduct(product.id)}
@@ -298,7 +386,7 @@ export default function ProductAndFoodRecommendationsPage({
                     Today's Recommended Foods
                   </h2>
                   <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                    Personalized nutrition for Week {week}
+                    Personalized nutrition for Week {week || "N/A"}
                   </p>
                 </div>
               </div>
@@ -332,20 +420,11 @@ export default function ProductAndFoodRecommendationsPage({
                   weeklyLogs[0];
                 const dynamicItems = todaysPlan?.items || [];
 
-                // Fallback to static items if no API data yet, or render nothing/message
-                // The user wants "proper set", so we should use API data.
-                const itemsToRender =
-                  dynamicItems.length > 0 ? dynamicItems : [];
+                // Use static fallback if no dynamic data
+                const itemsToRender: FoodItem[] =
+                  dynamicItems.length > 0 ? dynamicItems : staticFoodItems;
 
-                if (itemsToRender.length === 0 && !isLoading) {
-                  return (
-                    <div className="text-center p-4 text-gray-500">
-                      No food recommendations available for today.
-                    </div>
-                  );
-                }
-
-                return itemsToRender.map((item: any, index: number) => {
+                return itemsToRender.map((item: FoodItem, index: number) => {
                   // Helper to assign icon based on name
                   const getIcon = (name: string) => {
                     const lower = name?.toLowerCase() || "";

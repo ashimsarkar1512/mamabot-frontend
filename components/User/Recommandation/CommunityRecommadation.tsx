@@ -19,20 +19,26 @@ interface CommunityRecommendationsProps {
 export default function CommunityRecommendations({
   profile,
 }: CommunityRecommendationsProps) {
-  const { data } = useGetQASessionsQuery(undefined);
+  const { data } = useGetQASessionsQuery(undefined );
   const [registerSession, { isLoading }] = useRegisterQASessionMutation();
 
   const [registeredIds, setRegisteredIds] = useState<number[]>([]); // Track registered sessions
 
-  const { data: groups } = useGetGroupQuery(undefined);
+  const { data: groups } = useGetGroupQuery(undefined,{
+  pollingInterval: 5000, // every 5 seconds
+});
+
+console.log(groups,"groups")
   const [joinGroup, { isLoading: isJoiningGroup }] = useJoinGroupMutation();
 
   const week = profile?.data?.current_week;
 
-  // Filter groups where is_member is false
-  const availableGroup = groups?.data?.find(
-    (group: any) => group.is_member === false,
-  );
+
+// Get the first group the user has not joined
+const nextAvailableGroup = groups?.data?.find(
+  (group: any) => group.is_member === false
+);
+
 
   const session = data?.data?.[0]; // first session
 
@@ -96,50 +102,73 @@ export default function CommunityRecommendations({
         {/* Community Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
           {/* Support Circle Card - Dynamic from API */}
-          {availableGroup && (
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
-              <div className="flex flex-col items-start gap-3">
-                <div className="bg-[#fce4ec] rounded-xl p-3">
-                  <Users size={24} className="text-[#e91e63]" />
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-800 leading-tight my-4">
-                  {availableGroup.name}
-                </h3>
-              </div>
+        {/* Support Circle Card - Dynamic from API */}
+{nextAvailableGroup ? (
+  <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
+    <div className="flex flex-col items-start gap-3">
+      <div className="bg-[#fce4ec] rounded-xl p-3">
+        <Users size={24} className="text-[#e91e63]" />
+      </div>
+      <h3 className="text-2xl font-semibold text-gray-800 my-4">
+        {nextAvailableGroup.name}
+      </h3>
+    </div>
 
-              <div className="bg-[#fdf0f5] rounded-xl p-5 mb-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <Users size={16} className="text-[#e91e63]" />
-                  <span className="text-gray-700 text-sm font-medium">
-                    {availableGroup.member_count || availableGroup.users_count}{" "}
-                    members
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#e91e63] text-lg">🔥</span>
-                  <span className="text-gray-700 text-sm font-medium">
-                    {availableGroup.is_active ? "Active today" : "Inactive"}
-                  </span>
-                </div>
-              </div>
+    <div className="bg-[#fdf0f5] rounded-xl p-5 mb-6">
+      <div className="flex items-center gap-3 mb-2">
+        <Users size={16} className="text-[#e91e63]" />
+        <span className="text-sm font-medium text-gray-700">
+          {nextAvailableGroup.member_count} members
+        </span>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="text-lg">🔥</span>
+        <span className="text-sm font-medium text-gray-700">
+          {nextAvailableGroup.is_active ? "Active today" : "Inactive"}
+        </span>
+      </div>
+    </div>
 
-              <p className="text-gray-500 text-[15px] mb-8">
-                {availableGroup.description}
-              </p>
+    <p className="text-gray-500 text-[15px] mb-8">
+      {nextAvailableGroup.description}
+    </p>
 
-              <button
-                onClick={() => handleJoinGroup(availableGroup.id)}
-                disabled={isJoiningGroup}
-                className={`mt-auto w-full border font-medium py-3 rounded-xl transition-all ${
-                  isJoiningGroup
-                    ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                    : "border-[#e91e63] text-[#e91e63] hover:bg-[#fce4ec] cursor-pointer"
-                }`}
-              >
-                {isJoiningGroup ? "Joining..." : "Join Group"}
-              </button>
-            </div>
-          )}
+    <button
+      onClick={() => handleJoinGroup(nextAvailableGroup.id)}
+      disabled={nextAvailableGroup.is_static || isJoiningGroup}
+      className={`mt-auto w-full border py-3 rounded-xl font-medium ${
+        nextAvailableGroup.is_static
+          ? "border-gray-300 text-gray-400 cursor-not-allowed"
+          : "border-[#e91e63] text-[#e91e63] hover:bg-[#fce4ec]"
+      }`}
+    >
+      {nextAvailableGroup.is_static ? "Coming Soon" : "Join Group"}
+    </button>
+  </div>
+) : (
+  // Static card if all groups joined
+  <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
+    <div className="flex flex-col items-start gap-3 mb-6">
+      <div className="bg-gray-100 rounded-xl p-3">
+        <Users size={24} className="text-gray-400" />
+      </div>
+      <h3 className="text-2xl font-semibold text-gray-800 my-4">
+        More Groups Coming Soon
+      </h3>
+    </div>
+    <p className="text-gray-500 text-[15px] mb-8">
+      All available groups have been joined. Stay tuned for upcoming communities!
+    </p>
+    <button
+      disabled
+      className="mt-auto w-full border font-medium py-3 rounded-xl 
+        border-gray-300 text-gray-400 cursor-not-allowed"
+    >
+      Coming Soon
+    </button>
+  </div>
+)}
+
 
           {/* Live Q&A Card - Dynamic */}
           {session ? (
