@@ -16,7 +16,7 @@ interface BlogCardProps {
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
   const title = "title" in post ? post.title : "";
-  const description =
+  const description = 
     "short_description" in post
       ? post.short_description
       : "description" in post
