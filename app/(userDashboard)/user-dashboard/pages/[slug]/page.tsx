@@ -2,8 +2,6 @@
 // import React from "react";
 // import FooterPageViewer from "@/components/FooterPages";
 
-import FooterPageViewer from "@/components/FooterPages";
-
 // interface PageProps {
 //   params: Promise<{ slug: string }>;
 // }
@@ -16,6 +14,7 @@ import FooterPageViewer from "@/components/FooterPages";
 
 // export default FooterDynamicPage;
 
+import FooterPageViewer from "@/components/FooterPages";
 interface PageProps {
   params: { slug: string };
 }
