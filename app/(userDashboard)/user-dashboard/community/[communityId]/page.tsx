@@ -14,7 +14,7 @@ import {
   LocationEdit,
 } from "lucide-react";
 import Image from "next/image";
-import { MOCK_POSTS } from "../page";
+import { useGetCommunityPostsQuery } from "@/redux/features/api/user/community";
 import PostCard from "@/components/User/userCommunity/PostCard";
 
 const GroupLandingPage = ({
@@ -28,6 +28,8 @@ const GroupLandingPage = ({
   const [postText, setPostText] = useState("");
   const [pregnancyWeek, setPregnancyWeek] = useState("Add pregnancy week");
   const [role, setRole] = useState("Add role");
+
+  const { data: communityPosts } = useGetCommunityPostsQuery({});
 
   return (
     <div className="w-full mx-auto p-4 font-sans">
@@ -106,9 +108,15 @@ const GroupLandingPage = ({
           </div>
 
           <div className="flex flex-col mt-6">
-            {MOCK_POSTS.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
+            {communityPosts?.data?.length === 0 ? (
+              <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
+                <p className="text-gray-500 text-sm">No community posts found</p>
+              </div>
+            ) : (
+              communityPosts?.data?.map((post: any) => (
+                <PostCard key={post.id} post={post} />
+              ))
+            )}
           </div>
         </div>
 

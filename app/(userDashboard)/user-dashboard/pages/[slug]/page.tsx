@@ -1,13 +1,13 @@
 "use client";
-
+import React from "react";
 import FooterPageViewer from "@/components/FooterPages";
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 const FooterDynamicPage = ({ params }: PageProps) => {
-  const { slug } = params;
+  const { slug } = React.use(params);
 
   return <FooterPageViewer slug={slug} />;
 };

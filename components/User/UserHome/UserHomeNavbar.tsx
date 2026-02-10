@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 
 
 import {
+  useGetMyProfileQuery,
   useGetUserDashboardQuery,
 } from "@/redux/features/api/user/profile";
 
@@ -33,6 +34,9 @@ export default function UserHomeNavbar() {
  
   const { data } = useGetUserDashboardQuery(undefined);
   const profile = data?.data;
+const {data: profileResponse} = useGetMyProfileQuery(undefined);
+console.log(profileResponse,"profile")
+const profileImage=profileResponse?.data
 
   const { data: notificationsResponse } =
     useGetLoggedInNotificationsQuery(undefined);
@@ -192,7 +196,7 @@ const filteredNotifications =
                     }`}
                   >
                     <Image
-                      src="/images/avatar.png"
+                      src={profileImage?.image || "/images/avatar.png"}
                       alt="Profile"
                       width={40}
                       height={40}
@@ -340,7 +344,7 @@ const filteredNotifications =
                   >
                     <div className="relative h-10 w-10 shrink-0">
                       <Image
-                        src="/images/avatar.png"
+                        src={profileImage?.image || "/images/avatar.png"}
                         alt="User"
                         width={40}
                         height={40}
