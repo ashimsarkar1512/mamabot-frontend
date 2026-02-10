@@ -29,12 +29,15 @@ const MamabotProfile: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { data: userProfile } = useGetUserDashboardQuery(undefined);
 
   const [deleteUser]=useDeleteUserMutation()
   // RTK Query Hooks
   const {data: profileResponse,isLoading,refetch,} = useGetMyProfileQuery(undefined);
+
+  console.log(profileResponse,"profileresponse")
   const [updateProfile, { isLoading: isUpdating }] = usePostMyProfileMutation();
   const [changePassword] = useChangePasswordMutation();
   const [toggles, setToggles] = useState<ToggleState>({
@@ -45,6 +48,7 @@ const MamabotProfile: React.FC = () => {
   });
 
   const [formData, setFormData] = useState({
+    image: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -86,6 +90,7 @@ const MamabotProfile: React.FC = () => {
 
       setFormData((prev) => ({
         ...prev,
+        
         firstName: u.first_name || prev.firstName,
         lastName: u.last_name || prev.lastName,
         email: u.email || prev.email,
@@ -112,8 +117,11 @@ const MamabotProfile: React.FC = () => {
         weightTracking: d.isWeightTrack ?? false,
         twoFactor: d.two_factor_auth ?? false,
       });
-
-      setProfileImage("/images/avatar.png"); // Replace if real profile image exists
+      if (d.image) {
+        setProfileImage(d.image);
+      } else {
+        setProfileImage("/images/avatar.png");
+      }
     }
   }, [profileResponse]);
 
@@ -140,6 +148,7 @@ const MamabotProfile: React.FC = () => {
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = () => setProfileImage(reader.result as string);
       reader.readAsDataURL(file);
@@ -159,38 +168,44 @@ const MamabotProfile: React.FC = () => {
         10,
       );
 
-      // 2. Build the payload carefully
-      const payload: IUpdateProfilePayload = {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        phone: formData.phone || undefined, // Send undefined instead of ""
-        address: formData.address,
-        language: formData.language,
-        pregnancy_status: formData.pregnancyStatus,
-        // Ensure date is in YYYY-MM-DD format for the server
-        due_date: formData.dueDate
-          ? new Date(formData.dueDate).toISOString()
-          : undefined,
-        current_week: isNaN(weekNumber) ? 1 : weekNumber,
-        baby_nickname: formData.babyNickname,
-        doctor_name: formData.doctor,
-        hospital_name: formData.clinic,
-        AI_tone: formData.toneOfAI,
-        support_type: formData.supportType,
-        product_interest: formData.productInterest,
-        dietary_preferences: formData.dietaryPreferences,
-        delivery_type: formData.deliveryType as any,
-        postpartum_day: Number(formData.postpartumDay) || 0,
-        isKickRemind: toggles.kickReminders,
-        isHydrationGoal: toggles.hydrationGoals,
-        isWeightTrack: toggles.weightTracking,
-        two_factor_auth: toggles.twoFactor,
-      };
+      // 2. Build FormData
+      const formDataToSend = new FormData();
+      formDataToSend.append("first_name", formData.firstName);
+      formDataToSend.append("last_name", formData.lastName);
+      if (formData.phone) formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("address", formData.address);
+      formDataToSend.append("language", formData.language);
+      formDataToSend.append("pregnancy_status", formData.pregnancyStatus);
+      
+      if (formData.dueDate) {
+        formDataToSend.append("due_date", new Date(formData.dueDate).toISOString());
+      }
+      
+      formDataToSend.append("current_week", String(isNaN(weekNumber) ? 1 : weekNumber));
+      formDataToSend.append("baby_nickname", formData.babyNickname);
+      formDataToSend.append("doctor_name", formData.doctor);
+      formDataToSend.append("hospital_name", formData.clinic);
+      formDataToSend.append("AI_tone", formData.toneOfAI);
+      formDataToSend.append("support_type", formData.supportType);
+      formDataToSend.append("product_interest", formData.productInterest);
+      formDataToSend.append("dietary_preferences", formData.dietaryPreferences);
+      formDataToSend.append("delivery_type", formData.deliveryType);
+      formDataToSend.append("postpartum_day", String(Number(formData.postpartumDay) || 0));
+      
+      formDataToSend.append("isKickRemind", toggles.kickReminders ? "1" : "0");
+      formDataToSend.append("isHydrationGoal", toggles.hydrationGoals ? "1" : "0");
+      formDataToSend.append("isWeightTrack", toggles.weightTracking ? "1" : "0");
+      formDataToSend.append("two_factor_auth", toggles.twoFactor ? "1" : "0");
 
-      console.log("Sending Payload:", payload); // Debug this!
+      if (selectedFile) {
+        formDataToSend.append("image", selectedFile);
+      }
 
-      await updateProfile(payload).unwrap();
+      console.log("Sending FormData...");
+
+      await updateProfile(formDataToSend).unwrap();
       setIsEditing(false);
+      setSelectedFile(null);
       toast.success("Profile updated!");
       refetch();
     } catch (error: any) {

@@ -15,6 +15,7 @@ import Link from "next/link";
 export function Footer() {
   const { data, isLoading, error } = useGetWebSettingsQuery();
   const { data: FooterPage, isLoading: pagesLoading } = useGetFooterPagesQuery();
+  console.log(FooterPage,"footer")
   if (isLoading) return <p className="text-center py-6">Loading footer...</p>;
   if (error || !data?.data)
     return <p className="text-center py-6">Footer not available</p>;
@@ -114,7 +115,7 @@ export function Footer() {
               {pages.map((page) => (
                 <li key={page.id}>
                   <Link
-                    href={`/user-dashboard/pages/${page.slug}`}
+                    href={`/footerPages/${page.slug}`}
                     className="hover:text-pink-600 transition-colors"
                   >
                     {page.title}

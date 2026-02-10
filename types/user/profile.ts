@@ -17,6 +17,7 @@ export interface IUserDashboardData {
   subscription_plan?: string | null;
   status?: string | null;
   last_activity?: string | null;
+  image?: string | null;
 }
 
 export interface IUserDashboardResponse {
@@ -53,6 +54,7 @@ export interface IProfileUser {
   otp: string | null;
   otp_expire_at: string | null;
   deleted_at: string | null;
+  image: string | null;
 }
 
 // Main profile data structure
@@ -88,6 +90,7 @@ export interface IProfileData {
   
   // Documents
   pregnancy_document: string | null;
+  image: string | null;
   
   // Timestamps
   created_at: string;
@@ -128,6 +131,7 @@ export interface IUpdateProfilePayload {
   isWeightTrack?: boolean;
   two_factor_auth?: boolean;
   delivery_type?: "vaginal_delivery" | "cesarean_delivery";
+  image?: File | string | null;
 }
 
 // ========================================
