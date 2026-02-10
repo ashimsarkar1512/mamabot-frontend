@@ -269,9 +269,16 @@ const filteredNotifications =
                 {/* Notification Bell */}
                 <button
                   onClick={() => setIsNotificationsOpen(true)}
-                  className="text-[#0ea5e9] hover:bg-blue-50 p-2 rounded-full transition-colors cursor-pointer"
+                  className="relative text-[#0ea5e9] hover:bg-blue-50 p-2 rounded-full transition-colors cursor-pointer"
                 >
-                  <Bell size={22} />
+                  <Bell size={24} />
+                  {notifications.filter((n: any) => n.read_at === null).length > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#E91E63] text-[10px] font-bold text-white border-2 border-white box-content">
+                      {notifications.filter((n: any) => n.read_at === null).length > 99
+                        ? "99+"
+                        : notifications.filter((n: any) => n.read_at === null).length}
+                    </span>
+                  )}
                 </button>
               </div>
             ) : (

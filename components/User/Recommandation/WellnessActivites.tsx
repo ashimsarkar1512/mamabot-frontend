@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, CloudCog } from "lucide-react";
+import { useGetWellnessActivitiesQuery } from "@/redux/features/api/user/recommandetion/wellnessAndSelfcare";
 
 interface Activity {
   id: number;
@@ -13,42 +14,25 @@ interface Activity {
   duration: string;
 }
 
-const activities: Activity[] = [
-  {
-    id: 1,
-    title: "Prenatal Yoga",
-    description: "Gentle yoga to relax and stretch your body",
-    image:
-      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800",
-    videoId: "v7AYKMP6rOE", // ~5 min prenatal yoga
-    duration: "23 mins",
-  },
-  {
-    id: 2,
-    title: "Breathing Exercise",
-    description: "Calming breathing to reduce stress",
-    image:
-      "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=800",
-    videoId: "inpok4MKVLM", // ~5 min breathing exercise
-    duration: "5 mins",
-  },
-  {
-    id: 3,
-    title: "Walking Routine",
-    description: "Light walking routine for daily movement",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800",
-    videoId: "8CE4ijWlQ18", // ~5 min walking routine
-    duration: "5 mins",
-  },
-];
-
 export default function WellnessActivities() {
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
+  const { data: wellness } = useGetWellnessActivitiesQuery(undefined);
+  console.log(wellness,"wellness")
+  
 
   const toggleVideo = (id: number) => {
     setActiveVideoId((prev) => (prev === id ? null : id));
   };
+
+  // Helper to extract YouTube ID
+  const getYouTubeId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const activities = wellness?.data || [];
 
   return (
     <section className="w-full py-12">
@@ -59,14 +43,15 @@ export default function WellnessActivities() {
             Wellness & Self-Care
           </h2>
           <p className="text-gray-600 text-sm">
-            Recommended 5-minute activities for your trimester
+            Recommended activities for your wellbeing
           </p>
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activities.map((activity) => {
+          {activities.map((activity: any) => {
             const isPlaying = activeVideoId === activity.id;
+            const videoId = getYouTubeId(activity.video_url);
 
             return (
               <div
@@ -74,22 +59,33 @@ export default function WellnessActivities() {
                 className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition"
               >
                 {/* Image / YouTube Video */}
-                <div className="relative aspect-video w-full bg-black">
-                  {isPlaying ? (
+                <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
+                  {isPlaying && videoId ? (
                     <iframe
                       className="w-full h-full"
-                      src={`https://www.youtube.com/embed/${activity.videoId}?autoplay=1&mute=1`}
+                      src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0`}
                       title={activity.title}
-                      allow="autoplay; encrypted-media"
+                      allow="autoplay; encrypted-media; picture-in-picture"
                       allowFullScreen
                     />
+               
                   ) : (
-                    <Image
-                      src={activity.image}
-                      alt={activity.title}
-                      fill
-                      className="object-cover"
-                    />
+                    <>
+                      {/* Blurred Background Layer */}
+                      <Image
+                        src={activity.image || "/placeholder-wellness.jpg"}
+                        alt={activity.title}
+                        fill
+                        className="object-cover blur-md opacity-60 scale-110"
+                      />
+                      {/* Main Image Layer */}
+                      <Image
+                        src={activity.image || "/placeholder-wellness.jpg"}
+                        alt={activity.title}
+                        fill
+                        className="object-cover  object-top z-10"
+                      />
+                    </>
                   )}
                 </div>
 
@@ -100,21 +96,21 @@ export default function WellnessActivities() {
                       {activity.title}
                     </h3>
                     <span className="bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                      {activity.duration}
+                      {activity.duration ? `${activity.duration} mins` : "5 mins"}
                     </span>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-4">
-                    {activity.description}
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    {activity.short_description || activity.description}
                   </p>
 
-                  {/* Button (same design) */}
+                  {/* Button */}
                   <button
                     onClick={() => toggleVideo(activity.id)}
                     className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 transition cursor-pointer"
                   >
                     {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                    {isPlaying ? "Stop" : "Start"}
+                    {isPlaying ? "Pause Video" : "Start Now"}
                   </button>
                 </div>
               </div>

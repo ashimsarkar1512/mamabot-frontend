@@ -4,12 +4,11 @@ import { comfortaa } from "@/app/fonts";
 import ContactBanner from "@/components/landing/Contact/ContactBanner";
 import SendMessage from "@/components/landing/Contact/SendMessage";
 import SupportCards from "@/components/landing/Contact/SupportCards";
-import { Footer } from "@/components/layout/Footer";
-import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 
-const Page = () => {
+import { Suspense, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+
+const ContactContent = () => {
    const searchParams = useSearchParams();
     const section = searchParams.get("section");
 
@@ -31,6 +30,14 @@ const Page = () => {
       <SupportCards />
       {/* <Footer /> */}
     </div>
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ContactContent />
+    </Suspense>
   );
 };
 

@@ -60,6 +60,13 @@ export const subscriptionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Dashboard"],
     }),
+    getGuestPlans: builder.query<PlansResponse, void>({
+      query: () => ({
+        url: "/guest-subscription-plan",
+        method: "GET",
+      }),
+      providesTags: ["Dashboard"],
+    }),
 
     createCheckout: builder.mutation<{ url: string }, { plan_id: string }>({
       query: (body) => ({
@@ -71,8 +78,15 @@ export const subscriptionApi = baseApi.injectEndpoints({
         },
       }),
     }),
+
+    successPayment:builder.query({
+     query:()=>({
+      url:"/payment-info-by-user",
+      method:"GET"
+     }) 
+    })
   }),
   overrideExisting: false,
 });
 
-export const { useGetPlansQuery, useCreateCheckoutMutation } = subscriptionApi;
+export const { useGetPlansQuery, useCreateCheckoutMutation, useSuccessPaymentQuery,useGetGuestPlansQuery } = subscriptionApi;

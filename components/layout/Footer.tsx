@@ -1,5 +1,6 @@
 "use client";
 
+import { useGetFooterPagesQuery } from "@/redux/features/api/FooterPages";
 import { useGetWebSettingsQuery } from "@/redux/features/api/user/Footer";
 import {
   Facebook,
@@ -13,12 +14,13 @@ import Link from "next/link";
 
 export function Footer() {
   const { data, isLoading, error } = useGetWebSettingsQuery();
-
+  const { data: FooterPage, isLoading: pagesLoading } = useGetFooterPagesQuery();
   if (isLoading) return <p className="text-center py-6">Loading footer...</p>;
   if (error || !data?.data)
     return <p className="text-center py-6">Footer not available</p>;
 
   const settings = data.data;
+  const pages = FooterPage?.data || [];
   return (
     <div className="py-2 px-4 md:px-10 md:py-10 mt-5 md:mt-14 mx-0 md:mx-25 mb-10 rounded-xl bg-[#F5F5F5] shadow-xl  text-gray-900">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
@@ -58,37 +60,67 @@ export function Footer() {
             <h4 className="font-semibold text-primary mb-4 uppercase text-xl tracking-wider">
               Legal
             </h4>
-            <ul className="space-y-2 text-base md:text-lg text-gray-600">
+            {/* <ul className="space-y-2 text-base md:text-lg text-gray-600">
               <li>
-                <a href="#" className="hover:text-pink-600 transition-colors">
+                <Link
+                  href="/footerPages/privacy-policy"
+                  className="hover:text-pink-600 transition-colors"
+                >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-600 transition-colors">
+                <Link
+                  href="/footerPages/terms-of-service"
+                  className="hover:text-pink-600 transition-colors"
+                >
                   Terms of Service
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-600 transition-colors">
+                <Link
+                  href="/footerPages/imprint"
+                  className="hover:text-pink-600 transition-colors"
+                >
                   Imprint
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-600 transition-colors">
+                <Link
+                  href="/footerPages/medical-disclaimer"
+                  className="hover:text-pink-600 transition-colors"
+                >
                   Medical Disclaimer
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-600 transition-colors">
+                <Link
+                  href="/footerPages/cookie-policy"
+                  className="hover:text-pink-600 transition-colors"
+                >
                   Cookie Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-600 transition-colors">
+                <Link
+                  href="/footerPages/affiliate-disclosure"
+                  className="hover:text-pink-600 transition-colors"
+                >
                   Affiliate Disclosure
-                </a>
+                </Link>
               </li>
+            </ul> */}
+            <ul className="space-y-2 text-base md:text-lg text-gray-600">
+              {pages.map((page) => (
+                <li key={page.id}>
+                  <Link
+                    href={`/user-dashboard/pages/${page.slug}`}
+                    className="hover:text-pink-600 transition-colors"
+                  >
+                    {page.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

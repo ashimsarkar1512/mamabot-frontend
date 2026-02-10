@@ -59,7 +59,10 @@ export const baseApi = createApi({
     "ServiceLanding",
     "UserDevices",
     "SubscriptionPlan",
+    "PregnancyFoodWeeklyLogs",
+    "WellnessActivities",
     "savedItems",
+    "FooterPages",
   ],
   endpoints: () => ({}),
 });

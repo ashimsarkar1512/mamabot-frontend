@@ -3,32 +3,34 @@
 import { comfortaa } from "@/app/fonts";
 import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { Article } from "@/redux/features/api/user/AllArticles";
-import { BlogPost } from "@/lib/data/blogData";
+// import { BlogPost } from "@/lib/data/blogData";
 import { Bookmark, BookOpenIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/savedItemsPost";
 
 interface BlogCardProps {
-  post: Article | BlogPost;
+  post: Article;
   categoryTitle: string;
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
-  const title = "title" in post ? post.title : "";
-  const description = 
-    "short_description" in post
-      ? post.short_description
-      : "description" in post
-        ? post.description
-        : "";
-  const image =
-    "thumb_img" in post
-      ? post.thumb_img
-      : "image" in post
-        ? post.image
-        : "/placeholder.jpg";
-  const slug = post.slug || "";
+  const [saveArticle] = useSaveItemMutation();
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleSaveArticle = async () => {
+    try {
+      await saveArticle({
+        item_type: "article",
+        item_id: post.id,
+      }).unwrap();
+
+      setIsSaved(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div
@@ -37,10 +39,10 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
       {/* Image */}
       <div className="w-full h-40 md:h-80 overflow-hidden">
         <Image
-          src={image || "/placeholder.jpg"}
+          src={post.thumb_img || "/placeholder.jpg"}
           width={524}
           height={320}
-          alt={title}
+          alt={post.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
@@ -52,18 +54,28 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
           <span className="bg-[#DEF0F8] px-3 py-2 text-xs font-medium rounded-full">
             {categoryTitle}
           </span>
-          <Bookmark width={22} height={22} />
+          <button onClick={handleSaveArticle} className="cursor-pointer">
+            {isSaved ? (
+              <Bookmark
+                width={22}
+                height={22}
+                className="text-[#229ECF] fill-[#229ECF]"
+              />
+            ) : (
+              <Bookmark width={22} height={22} />
+            )}
+          </button>
         </div>
 
         <h3 className="text-xl md:text-2xl font-semibold text-[#303030] mb-3 line-clamp-2">
-          {title}
+          {post.title}
         </h3>
 
         <p className="text-[#677381] text-base md:text-lg mb-6 line-clamp-3 grow">
-          {description}
+          {post.short_description}
         </p>
 
-        <Link href={`/user-dashboard/blog/${slug}`} className="mt-auto">
+        <Link href={`/user-dashboard/blog/${post.slug}`} className="mt-auto">
           <CommonButton
             text="Read Article"
             icon={<BookOpenIcon size={22} />}

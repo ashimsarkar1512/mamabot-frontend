@@ -2,19 +2,47 @@
 
 import { useState } from "react";
 import { comfortaa } from "@/app/fonts";
-import SavedRecommendation from "@/components/landing/SavedItems/SavedRecommendation";
+
 import { items, tabs } from "@/lib/data/savedData";
 import { BookmarkIcon, Menu, X } from "lucide-react";
-import CommunityPosts from "@/components/landing/SavedItems/CommunityPosts";
+
+import { useGetSavedItemsQuery } from "@/redux/features/api/user/recommandetion/savedItemsGet";
+import SavedProducts from "@/components/landing/SavedItems/SavedProducts";
+import SavedPosts from "@/components/landing/SavedItems/SavedPosts";
 import SavedArticles from "@/components/landing/SavedItems/SavedArticles";
 
 const Page = () => {
+  const { data, isLoading } = useGetSavedItemsQuery();
   const [activeTab, setActiveTab] = useState("All(24)");
   const [isOpen, setIsOpen] = useState(false);
+
+  // const filteredItems =
+  //   activeTab === "All(24)"
+  //     ? items
+  //     : items.filter((item) => item.type === activeTab);
   const filteredItems =
     activeTab === "All(24)"
-      ? items
-      : items.filter((item) => item.type === activeTab);
+      ? data?.data || []
+      : data?.data?.filter((item) => {
+          if (activeTab === "Products")
+            return item.savable_type === "AffiliateProduct";
+          if (activeTab === "Articles") return item.savable_type === "Article";
+          if (activeTab === "Community Posts")
+            return item.savable_type === "CommunityPost";
+          return false;
+        }) || [];
+
+  const savedProducts = data?.data.filter(
+    (item) => item.savable_type === "AffiliateProduct",
+  );
+
+  const savedArticles = data?.data.filter(
+    (item) => item.savable_type === "Article",
+  );
+
+  const savedPosts = data?.data.filter(
+    (item) => item.savable_type === "CommunityPost",
+  );
 
   return (
     <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-24`}>
@@ -86,17 +114,19 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Sections */}
+      {/* Products */}
       {(activeTab === "All(24)" || activeTab === "Products") && (
-        <SavedRecommendation activeTab={activeTab} />
+        <SavedProducts products={savedProducts} />
       )}
 
-      {(activeTab === "All(24)" || activeTab === "Community Posts") && (
-        <CommunityPosts activeTab={activeTab} />
-      )}
+      {/* Community Posts */}
+      {/* {(activeTab === "All(24)" || activeTab === "Community Posts") && (
+        <SavedPosts posts={savedPosts} />
+      )} */}
 
+      {/* Articles */}
       {(activeTab === "All(24)" || activeTab === "Articles") && (
-        <SavedArticles activeTab={activeTab} />
+        <SavedArticles articles={savedArticles} />
       )}
     </div>
   );
