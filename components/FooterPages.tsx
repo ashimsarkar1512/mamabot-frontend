@@ -9,30 +9,63 @@ interface FooterPageViewerProps {
 }
 
 const FooterPageViewer: React.FC<FooterPageViewerProps> = ({ slug }) => {
-  console.log("FooterPageViewer slug:", slug);
   const { data, isLoading, isError } = useGetFooterPageBySlugQuery(slug);
-  console.log("FooterPageViewer response:", { data, isLoading, isError });
 
-  if (isLoading) return <p className="text-center py-12">Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <p className="text-lg text-muted-foreground">Loading page…</p>
+      </div>
+    );
+  }
 
   if (isError || !data?.success || !data.data) {
     return (
-      <p className="text-center py-12 text-red-500">
-        {data?.message || "Page not found or inactive"}
-      </p>
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <p className="text-red-500 text-lg">
+          {data?.message || "Page not found"}
+        </p>
+      </div>
     );
   }
 
   const page = data.data;
 
   return (
-    <div className={`prose prose-pink max-w-4xl mx-auto py-12 px-4 md:px-0 ${comfortaa.className}`}>
-      <h1 className="text-3xl font-bold mb-8 text-primary">{page.title}</h1>
-      <div 
-        className="prose-headings:text-primary prose-a:text-pink-600 hover:prose-a:underline"
-        dangerouslySetInnerHTML={{ __html: page.content }} 
-      />
-    </div>
+    <section
+      className={`bg-gradient-to-b from-pink-50 to-white ${comfortaa.className}`}
+    >
+      <div className=" px-4 mt-5 sm:px-6 lg:px-8 py-16">
+        {/* Page Header */}
+        <header className="mb-6 text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold text-primary leading-tight">
+            {page.title}
+          </h1>
+
+          <div className="mt-4 flex justify-center">
+            <span className="h-1 w-24 rounded-full bg-pink-500" />
+          </div>
+        </header>
+
+        {/* Content Card */}
+        <article className="bg-white rounded-2xl shadow-sm border !border-pink-100 p-6 sm:p-10">
+          <div
+            className=""
+            dangerouslySetInnerHTML={{ __html: page.content }}
+          />
+        </article>
+
+        {/* Footer meta (optional) */}
+        <footer className="mt-12 text-center text-sm text-gray-500">
+          Last updated:{" "}
+          {new Date(page.updated_at).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </footer>
+      </div>
+    </section>
   );
 };
 
