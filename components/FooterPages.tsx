@@ -104,7 +104,7 @@ const FooterPageViewer: React.FC<FooterPageViewerProps> = ({ slug }) => {
   const page = data.data;
 
   return (
-    <section className={`bg-white ${comfortaa.className}`}>
+    <section className={` ${comfortaa.className}`}>
       <div className="px-4 sm:px-6 lg:px-8 py-16">
         {/* Page Header */}
         <header className="my-6 text-center">
