@@ -10,7 +10,7 @@ export interface FooterPage {
   meta_keywords: string | null;
   meta_image: string | null;
   is_active: boolean;
-  is_indexable: boolean;
+  is_indexable: boolean; 
   created_at: string;
   updated_at: string;
 }

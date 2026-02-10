@@ -8,8 +8,7 @@ const OurService = () => {
   const { data, isLoading, isError } = useGetLandingServicesQuery();
   const [showAll, setShowAll] = useState(false);
 
-  if (isLoading) {
-    return <p className="text-center py-20">Loading services...</p>;
+  if (isLoading) {    return <p className="text-center py-20">Loading services...</p>;
   }
 
   if (isError || !data?.data?.length) {
