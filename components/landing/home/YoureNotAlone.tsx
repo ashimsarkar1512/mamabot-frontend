@@ -11,7 +11,7 @@ const YoureNotAlone = () => {
         <Users width={16} height={16} /> 10,000+ Active Members
       </div>
       <h2 className="text-xl text-start md:text-center md:text-[40px] font-bold mb-3 md:mb-6">
-        You're Not Alone
+        You are Not Alone
       </h2>
       <p className="text-[#4A5565] text-start md:text-center text-sm md:text-lg mb-7 md:mb-14">
         Join a supportive community of mothers, experts, and mentors across
