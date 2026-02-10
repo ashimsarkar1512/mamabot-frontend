@@ -13,7 +13,7 @@ export const profileApi = baseApi.injectEndpoints({
     }),
 
     // Update profile mutation
-    postMyProfile: builder.mutation<IProfileResponse, IUpdateProfilePayload>({
+    postMyProfile: builder.mutation<IProfileResponse, IUpdateProfilePayload | FormData>({
       query: (payload) => ({
         url: "/profiles",
         method: "POST", 

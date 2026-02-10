@@ -16,7 +16,7 @@ import Button from "../ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import CommonButton from "../ui/Reusable/CommonButton";
 import { usePathname, useRouter } from "next/navigation";
-import { useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
+import { useGetMyProfileQuery, useGetUserDashboardQuery } from "@/redux/features/api/user/profile";
 import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 import Cookies from "js-cookie";
 import { AnimatePresence,motion  } from "framer-motion";
@@ -37,6 +37,10 @@ export default function Navbar() {
   const router = useRouter();
   const { data } = useGetUserDashboardQuery(undefined);
    const [logout] = useLogOutMutation();
+   const {data: profileResponse} = useGetMyProfileQuery(undefined);
+console.log(profileResponse,"profile")
+const profileImage=profileResponse?.data
+console.log(profileImage,"profileImage")
 
   // Derive authentication state from API data
   const isAuthenticated = !!data?.data;
@@ -136,8 +140,19 @@ export default function Navbar() {
                 onClick={() => setIsAuthOpen(!isAuthOpen)}
                 className="flex items-center gap-2 rounded-full bg-gray-200 p-1 pr-3 hover:bg-gray-300 transition-colors cursor-pointer"
               >
-                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-[#D82479] text-white">
-                  <User size={16} />
+                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-[#D82479] text-white overflow-hidden">
+                  {profileImage?.image ? (
+                    <Image
+                      src={profileImage.image}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      unoptimized={true}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User size={16} />
+                  )}
                 </div>
                 <span className="max-w-30 truncate text-sm font-medium">
                   {user.name || user.email}
@@ -260,9 +275,27 @@ export default function Navbar() {
 
             {isAuthenticated && user ? (
               <div className="border-t mt-2 pt-2 flex flex-col gap-2">
-                <div className="px-2 py-2">
-                  <p className="font-medium text-gray-900">{user.name || "User"}</p>
-                  <p className="text-xs text-gray-500">{user.email}</p>
+                <div className="px-2 py-2 flex items-center gap-3">
+                  <div className="h-10 w-10 flex items-center justify-center rounded-full bg-[#D82479] text-white overflow-hidden shrink-0">
+                    {profileImage?.image ? (
+                      <Image
+                        src={profileImage.image}
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        unoptimized={true}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <User size={20} />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900 leading-tight">
+                      {user.name || "User"}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  </div>
                 </div>
 
                 <Link

@@ -1,13 +1,13 @@
-// import FooterPageViewer from "@/components/FooterPages";
+import FooterPageViewer from "@/components/FooterPages";
 
-// interface PageProps {
-//   params: { slug: string };
-// }
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-// const FooterDynamicPage = ({ params }: PageProps) => {
-//   const { slug } = params;
+const FooterDynamicPage = async ({ params }: PageProps) => {
+  const { slug } = await params;
 
-//   return <FooterPageViewer slug={slug} />;
-// };
+  return <FooterPageViewer slug={slug} />;
+};
 
-// export default FooterDynamicPage;
+export default FooterDynamicPage;
