@@ -1,3 +1,5 @@
+"use client";
+
 import FooterPageViewer from "@/components/FooterPages";
 
 interface PageProps {
