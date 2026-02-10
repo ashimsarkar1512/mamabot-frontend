@@ -1,6 +1,5 @@
 "use client";
 import { Users } from "lucide-react";
-import React from "react";
 import RecentDiscussion from "./RecentDiscussion";
 import WhatUserSay from "./WhatUserSay";
 
@@ -15,8 +14,8 @@ const YoureNotAlone = () => {
       </h2>
       <p className="text-[#4A5565] text-start md:text-center text-sm md:text-lg mb-7 md:mb-14">
         Join a supportive community of mothers, experts, and mentors across
-        Germany, Austria, and Switzerland
-      </p>
+        Germany, Austria, and Switzerland.
+      </p> 
 
       <RecentDiscussion />
       <WhatUserSay />
