@@ -29,9 +29,9 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({
   return (
     <div className={`${comfortaa.className} min-h-screen pt-18`}>
       {/* Hero Section */}
-      <div className="relative w-full h-[200px] md:w-full md:h-[400px] overflow-hidden">
+      <div className="relative w-full h-50 md:h-200 overflow-hidden">
         <Image
-          src={post.main_img || "/images/blog/blog-details.png"}
+          src={post.thumb_img || "/images/blog/blog-details.png"}
           fill
           alt={post.title}
           className="object-cover w-full h-full"
@@ -46,7 +46,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({
         </div>
 
         {/* Desktop Title */}
-        <h1 className="hidden md:block text-2xl md:text-5xl absolute top-32 right-10 max-w-2xl text-white font-bold">
+        <h1 className="hidden md:block text-2xl md:text-5xl absolute top-50 left-20 max-w-2xl text-white font-bold">
           {post.title}
         </h1>
       </div>
@@ -57,7 +57,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({
       </h1>
 
       {/* Article Content */}
-      <div className="mx-auto mt-6 md:mt-12 z-10">
+      <div className="mx-auto px-0 md:px-8 mt-6 md:mt-12 z-10">
         <div className="rounded-2xl mb-12">
           <h2 className="text-xl md:text-[32px] text-[#229ECF] font-bold py-3 md:py-6">
             Introduction
@@ -94,7 +94,7 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({
               <p className="bg-[#DEF0F8] text-base px-2 py-1">
                 Bleeding & Cramping
               </p>
-              <p className="bg-[#DEF0F8] text-base px-2 py-1">Women's Health</p>
+              <p className="bg-[#DEF0F8] text-base px-2 py-1">Women Health</p>
               <p className="bg-[#DEF0F8] text-base px-2 py-1">Baby Care</p>
             </div>
           </div>
