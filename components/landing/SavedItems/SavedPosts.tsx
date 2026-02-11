@@ -14,11 +14,16 @@ const SavedPosts = ({ posts }: SavedPostsProps) => {
   }
 
   return (
-    <div className="space-y-6">
-      {posts.map((item) => (
-        <PostCard key={item.id} post={item.savable} />
-      ))}
-    </div>
+    <section>
+      <h1 className="text-primary pb-3 font-semibold text-lg md:text-3xl ">
+        Your Saved Posts :
+      </h1>
+      <div className="space-y-6">
+        {posts.map((item) => (
+          <PostCard key={item.id} post={item.savable} />
+        ))}
+      </div>
+    </section>
   );
 };
 

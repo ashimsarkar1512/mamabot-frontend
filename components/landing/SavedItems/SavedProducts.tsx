@@ -18,20 +18,26 @@ const SavedProducts = ({ products }: SavedProductsProps) => {
   }
 
   return (
-    <div className="grid md:grid-cols-3 gap-6">
-      {products.map((item) => {
-        if (!isAffiliateProduct(item.savable)) return null;
+    <section>
+      <h1 className="text-primary pb-3 font-semibold text-lg md:text-3xl ">
+        Your Saved Products :
+      </h1>
 
-        const product = item.savable;
+      <div className="grid md:grid-cols-3 gap-6">
+        {products.map((item) => {
+          if (!isAffiliateProduct(item.savable)) return null;
 
-        return (
-          <div key={item.id} className="border rounded-xl p-4">
-            <h3>{product.title}</h3>
-            <p>{product.reason}</p>
-          </div>
-        );
-      })}
-    </div>
+          const product = item.savable;
+
+          return (
+            <div key={item.id} className="border rounded-xl p-4">
+              <h3>{product.title}</h3>
+              <p>{product.reason}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 };
 

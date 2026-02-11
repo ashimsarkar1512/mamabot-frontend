@@ -13,7 +13,7 @@ import {
 import SavedProducts from "@/components/landing/SavedItems/SavedProducts";
 import SavedArticles from "@/components/landing/SavedItems/SavedArticles";
 import SavedPosts from "@/components/landing/SavedItems/SavedPosts";
-// import SavedPosts from "@/components/landing/SavedItems/SavedPosts";
+
 
 const tabs = ["All", "Products", "Articles", "Community Posts"];
 
@@ -23,7 +23,7 @@ const Page = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [isOpen, setIsOpen] = useState(false);
 
-  /* ------------------ FILTERING ------------------ */
+
   const filteredItems = useMemo(() => {
     if (activeTab === "All") return savedItems;
 
@@ -53,9 +53,7 @@ const Page = () => {
     (item) => item.savable_type === "App\\Models\\Article",
   );
 
-  // const savedPosts = savedItems.filter(
-  //   (item) => item.savable_type === "App\\Models\\CommunityPost",
-  // );
+  
   const savedPosts = savedItems.filter(
     (item): item is SavedItem & { savable: CommunityPost } =>
       item.savable_type === "App\\Models\\CommunityPost" &&
@@ -81,7 +79,6 @@ const Page = () => {
         </div>
       </div>
 
-      {/* ---------------- Tabs ---------------- */}
       <div>
         {/* Mobile */}
         <div className="md:hidden relative mb-6">
@@ -133,7 +130,7 @@ const Page = () => {
         </div>
       </div>
 
-      {/* ---------------- Content ---------------- */}
+ 
       {(activeTab === "All" || activeTab === "Products") && (
         <SavedProducts products={savedProducts} />
       )}
