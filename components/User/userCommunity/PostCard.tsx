@@ -93,11 +93,11 @@ const PostCard = ({ post }: { post: any }) => {
           <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-200">
             <Image
               src={
-                post.user.image
+                post.user?.image
                   ? post.user.image
                   : "https://i.pravatar.cc/150?u=sarah"
               }
-              alt={post.user.first_name}
+              alt={post.user?.first_name ?? "User"}
               fill
               className="object-cover"
             />
@@ -105,7 +105,7 @@ const PostCard = ({ post }: { post: any }) => {
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-medium text-sky-500">
-                {post.user.first_name} {post.user.last_name}
+                {post.user?.first_name ?? "User"} {post.user?.last_name ?? ""}
               </span>
               <span className="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded-full font-medium border border-pink-100">
                 Week {post.week}

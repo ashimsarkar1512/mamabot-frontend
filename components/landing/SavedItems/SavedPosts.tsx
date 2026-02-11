@@ -1,6 +1,14 @@
 import PostCard from "@/components/User/userCommunity/PostCard";
+import {
+  SavedItem,
+  CommunityPost,
+} from "@/redux/features/api/user/recommandetion/savedItemsGet";
 
-const SavedPosts = ({ posts }: { posts: any[] }) => {
+interface SavedPostsProps {
+  posts: (SavedItem & { savable: CommunityPost })[];
+}
+
+const SavedPosts = ({ posts }: SavedPostsProps) => {
   if (!posts?.length) {
     return <p>No saved posts</p>;
   }
