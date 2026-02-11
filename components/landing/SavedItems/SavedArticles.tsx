@@ -20,15 +20,20 @@ const SavedArticles = ({ articles }: SavedArticlesProps) => {
   }
 
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-      {articles
-        .filter((item): item is SavedItem & { savable: Article } =>
-          isArticle(item.savable),
-        )
-        .map((item) => (
-          <BlogCard key={item.id} post={item.savable} categoryTitle="Saved" />
-        ))}
-    </div>
+    <section>
+      <h1 className="text-primary pb-3 font-semibold text-lg md:text-3xl ">
+        Your Saved Articles :
+      </h1>
+      <div className="grid md:grid-cols-2 gap-6">
+        {articles
+          .filter((item): item is SavedItem & { savable: Article } =>
+            isArticle(item.savable),
+          )
+          .map((item) => (
+            <BlogCard key={item.id} post={item.savable} categoryTitle="Saved" />
+          ))}
+      </div>
+    </section>
   );
 };
 
