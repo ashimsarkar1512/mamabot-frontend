@@ -135,7 +135,7 @@ function LandingPage({ store, chat }: any) {
 
       {/* Top Disclaimer */}
       <div className="hidden md:flex justify-center pt-4 pb-2">
-        <div className="bg-orange-50 border border-orange-200 text-orange-600 text-xs px-3 py-1 rounded-full flex gap-2">
+        <div className="bg-orange-50 border !border-orange-200 text-orange-600 text-xs px-3 py-1 rounded-full flex gap-2">
           <span className="font-semibold">Not medical advice</span>
           <span className="text-orange-300">|</span>
           <span>In emergencies: Call 112</span>
@@ -218,7 +218,7 @@ function LandingPage({ store, chat }: any) {
             </div>
 
             <div className="flex gap-2 items-center">
-              <button
+              {/* <button
                 onClick={() =>
                   toast("Listening... (Microphone access not implemented)")
                 }
@@ -226,7 +226,7 @@ function LandingPage({ store, chat }: any) {
                 title="Voice Input"
               >
                 <Mic className="w-5 h-5" />
-              </button>
+              </button> */}
               <button
                 onClick={handleSend}
                 disabled={store.isLoading}

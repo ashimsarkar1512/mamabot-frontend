@@ -1,17 +1,20 @@
-import { Chat, Message, HistoryItem,Project} from "@/types/chat";
+import { Chat, Message, HistoryItem, Project } from "@/types/chat";
 
 // Mock history
 const MOCK_HISTORY: HistoryItem[] = [
   {
     id: "1",
     title: "You Could Use Some of Your Equity To Put Down on Your Next Home",
-    excerpt: "If you're a homeowner, chances are you've built up a lot of wealth – just by living in your house and watching...",
+    excerpt:
+      "If you're a homeowner, chances are you've built up a lot of wealth – just by living in your house and watching...",
     date: "May 21, 2025",
   },
   {
     id: "2",
-    title: "More Homes for Sale Isn't a Warning Sign – It's Your Buying Opportunity",
-    excerpt: "If you're a homeowner, chances are you've built up a lot of wealth – just by living in your house and watching...",
+    title:
+      "More Homes for Sale Isn't a Warning Sign – It's Your Buying Opportunity",
+    excerpt:
+      "If you're a homeowner, chances are you've built up a lot of wealth – just by living in your house and watching...",
     date: "May 21, 2025",
   },
 ];
@@ -28,9 +31,9 @@ class ChatService {
   createNewChat(): Chat {
     const chat: Chat = {
       id: `chat_${Date.now()}`,
-      title: `Chat ${this.chats.size + 1}`,  // <-- updated to "title"
+      title: `Chat ${this.chats.size + 1}`, // <-- updated to "title"
       messages: [],
-      createdAt: Date.now(),                 // <-- use number
+      createdAt: Date.now(), // <-- use number
     };
     this.chats.set(chat.id, chat);
     return chat;
@@ -95,7 +98,8 @@ class ChatService {
     this.chats.delete(chatId);
     if (this.currentChatId === chatId) {
       const remainingChats = this.getAllChats();
-      this.currentChatId = remainingChats.length > 0 ? remainingChats[0].id : null;
+      this.currentChatId =
+        remainingChats.length > 0 ? remainingChats[0].id : null;
     }
   }
 }

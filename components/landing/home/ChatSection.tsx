@@ -152,7 +152,7 @@ export default function ChatSection() {
       <div className="flex-1 flex flex-col w-full lg:w-auto ">
         {/* Top Badges */}
         <div className="flex justify-center w-full py-2 ">
-          <div className="flex flex-col md:flex-row items-center gap-3 px-2 md:px-4 py-1 md:border md:border-[#FF9800] md:bg-orange-50/30 rounded-full md:shadow-sm">
+          <div className="flex flex-col md:flex-row items-center gap-3 px-2 md:px-4 py-1 md:border md:!border-[#FF9800] md:bg-orange-50/30 rounded-full md:shadow-sm">
             {/* Section 1: Not medical advice */}
             <span className="text-[11px] text-[#FF9800] sm:text-xs font-medium  whitespace-nowrap">
               Not medical advice
