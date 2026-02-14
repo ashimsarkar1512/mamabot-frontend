@@ -8,12 +8,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 import Cookies from "js-cookie";
-
 import {
   useGetMyProfileQuery,
   useGetUserDashboardQuery,
 } from "@/redux/features/api/user/profile";
-
 import {
   useGetLoggedInNotificationsQuery,
   useMarkAsReadMutation,
@@ -27,11 +25,8 @@ export default function UserHomeNavbar() {
   const [isMobileAuthOpen, setIsMobileAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
-
   const [logout] = useLogOutMutation();
-
   const router = useRouter();
-
   const { data } = useGetUserDashboardQuery(undefined);
   const profile = data?.data;
   const { data: profileResponse } = useGetMyProfileQuery(undefined);
@@ -39,33 +34,25 @@ export default function UserHomeNavbar() {
   const profileImage = profileResponse?.data;
   const { data: webSettingsData, isLoading: settingsLoading } =
     useGetWebSettingsQuery();
-
-  // Get logo URL
   const logoUrl = webSettingsData?.data?.logo || "/images/icon.png";
   const { data: notificationsResponse } =
     useGetLoggedInNotificationsQuery(undefined);
   const [markAsRead, { isLoading: isMarking }] = useMarkAsReadMutation();
-
   const notifications = notificationsResponse?.data || [];
-
   console.log(notifications, "notification");
   // Inside your component
   const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
-
   // Filter notifications based on tab
   const filteredNotifications =
     activeTab === "all"
       ? notifications
       : notifications.filter((n: any) => n.read_at === null);
-
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
     { label: "About Us", href: "/user-dashboard/about-us" },
     { label: "Blog", href: "/user-dashboard/blog" },
     { label: "Contact Us", href: "/user-dashboard/contact-us" },
-    // { label: "Saved Items", href: "/user-dashboard/saved-items" },
   ];
-
   const links = [
     { name: "profile", label: "My Profile", href: "/user-dashboard/profile" },
     {
@@ -81,7 +68,6 @@ export default function UserHomeNavbar() {
     },
     { name: "settings", label: "Settings", href: "/user-dashboard/settings" },
   ];
-
   // Mock state for demonstration (matching the image provided)
   const [isAuthenticated] = useState(true);
   const [user] = useState({
@@ -89,9 +75,7 @@ export default function UserHomeNavbar() {
     email: "sarah@mamabot.com",
     avatar: "/images/user-avatar.png", // Replace with actual path
   });
-
   const authDropdownRef = useRef<HTMLDivElement>(null);
-
   // Handle outside clicks to close dropdown
   useEffect(() => {
     const handler = (e: MouseEvent) => {
