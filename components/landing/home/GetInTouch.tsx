@@ -77,6 +77,7 @@ const GetInTouch = () => {
                   <input
                     name="first_name"
                     placeholder="First Name"
+                    value={formData.first_name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border rounded-lg"
                   />
@@ -89,6 +90,7 @@ const GetInTouch = () => {
                   <input
                     name="last_name"
                     placeholder="Last Name"
+                    value={formData.last_name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border rounded-lg"
                   />
@@ -100,23 +102,14 @@ const GetInTouch = () => {
                 </label>
                 <input
                   name="email"
+                  value={formData.email}
                   type="email"
                   placeholder="you@company.com"
                   onChange={handleChange}
                   className="w-full px-4 py-3 border rounded-lg"
                 />
               </div>
-              {/* <div className="mb-6">
-                <label className="block text-sm font-medium mb-1.5">
-                  Phone Number
-                </label>
-                <input
-                  name="phone_number"
-                  placeholder="Phone Number"
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border rounded-lg"
-                />
-              </div> */}
+
               <div className="mb-6 ">
                 <label className="block text-sm font-medium mb-1.5">
                   Phone Number
@@ -143,6 +136,7 @@ const GetInTouch = () => {
                 </label>
                 <textarea
                   name="message"
+                  value={formData.message}
                   rows={5}
                   placeholder="Tell us how we can help you..."
                   onChange={handleChange}
