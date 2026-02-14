@@ -5,7 +5,7 @@ import { Play } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
+import PhoneInput from "react-phone-number-input";
 const GetInTouch = () => {
   const [agreed, setAgreed] = useState(false);
 
@@ -93,31 +93,47 @@ const GetInTouch = () => {
                     className="w-full px-4 py-3 border rounded-lg"
                   />
                 </div>
+              </div>
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-1.5">
+                  Email Address
+                </label>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@company.com"
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border rounded-lg"
+                />
+              </div>
+              {/* <div className="mb-6">
+                <label className="block text-sm font-medium mb-1.5">
+                  Phone Number
+                </label>
+                <input
+                  name="phone_number"
+                  placeholder="Phone Number"
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border rounded-lg"
+                />
+              </div> */}
+              <div className="mb-6 ">
+                <label className="block text-sm font-medium mb-1.5">
+                  Phone Number
+                </label>
 
-                <div>
-                  <label className="block text-sm font-medium mb-1.5">
-                    Email Address
-                  </label>
-                  <input
-                    name="email"
-                    type="email"
-                    placeholder="Email Address"
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border rounded-lg"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1.5">
-                    Phone Number
-                  </label>
-                  <input
-                    name="phone_number"
-                    placeholder="Phone Number"
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border rounded-lg"
-                  />
-                </div>
+                <PhoneInput
+                  international
+                  defaultCountry="US"
+                  value={formData.phone_number}
+                  onChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      phone_number: value || "",
+                    }))
+                  }
+                  className="phone-input cursor-pointer  w-full rounded-lg"
+                />
               </div>
 
               {/* Message */}
