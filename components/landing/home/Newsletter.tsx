@@ -37,7 +37,7 @@ const Newsletter = () => {
   return (
     <div className="px-0 md:px-30">
       <Toaster position="top-right" reverseOrder={false} />
-      <div className="bg-white p-4 md:p-22 rounded-xl shadow-xl mb-6 md:mb-11">
+      <div className="bg-white p-4 md:p-22 rounded-xl shadow-xl mb-6 md:mb-11 border-2 !border-white">
         <h2 className="text-2xl md:text-[32px] text-center mb-10">
           Subscribe to Our <span className="text-primary">Newsletter</span>
         </h2>
