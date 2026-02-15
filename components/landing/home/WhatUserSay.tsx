@@ -31,7 +31,7 @@ const WhatUserSay = () => {
         {data.data.map((testimonial) => (
           <div
             key={testimonial.id}
-            className=" rounded-xl p-3 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+            className="flex flex-col justify-between rounded-xl p-3 md:p-8 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex flex-col items-center text-center">
               <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-[#D9E5E9] mb-4 md:mb-6 overflow-hidden">
@@ -47,11 +47,12 @@ const WhatUserSay = () => {
                   }}
                 />
               </div>
-
+            </div>
+            <div className="mt-auto">
               <p className="text-gray-700 text-sm md:text-base mb-5 md:mb-6 leading-relaxed italic">
                 "{testimonial.description}"
               </p>
-
+              {/* signature */}
               <div>
                 <p className="font-semibold text-gray-900 text-base md:text-lg">
                   {testimonial.author_name}
