@@ -77,13 +77,11 @@ function LandingPage({ store, chat }: any) {
     if (selectedFile) files.file = selectedFile;
 
     if (!chat) {
-      store.createChat(null);
-      setTimeout(() => {
-        store.sendMessage(inputValue, files);
-        setInputValue("");
-        setSelectedImage(null);
-        setSelectedFile(null);
-      }, 50);
+      const newChatId = store.createChat(null);
+      store.sendMessage(inputValue, files, { chatId: newChatId, projectId: null });
+      setInputValue("");
+      setSelectedImage(null);
+      setSelectedFile(null);
     } else {
       store.sendMessage(inputValue, files);
       setInputValue("");
