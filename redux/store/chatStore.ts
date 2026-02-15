@@ -141,6 +141,7 @@ export function useChatStore() {
     }
 
     setActiveChatId(newChat.id);
+    return newChat.id;
   }
 
   function deleteChat(chatId: string) {
@@ -236,6 +237,7 @@ export function useChatStore() {
     role: "user" | "ai",
     content: string,
     metadata?: Message["metadata"],
+    projectId?: string | null
   ) => {
     const msg: Message = {
       id: uid(),
@@ -245,7 +247,11 @@ export function useChatStore() {
       metadata,
     };
 
-    if (activeProjectId) {
+    // Use provided projectId if available, otherwise check activeProjectId
+    // explicit null means "History" (no project)
+    const pid = projectId !== undefined ? projectId : activeProjectId;
+
+    if (pid) {
       setProjects((prev) =>
         prev.map((p) =>
           p.id === activeProjectId
@@ -276,13 +282,14 @@ export function useChatStore() {
   async function sendMessage(
     text: string,
     options?: { image?: File; file?: File },
+    overrides?: { chatId?: string; projectId?: string | null }
   ) {
-    if (!activeChatId) {
+    const chatId = overrides?.chatId || activeChatId;
+
+    if (!chatId) {
       toast.error("No active chat. Please create a chat first.");
       return;
     }
-
-    const chatId = activeChatId;
 
     // Get token from cookies
     const token = Cookies.get("token");
@@ -292,7 +299,7 @@ export function useChatStore() {
     }
 
     // Add user message immediately
-    addMessageToChat(chatId, "user", text);
+    addMessageToChat(chatId, "user", text, undefined, overrides?.projectId);
 
     // Set loading state
     setIsLoading(true);
@@ -328,12 +335,18 @@ export function useChatStore() {
       }
 
       // Add AI response with metadata
-      addMessageToChat(chatId, "ai", response.data.ai_response, {
-        is_emergency: response.data.is_emergency,
-        quota_exceeded: response.data.quota_exceeded,
-        used_today: response.data.used_today,
-        daily_query_limit: response.data.daily_query_limit,
-      });
+      addMessageToChat(
+        chatId,
+        "ai",
+        response.data.ai_response,
+        {
+          is_emergency: response.data.is_emergency,
+          quota_exceeded: response.data.quota_exceeded,
+          used_today: response.data.used_today,
+          daily_query_limit: response.data.daily_query_limit,
+        },
+        overrides?.projectId
+      );
 
       // Show quota info if close to limit
       const remaining =
@@ -352,6 +365,8 @@ export function useChatStore() {
         chatId,
         "ai",
         "Sorry, I encountered an error. Please try again.",
+        undefined,
+        overrides?.projectId
       );
     } finally {
       setIsLoading(false);
