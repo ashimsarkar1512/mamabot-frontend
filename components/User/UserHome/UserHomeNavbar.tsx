@@ -8,18 +8,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 import Cookies from "js-cookie";
-
-
 import {
   useGetMyProfileQuery,
   useGetUserDashboardQuery,
 } from "@/redux/features/api/user/profile";
-
 import {
   useGetLoggedInNotificationsQuery,
   useMarkAsReadMutation,
 } from "@/redux/features/api/user/notification";
 import { toast } from "sonner";
+import { useGetWebSettingsQuery } from "@/redux/features/api/user/Footer";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,42 +25,34 @@ export default function UserHomeNavbar() {
   const [isMobileAuthOpen, setIsMobileAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
-
   const [logout] = useLogOutMutation();
-
   const router = useRouter();
- 
   const { data } = useGetUserDashboardQuery(undefined);
   const profile = data?.data;
-const {data: profileResponse} = useGetMyProfileQuery(undefined);
-console.log(profileResponse,"profile")
-const profileImage=profileResponse?.data
-
+  const { data: profileResponse } = useGetMyProfileQuery(undefined);
+  console.log(profileResponse, "profile");
+  const profileImage = profileResponse?.data;
+  const { data: webSettingsData, isLoading: settingsLoading } =
+    useGetWebSettingsQuery();
+  const logoUrl = webSettingsData?.data?.logo || "/images/icon.png";
   const { data: notificationsResponse } =
     useGetLoggedInNotificationsQuery(undefined);
   const [markAsRead, { isLoading: isMarking }] = useMarkAsReadMutation();
-
   const notifications = notificationsResponse?.data || [];
-
-  console.log(notifications,"notification")
+  console.log(notifications, "notification");
   // Inside your component
-const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
-
-// Filter notifications based on tab
-const filteredNotifications =
-  activeTab === "all"
-    ? notifications
-    : notifications.filter((n: any) => n.read_at === null);
-
-
+  const [activeTab, setActiveTab] = useState<"all" | "unread">("all");
+  // Filter notifications based on tab
+  const filteredNotifications =
+    activeTab === "all"
+      ? notifications
+      : notifications.filter((n: any) => n.read_at === null);
   const navItems = [
     { label: "Home", href: "/user-dashboard" },
     { label: "About Us", href: "/user-dashboard/about-us" },
     { label: "Blog", href: "/user-dashboard/blog" },
     { label: "Contact Us", href: "/user-dashboard/contact-us" },
-    // { label: "Saved Items", href: "/user-dashboard/saved-items" },
   ];
-
   const links = [
     { name: "profile", label: "My Profile", href: "/user-dashboard/profile" },
     {
@@ -78,7 +68,6 @@ const filteredNotifications =
     },
     { name: "settings", label: "Settings", href: "/user-dashboard/settings" },
   ];
-
   // Mock state for demonstration (matching the image provided)
   const [isAuthenticated] = useState(true);
   const [user] = useState({
@@ -86,9 +75,7 @@ const filteredNotifications =
     email: "sarah@mamabot.com",
     avatar: "/images/user-avatar.png", // Replace with actual path
   });
-
   const authDropdownRef = useRef<HTMLDivElement>(null);
-
   // Handle outside clicks to close dropdown
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -136,17 +123,17 @@ const filteredNotifications =
       <div className="mx-auto container">
         <div className="relative flex items-center justify-between rounded-full border border-gray-100 bg-white/90 px-6 py-4 shadow-sm backdrop-blur-md">
           {/* 1. Logo Section */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="relative h-10 w-10 overflow-hidden rounded-full bg-[#fce7f3] p-1">
-              <Image
-                src="/images/icon.png"
-                alt="Mamabot Logo"
-                width={40}
-                height={40}
-                className="object-contain"
-              />
-            </div>
-            <span className="text-xl font-bold text-[#D82479]">Mamabot</span>
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src={logoUrl}
+              alt={webSettingsData?.data?.site_name || "Mamabot"}
+              width={40}
+              height={40}
+              unoptimized={true}
+            />
+            <span className="text-lg font-semibold text-[#D82479]">
+              {webSettingsData?.data?.site_name || "Mamabot"}
+            </span>
           </Link>
 
           {/* 2. Desktop Navigation (Centered) */}
@@ -167,7 +154,7 @@ const filteredNotifications =
         `}
                 >
                   {item.label}
-                </Link> 
+                </Link>
               );
             })}
           </div>
@@ -276,11 +263,14 @@ const filteredNotifications =
                   className="relative text-[#0ea5e9] hover:bg-blue-50 p-2 rounded-full transition-colors cursor-pointer"
                 >
                   <Bell size={24} />
-                  {notifications.filter((n: any) => n.read_at === null).length > 0 && (
+                  {notifications.filter((n: any) => n.read_at === null).length >
+                    0 && (
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#E91E63] text-[10px] font-bold text-white border-2 border-white box-content">
-                      {notifications.filter((n: any) => n.read_at === null).length > 99
+                      {notifications.filter((n: any) => n.read_at === null)
+                        .length > 99
                         ? "99+"
-                        : notifications.filter((n: any) => n.read_at === null).length}
+                        : notifications.filter((n: any) => n.read_at === null)
+                            .length}
                     </span>
                   )}
                 </button>
@@ -353,9 +343,13 @@ const filteredNotifications =
                     </div>
                     <div className="flex-1 text-left">
                       <p className="font-bold text-[#0ea5e9] group-hover:text-[#D82479] transition-colors leading-tight">
-                        {profile ? `${profile.first_name} ${profile.last_name}` : user.name}
+                        {profile
+                          ? `${profile.first_name} ${profile.last_name}`
+                          : user.name}
                       </p>
-                      <p className="text-xs text-gray-400">{profile?.email || user.email}</p>
+                      <p className="text-xs text-gray-400">
+                        {profile?.email || user.email}
+                      </p>
                     </div>
                     <motion.div
                       animate={{ rotate: isMobileAuthOpen ? 180 : 0 }}
@@ -405,7 +399,13 @@ const filteredNotifications =
                       `}
                             >
                               {link.icon && (
-                                <span className={isActive ? "text-[#D82479]" : "text-gray-500"}>
+                                <span
+                                  className={
+                                    isActive
+                                      ? "text-[#D82479]"
+                                      : "text-gray-500"
+                                  }
+                                >
                                   {link.icon}
                                 </span>
                               )}
@@ -434,92 +434,92 @@ const filteredNotifications =
       </div>
 
       {/* NOTIFICATIONS MODAL */}
-    <AnimatePresence>
-  {isNotificationsOpen && (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-[32px] p-8 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden"
-      >
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-[#E91E63] text-2xl font-bold">
-            Notifications
-          </h2>
-          <button
-            onClick={() => setIsNotificationsOpen(false)}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 cursor-pointer"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-6 border-b border-gray-100 mb-6">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`pb-2 font-bold text-sm transition-colors cursor-pointer ${
-              activeTab === "all"
-                ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            All ({notifications.length})
-          </button>
-          <button
-            onClick={() => setActiveTab("unread")}
-            className={`pb-2 font-medium text-sm transition-colors cursor-pointer ${
-              activeTab === "unread"
-                ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            Unread ({notifications.filter((n: any) => n.read_at === null).length})
-          </button>
-        </div>
-
-        {/* Notifications List */}
-        <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
-          {filteredNotifications.map((item: any) => (
-            <div
-              key={item.id}
-              className="p-4 bg-[#F8FBFF] border border-blue-50 rounded-2xl"
+      <AnimatePresence>
+        {isNotificationsOpen && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-[32px] p-8 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden"
             >
-              <h3 className="text-[#3EB1E4] font-bold text-sm mb-1">
-                {item.title}
-              </h3>
-              <p className="text-gray-500 text-xs leading-relaxed">
-                {item.message}
-              </p>
-              <p className="text-gray-400 text-[10px] mt-1">
-                {item.created_at_formatted}
-              </p>
-            </div>
-          ))}
-          {filteredNotifications.length === 0 && (
-            <p className="text-center text-gray-400 text-sm">
-              No notifications yet
-            </p>
-          )}
-        </div>
+              {/* Header */}
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-[#E91E63] text-2xl font-bold">
+                  Notifications
+                </h2>
+                <button
+                  onClick={() => setIsNotificationsOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 cursor-pointer"
+                >
+                  <X size={24} />
+                </button>
+              </div>
 
-        {/* Footer Action */}
-        <div className="mt-8">
-          <button
-            onClick={handleMarkAllAsRead}
-            disabled={isMarking}
-            className="w-full py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 transition-colors cursor-pointer disabled:opacity-60"
-          >
-            {isMarking ? "Marking..." : "Mark all as read"}
-          </button>
-        </div>
-      </motion.div>
-    </div>
-  )}
-</AnimatePresence>
+              {/* Tabs */}
+              <div className="flex gap-6 border-b border-gray-100 mb-6">
+                <button
+                  onClick={() => setActiveTab("all")}
+                  className={`pb-2 font-bold text-sm transition-colors cursor-pointer ${
+                    activeTab === "all"
+                      ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
+                      : "text-gray-400 hover:text-gray-600"
+                  }`}
+                >
+                  All ({notifications.length})
+                </button>
+                <button
+                  onClick={() => setActiveTab("unread")}
+                  className={`pb-2 font-medium text-sm transition-colors cursor-pointer ${
+                    activeTab === "unread"
+                      ? "text-[#3EB1E4] border-b-2 border-[#3EB1E4]"
+                      : "text-gray-400 hover:text-gray-600"
+                  }`}
+                >
+                  Unread (
+                  {notifications.filter((n: any) => n.read_at === null).length})
+                </button>
+              </div>
 
+              {/* Notifications List */}
+              <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+                {filteredNotifications.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="p-4 bg-[#F8FBFF] border border-blue-50 rounded-2xl"
+                  >
+                    <h3 className="text-[#3EB1E4] font-bold text-sm mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-500 text-xs leading-relaxed">
+                      {item.message}
+                    </p>
+                    <p className="text-gray-400 text-[10px] mt-1">
+                      {item.created_at_formatted}
+                    </p>
+                  </div>
+                ))}
+                {filteredNotifications.length === 0 && (
+                  <p className="text-center text-gray-400 text-sm">
+                    No notifications yet
+                  </p>
+                )}
+              </div>
+
+              {/* Footer Action */}
+              <div className="mt-8">
+                <button
+                  onClick={handleMarkAllAsRead}
+                  disabled={isMarking}
+                  className="w-full py-3.5 rounded-xl bg-[#E91E63] text-white font-bold shadow-lg hover:bg-pink-700 transition-colors cursor-pointer disabled:opacity-60"
+                >
+                  {isMarking ? "Marking..." : "Mark all as read"}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

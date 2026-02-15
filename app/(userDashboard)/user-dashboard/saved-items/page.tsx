@@ -1,52 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { comfortaa } from "@/app/fonts";
-
-import { items, tabs } from "@/lib/data/savedData";
 import { BookmarkIcon, Menu, X } from "lucide-react";
 
-import { useGetSavedItemsQuery } from "@/redux/features/api/user/recommandetion/savedItemsGet";
+import {
+  CommunityPost,
+  SavedItem,
+  useGetSavedItemsQuery,
+} from "@/redux/features/api/user/recommandetion/savedItemsGet";
+
 import SavedProducts from "@/components/landing/SavedItems/SavedProducts";
-import SavedPosts from "@/components/landing/SavedItems/SavedPosts";
 import SavedArticles from "@/components/landing/SavedItems/SavedArticles";
+import SavedPosts from "@/components/landing/SavedItems/SavedPosts";
+
+
+const tabs = ["All", "Products", "Articles", "Community Posts"];
 
 const Page = () => {
-  const { data, isLoading } = useGetSavedItemsQuery();
-  const [activeTab, setActiveTab] = useState("All(24)");
+  const { data: savedItems = [], isLoading } = useGetSavedItemsQuery();
+
+  const [activeTab, setActiveTab] = useState("All");
   const [isOpen, setIsOpen] = useState(false);
 
-  // const filteredItems =
-  //   activeTab === "All(24)"
-  //     ? items
-  //     : items.filter((item) => item.type === activeTab);
-  const filteredItems =
-    activeTab === "All(24)"
-      ? data?.data || []
-      : data?.data?.filter((item) => {
-          if (activeTab === "Products")
-            return item.savable_type === "AffiliateProduct";
-          if (activeTab === "Articles") return item.savable_type === "Article";
-          if (activeTab === "Community Posts")
-            return item.savable_type === "CommunityPost";
-          return false;
-        }) || [];
 
-  const savedProducts = data?.data.filter(
-    (item) => item.savable_type === "AffiliateProduct",
+  const filteredItems = useMemo(() => {
+    if (activeTab === "All") return savedItems;
+
+    if (activeTab === "Products")
+      return savedItems.filter(
+        (item) => item.savable_type === "App\\Models\\AffiliateProductSave",
+      );
+
+    if (activeTab === "Articles")
+      return savedItems.filter(
+        (item) => item.savable_type === "App\\Models\\Article",
+      );
+
+    if (activeTab === "Community Posts")
+      return savedItems.filter(
+        (item) => item.savable_type === "App\\Models\\CommunityPost",
+      );
+
+    return [];
+  }, [activeTab, savedItems]);
+
+  const savedProducts = savedItems.filter(
+    (item) => item.savable_type === "App\\Models\\AffiliateProductSave",
   );
 
-  const savedArticles = data?.data.filter(
-    (item) => item.savable_type === "Article",
+  const savedArticles = savedItems.filter(
+    (item) => item.savable_type === "App\\Models\\Article",
   );
 
-  const savedPosts = data?.data.filter(
-    (item) => item.savable_type === "CommunityPost",
+  
+  const savedPosts = savedItems.filter(
+    (item): item is SavedItem & { savable: CommunityPost } =>
+      item.savable_type === "App\\Models\\CommunityPost" &&
+      item.savable !== null,
   );
+
+  if (isLoading) {
+    return <p className="py-20 text-center">Loading saved items...</p>;
+  }
 
   return (
     <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-24`}>
-      <div className="flex items-center mb-5 md:mb-10 gap-3 md:gap-6">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-8">
         <div className="w-14 h-14 bg-[#229ECF] text-white rounded-full flex items-center justify-center">
           <BookmarkIcon size={24} />
         </div>
@@ -58,21 +79,19 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="mb-8 md:mb-16">
-        {/* Mobile Hamburger */}
-
-        <div className="md:hidden relative">
+      <div>
+        {/* Mobile */}
+        <div className="md:hidden relative mb-6">
           <button
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="w-full flex items-center justify-between px-4 py-3 border rounded-lg bg-white"
+            onClick={() => setIsOpen((p) => !p)}
+            className="w-full flex justify-between items-center px-4 py-3 rounded-lg bg-white"
           >
-            <span className="font-medium">{activeTab}</span>
+            <span>{activeTab}</span>
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
           {isOpen && (
-            <div className="absolute z-20 mt-2 w-full bg-white border rounded-lg shadow-md overflow-hidden">
+            <div className="absolute z-20 mt-2 w-full bg-white border rounded-lg shadow">
               {tabs.map((tab) => (
                 <button
                   key={tab}
@@ -80,12 +99,11 @@ const Page = () => {
                     setActiveTab(tab);
                     setIsOpen(false);
                   }}
-                  className={`w-full text-left px-4 py-3 text-sm transition
-            ${
-              activeTab === tab
-                ? "bg-[#229ECF] text-white"
-                : "hover:bg-gray-100 text-gray-700"
-            }`}
+                  className={`w-full px-4 py-3 text-left ${
+                    activeTab === tab
+                      ? "bg-[#229ECF] text-white"
+                      : "hover:bg-gray-100"
+                  }`}
                 >
                   {tab}
                 </button>
@@ -94,19 +112,17 @@ const Page = () => {
           )}
         </div>
 
-        {/* Desktop Tabs */}
-        <div className="hidden md:grid grid-cols-6 overflow-hidden border-2 border-white! bg-white/25">
+        {/* Desktop */}
+        <div className="hidden md:grid grid-cols-4 border-2 !border-white bg-white/25">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-3 text-sm cursor-pointer border-r-2 border-r-white! font-medium transition
-          ${
-            activeTab === tab
-              ? "bg-[#229ECF] text-white"
-              : "text-gray-600 hover:bg-gray-50"
-          }
-        `}
+              className={`py-3 font-medium ${
+                activeTab === tab
+                  ? "bg-[#229ECF] text-white"
+                  : "hover:bg-gray-50 text-gray-600"
+              }`}
             >
               {tab}
             </button>
@@ -114,19 +130,17 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Products */}
-      {(activeTab === "All(24)" || activeTab === "Products") && (
+ 
+      {(activeTab === "All" || activeTab === "Products") && (
         <SavedProducts products={savedProducts} />
       )}
 
-      {/* Community Posts */}
-      {/* {(activeTab === "All(24)" || activeTab === "Community Posts") && (
-        <SavedPosts posts={savedPosts} />
-      )} */}
-
-      {/* Articles */}
-      {(activeTab === "All(24)" || activeTab === "Articles") && (
+      {(activeTab === "All" || activeTab === "Articles") && (
         <SavedArticles articles={savedArticles} />
+      )}
+
+      {(activeTab === "All" || activeTab === "Community Posts") && (
+        <SavedPosts posts={savedPosts} />
       )}
     </div>
   );

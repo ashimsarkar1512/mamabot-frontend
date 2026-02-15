@@ -3,7 +3,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @keyframes gentleHangSway {
-  0%, 100% {
+  0%,
+  100% {
     transform: rotate(-9.2deg) translateY(1px);
   }
   25% {
@@ -21,7 +22,6 @@
 .hanging-alert:hover {
   animation-play-state: paused;
 }
-
 
 /* Light mode */
 :root {
@@ -249,11 +249,62 @@ body {
 html {
   scroll-behavior: smooth;
 }
+.phone-input {
+  display: flex;
+  flex-direction: column; /* mobile: stacked */
+  gap: 8px;
+  width: 100%;
+}
 
+/* md+ screens */
+@media (min-width: 768px) {
+  .phone-input {
+    flex-direction: row; /* md & lg: inline */
+  }
+}
 
+/* Country select wrapper */
+.phone-input .PhoneInputCountry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 
+  flex: 0 0 auto;
+  width: fit-content;
 
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
 
+/* Mobile: full width country selector */
+@media (max-width: 767px) {
+  .phone-input .PhoneInputCountry {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
 
+/* Flag size */
+.phone-input .PhoneInputCountryIcon {
+  width: 16px;
+  height: 12px;
+  flex-shrink: 0;
+}
 
+/* Country code text */
+.phone-input .PhoneInputCountrySelect {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
 
+/* Phone number input */
+.phone-input .PhoneInputInput {
+  flex: 1;
+  width: 100%;
+
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}

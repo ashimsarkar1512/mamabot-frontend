@@ -92,7 +92,7 @@ export default function LearnAndGrow() {
         {otherArticles.map((article) => (
           <div
             key={article.id}
-            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+            className="bg-white flex flex-col rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
           >
             {/* Article Image */}
             <div className="relative w-full h-64 md:h-80 overflow-hidden">
@@ -106,7 +106,7 @@ export default function LearnAndGrow() {
             </div>
 
             {/* Article Content */}
-            <div className="p-4 md:p-6">
+            <div className="p-4 md:p-6  flex flex-col flex-1">
               <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2">
                 {article.title}
               </h4>
@@ -118,7 +118,7 @@ export default function LearnAndGrow() {
                 icon={<Navigation size={16} className="fill-white" />}
                 iconPosition="right"
                 onClick={() => router.push(`/articles/${article.id}`)}
-                className="rounded-lg py-1 px-4 text-sm bg-pink-600 hover:bg-pink-700 text-white"
+                className="rounded-lg py-1 px-4 text-sm mt-auto w-fit bg-pink-600 hover:bg-pink-700 text-white"
               />
             </div>
           </div>

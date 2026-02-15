@@ -16,8 +16,7 @@ export default function SendMessage() {
     message: "",
   });
 
-  const [sendMessage, { isLoading }] =
-    useSendMessageMutation();
+  const [sendMessage, { isLoading }] = useSendMessageMutation();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -40,7 +39,6 @@ export default function SendMessage() {
 
       toast.success("Message sent successfully!");
 
-     
       setFormData({
         first_name: "",
         last_name: "",
@@ -143,14 +141,7 @@ export default function SendMessage() {
               className="mt-1 h-4 w-4"
             />
             <label className="text-sm text-gray-600">
-              I have read and understood the{" "}
-              <a
-                href="/terms-and-conditions"
-                target="_blank"
-                className="text-primary underline"
-              >
-                Terms & Conditions
-              </a>{" "}
+              I have read and understood the Terms of Service{" "}
               <span className="italic">(Optional)</span>
             </label>
           </div>
