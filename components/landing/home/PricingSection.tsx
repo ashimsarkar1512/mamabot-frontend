@@ -89,7 +89,7 @@ export default function PricingPricing() {
   const plans = response?.data ?? [];
 
   return (
-    <div className="py-20 px-4 bg-white/25 rounded-2xl border border-white shadow-lg my-10">
+    <div className="py-20 px-4 bg-white/25 rounded-2xl border-2 !border-white shadow-lg my-10">
       {/* Header */}
       <div className="max-w-6xl mx-auto my-10">
         <span className="inline-flex items-center gap-2 text-xs font-medium text-pink-600 bg-pink-100 px-4 py-2 rounded-full mb-4">

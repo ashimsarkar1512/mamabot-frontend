@@ -20,7 +20,7 @@ const OurService = () => {
 
   const visibleServices = showAll ? services : services.slice(0, 3);
   return (
-    <div className="bg-[#F6F8FB] my-7 rounded-xl shadow-md md:my-24 border border-white px-4 md:px-40 py-10 md:py-24">
+    <div className="bg-[#F6F8FB] my-7 rounded-xl shadow-md md:my-24 border-2 !border-white px-4 md:px-40 py-10 md:py-24">
       <div className="mb-8 md:mb-16 md:text-center">
         <h2 className="text-xl mb-4 md:text-[40px]">
           Our <span className="text-primary">Services</span>

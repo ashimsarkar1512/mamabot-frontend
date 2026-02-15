@@ -25,7 +25,7 @@ export default function ChatSection() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex md:h-screen rounded-2xl border border-white/50 bg-white/50 backdrop-blur-md flex-col lg:flex-row pl-4 py-4">
+    <div className="flex md:h-screen rounded-2xl border-2 !border-white bg-white/50 backdrop-blur-md flex-col lg:flex-row pl-4 py-4">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
