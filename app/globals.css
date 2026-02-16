@@ -1,7 +1,27 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+@keyframes gentleHangSway {
+  0%,
+  100% {
+    transform: rotate(-9.2deg) translateY(1px);
+  }
+  25% {
+    transform: rotate(9.8deg) translateY(2px);
+  }
+  50% {
+    transform: rotate(-9deg) translateY(1px);
+  }
+  75% {
+    transform: rotate(9.4deg) translateY(9px);
+  }
+}
+
+/* Optional: make it pause on hover/focus for better readability */
+.hanging-alert:hover {
+  animation-play-state: paused;
+}
 
 /* Light mode */
 :root {
@@ -43,21 +63,20 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-
 /* Map variables to Tailwind classes via CSS custom properties */
 .bg-primary {
   background-color: var(--primary);
 }
 
 .bg-landing {
-  background-color: #F2F4F8;
+  background-color: #f2f4f8;
 }
 
 .bg-primary-foreground {
   background-color: var(--primary-foreground);
 }
 .bg-secondary {
-  background-color: var(--secondary);
+  background-color: var(--secondaryColor);
 }
 .bg-secondary-foreground {
   background-color: var(--secondary-foreground);
@@ -223,4 +242,69 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  button {
+    @apply cursor-pointer;
+  }
+}
+html {
+  scroll-behavior: smooth;
+}
+.phone-input {
+  display: flex;
+  flex-direction: column; /* mobile: stacked */
+  gap: 8px;
+  width: 100%;
+}
+
+/* md+ screens */
+@media (min-width: 768px) {
+  .phone-input {
+    flex-direction: row; /* md & lg: inline */
+  }
+}
+
+/* Country select wrapper */
+.phone-input .PhoneInputCountry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  flex: 0 0 auto;
+  width: fit-content;
+
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* Mobile: full width country selector */
+@media (max-width: 767px) {
+  .phone-input .PhoneInputCountry {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Flag size */
+.phone-input .PhoneInputCountryIcon {
+  width: 16px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+/* Country code text */
+.phone-input .PhoneInputCountrySelect {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Phone number input */
+.phone-input .PhoneInputInput {
+  flex: 1;
+  width: 100%;
+
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
 }

@@ -6,6 +6,17 @@ import {
   RegisterPayload,
   LoginResponse,
   RegisterResponse,
+  VerifyOtpPayload,
+  VerifyOtpResponse,
+  VerifyEmailPayload,
+  VerifyEmailResponse,
+  SignupPayload,
+  SignupResponse,
+  LogoutResponse,
+  ForgotPasswordPayload,
+  ForgotPasswordResponse,
+  ResetPasswordPayload,
+  ResetPasswordResponse,
 } from "@/types/auth/authType";
 
 export const authApi = baseApi.injectEndpoints({
@@ -70,9 +81,71 @@ export const authApi = baseApi.injectEndpoints({
         }
       },
     }),
+
+    // Verify OTP
+    verifyOtp: builder.mutation<VerifyOtpResponse, VerifyOtpPayload>({
+      query: (credentials) => ({
+        url: "/auth/verify-otp",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+
+    // Verify Email
+    verifyEmail: builder.mutation<VerifyEmailResponse, VerifyEmailPayload>({
+      query: (credentials) => ({
+        url: "/auth/verify-email",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+
+    // Signup (alias for register)
+    signup: builder.mutation<SignupResponse, SignupPayload>({
+      query: (credentials) => ({
+        url: "/auth/register",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+
+    // Logout
+    logout: builder.mutation<LogoutResponse, void>({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+    }),
+
+    // Forgot Password
+    forgotPassword: builder.mutation<ForgotPasswordResponse, ForgotPasswordPayload>({
+      query: (credentials) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+
+    // Reset Password
+    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordPayload>({
+      query: (credentials) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useVerifyOtpMutation,
+  useVerifyEmailMutation,
+  useSignupMutation,
+  useLogoutMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+} = authApi;
 

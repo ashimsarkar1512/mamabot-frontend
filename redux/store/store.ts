@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/slice/authSlice";
 import uiReducer from "../features/slice/uiSlice";
 import { baseApi } from "../features/api/baseApi";
+import babyCareModalReducer from "../features/slice/babyCareModalSlice";
 
 // Create store function
 export const makeStore = (preloadedState = {}) => {
@@ -9,6 +10,7 @@ export const makeStore = (preloadedState = {}) => {
     reducer: {
       auth: authReducer,
       ui: uiReducer,
+      babyCareModal: babyCareModalReducer,
       [baseApi.reducerPath]: baseApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>

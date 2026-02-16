@@ -1,160 +1,106 @@
 "use client";
 
+import { useState } from "react";
+import { comfortaa } from "@/app/fonts";
 
-export default function UserSettingsPage() {
+import { Menu, Settings2, X } from "lucide-react";
+
+import { settingsTabs } from "@/lib/data/SettingsData";
+import Personalization from "@/components/landing/Settings/Personalization";
+import Notifications from "@/components/landing/Settings/Notifications";
+import PrivacyData from "@/components/landing/Settings/PrivacyData";
+import SmartPersonalization from "@/components/landing/Settings/SmartPersonalization";
+import Subscription from "@/components/landing/Settings/Subscription";
+import HelpSupport from "@/components/landing/Settings/HelpSupport";
+
+const Page = () => {
+  const [activeTab, setActiveTab] = useState(settingsTabs[0]);
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
- 
-      <div className="max-w-full">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Account Settings</h1>
-          <p className="text-gray-600">
-            Manage your account preferences and settings.
+    <div className={`pt-12 ${comfortaa.className} space-y-7 md:space-y-16`}>
+      <div className="flex md:items-center gap-3 ">
+        <div className="w-5 md:w-14 h-5 md:h-14 bg-primary text-white rounded-full flex items-center justify-center">
+          <Settings2 />
+        </div>
+        <div>
+          <h1 className="text-xl md:text-3xl mb-1">Settings</h1>
+          <p className="text-sm md:text-lg text-[#4A5565]">
+            Fine-tune your Mamabot experience — your comfort, your control.
           </p>
         </div>
+      </div>
 
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-800">
-              General Settings
-            </h2>
-          </div>
+      {/* Tabs */}
+      <div className="mb-8 md:mb-16">
+        {/* Mobile Hamburger */}
 
-          <div className="p-6">
-            <div className="mb-8">
-              <h3 className="text-md font-medium text-gray-800 mb-4">
-                Profile Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="John"
-                  />
-                </div>
+        <div className="md:hidden block relative">
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between px-4 py-3 border rounded-lg bg-white"
+          >
+            <span className="font-medium">{activeTab}</span>
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="Doe"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="john.doe@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    defaultValue="+1 (555) 123-4567"
-                  />
-                </div>
-              </div>
+          {isOpen && (
+            <div className="absolute z-20 mt-2 w-full bg-white border rounded-lg shadow-md overflow-hidden">
+              {settingsTabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 text-sm transition
+            ${
+              activeTab === tab
+                ? "bg-[#229ECF] text-white"
+                : "hover:bg-gray-100 text-gray-700"
+            }`}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
+          )}
+        </div>
 
-            <div className="mb-8">
-              <h3 className="text-md font-medium text-gray-800 mb-4">
-                Security Settings
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Two-factor authentication
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Add extra security to your account
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    Enable
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Password
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Change your password
-                    </p>
-                  </div>
-                  <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    Change
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-md font-medium text-gray-800 mb-4">
-                Notification Preferences
-              </h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Email Notifications
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Receive notifications via email
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      defaultChecked
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      Push Notifications
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Receive notifications on your device
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end">
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                Save Changes
-              </button>
-            </div>
-          </div>
+        {/* Desktop Tabs */}
+        <div className="md:flex justify-around hidden border-r-2 !border-r-white !bg-white/25">
+          {settingsTabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`py-3 px-16 text-sm cursor-pointer border-r-2 !border-r-white font-medium transition
+          ${
+            activeTab === tab
+              ? "bg-[#229ECF] text-white"
+              : "text-gray-600 hover:bg-gray-50"
+          }
+        `}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
-   
+
+      {/* Sections */}
+
+      {activeTab === "Personalization" && (
+        <Personalization activeTab={activeTab} />
+      )}
+      {activeTab === "Notifications" && <Notifications activeTab={activeTab} />}
+      {activeTab === "Privacy & Data" && <PrivacyData activeTab={activeTab} />}
+      {activeTab === "Smart Personalization" && (
+        <SmartPersonalization activeTab={activeTab} />
+      )}
+      {activeTab === "Subscription" && <Subscription activeTab={activeTab} />}
+      {activeTab === "Help & Support" && <HelpSupport activeTab={activeTab} />}
+    </div>
   );
-}
+};
+
+export default Page;
