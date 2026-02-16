@@ -15,7 +15,7 @@ export default function AdminDashboardLayout({
   return (
     <DashboardLayout sidebar={<AdminSidebar />}>
       <div className={comfortaa.className}>
-        <AdminHeader /> 
+        <AdminHeader />
         {children}
       </div>
     </DashboardLayout>

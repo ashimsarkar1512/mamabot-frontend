@@ -12,7 +12,7 @@ export default function AdminSidebar() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto  pt-16 md:pt-0 sidebar-scroll">
+    <div className="h-full flex flex-col overflow-y-auto   ">
       <div className="flex border-b border-b-[#F3BBD5]! pb-10 items-center duration-200 cursor-pointer">
         <div className="w-10 h-10 md:w-12 md:h-12 mr-1 flex items-center justify-center">
           <Image

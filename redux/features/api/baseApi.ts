@@ -1,17 +1,14 @@
-import { getSession } from "next-auth/react";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import Cookies from "js-cookie";
 
-// Create a dynamic baseQuery that handles SSR properly
 const dynamicBaseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api",
-  credentials: "include", // Include credentials (cookies) for all requests
-  prepareHeaders: async (headers) => {
-    // Check if we're in the browser environment
+  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+
+  prepareHeaders: (headers) => {
     if (typeof window !== "undefined") {
-      const session = await getSession();
-      if (session?.accessToken) {
-        // Use Bearer token format for authorization header
-        headers.set("authorization", `Bearer ${session.accessToken}`);
+      const token = Cookies.get("token");
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
       }
     }
     return headers;
@@ -21,6 +18,51 @@ const dynamicBaseQuery = fetchBaseQuery({
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: dynamicBaseQuery,
-  tagTypes: ["User", "Products"],
+  tagTypes: [
+    "User",
+    "Products",
+    "Profile",
+    "Dashboard",
+    "Hydration",
+    "Movement",
+    "Personalize",
+    "NotificationSetting",
+    "FeedingLogs",
+    "RecoveryLogs",
+    "PelvicExerciseLogs",
+    "PainMovementLogs",
+    "DiaperLog",
+    "SleepTrackings",
+    "IncisionHealingChecks",
+    "AboutUs",
+    "OurMission",
+    "OurJourney",
+    "Community",
+    "Recommendations",
+    "MotherWellnessLogs",
+    "Notifications",
+    "NutritionLogs",
+    "QASessions",
+    "MovementRestrictions",
+    "Articles",
+    "PregnancyProducts",
+    "OurTeam",
+    "PrivacyData",
+    "SmartPersonalization",
+    "Newsletter",
+    "footer",
+    "testimonials",
+    "YoureNotAlone",
+    "BabyCueLogs",
+    "MentalHealthLogs",
+    "CommunityGroups",
+    "ServiceLanding",
+    "UserDevices",
+    "SubscriptionPlan",
+    "PregnancyFoodWeeklyLogs",
+    "WellnessActivities",
+    "savedItems",
+    "FooterPages",
+  ],
   endpoints: () => ({}),
 });
