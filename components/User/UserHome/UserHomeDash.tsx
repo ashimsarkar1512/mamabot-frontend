@@ -37,6 +37,7 @@ export default function UserHomeDashboard() {
   const { data: hydration } = useGetHydrationLogsQuery(undefined);
   const { data: pregnancyArticle } = useGetArticlesQuery(undefined);
   console.log(pregnancyArticle, "pregnancyArticle");
+  console.log(profile,"user")
 
   const week = profile?.data?.current_week;
   const totalGlass = hydration?.data?.glass_count ?? 0;
@@ -59,7 +60,7 @@ export default function UserHomeDashboard() {
           <div className="flex items-center gap-4">
             <div className="relative h-14 w-14 rounded-full  shadow-sm">
               <Image
-                src="/images/avatar.png"
+                src={profile?.data?.image || "/images/avatar.png"}
                 alt="User avatar"
                 fill
                 className="object-cover rounded-full"
@@ -445,18 +446,18 @@ export default function UserHomeDashboard() {
 
             {/* Profile */}
             <Card className="p-6">
-              <div className="flex items-center ">
-                <button className="h-10 w-10 rounded-full overflow-hidden  hover:border-[#D82479] transition-all">
-                  <Image
-                    src="/images/avatar.png"
-                    alt="Profile"
-                    width={30}
-                    height={30}
-                    className="object-cover"
-                  />
-                </button>
-                <h3 className="font-semibold">Profile Summary</h3>
-              </div>
+            <div className="flex items-center gap-2">
+  <button className="relative h-10 w-10 rounded-full overflow-hidden hover:border-2 hover:border-[#D82479] transition-all">
+    <Image
+      src={profile?.data?.image || "/images/avatar.png"}
+      alt="Profile"
+      fill
+      className="object-cover"
+    />
+  </button>
+  <h3 className="font-semibold">Profile Summary</h3>
+</div>
+
 
               <div className="space-y-3">
                 <div className="flex justify-between mb-4">
