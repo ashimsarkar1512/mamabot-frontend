@@ -1,4 +1,4 @@
-import { baseApi } from "@/redux/features/api/baseApi";
+import { baseApi } from "../../baseApi";
 
 export interface CommunityUser {
   id: number;
