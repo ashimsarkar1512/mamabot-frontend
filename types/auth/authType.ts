@@ -29,29 +29,38 @@ export interface VerifyOtpResponse {
 
 // Login response
 export interface LoginResponse {
-  accessToken: string;
-  user: {
-    _id: string;
-    name: string;
-    email: string;
-    roles?: string[];
+  message: string;
+  data: {
+    token: string;
+    user: {
+      _id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+      role: string;
+      "plan id"?: string;
+      "subscription Plan"?: string;
+    };
   };
 }
 
 // Register response
 export interface RegisterResponse {
   message: string;
-  user: {
-    _id: string;
-    name: string;
-    email: string;
-    roles?: string[];
+  data: {
+    user: {
+      _id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+      role: string;
+    };
   };
 }
 
 // Verify Email request payload
 export interface VerifyEmailPayload {
-  token: string;
+  email: string;
 }
 
 // Verify Email response
@@ -60,22 +69,32 @@ export interface VerifyEmailResponse {
   success: boolean;
 }
 
-// Signup request payload (alias for RegisterPayload)
+// Signup request payload
 export interface SignupPayload {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
   email: string;
   password: string;
+  password_confirmation: string;
+  accepted_terms: number;
+  consent_health_data: number;
+  newsletter_opt_in: number;
+  accepted_withdrawal_waiver: number;
+  accepted_auto_renewal: number;
 }
 
 // Signup response
 export interface SignupResponse {
   message: string;
-  user: {
-    _id: string;
-    name: string;
-    email: string;
-    roles?: string[];
+  data: {
+    user: {
+      _id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+      role: string;
+    };
   };
 }
 
@@ -98,9 +117,10 @@ export interface ForgotPasswordResponse {
 
 // Reset Password request payload
 export interface ResetPasswordPayload {
-  token: string;
+  email: string;
   password: string;
-  confirmPassword?: string;
+  password_confirmation: string;
+  otp?: string | null;
 }
 
 // Reset Password response

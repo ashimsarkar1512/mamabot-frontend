@@ -12,6 +12,7 @@ import { handleError, handleSuccess } from "@/lib/data/handdleError";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/features/slice/authSlice";
+import { User } from "@/types/user/userType";
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,37 +37,41 @@ export default function Home() {
 
     if (!email || !password) return;
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-
     try {
-      const res = await login(formData).unwrap();
+      const res = await login({ email, password }).unwrap();
       handleSuccess(res.message || "Login successful");
 
+      const apiUser = res.data.user;
+      const transformedUser: User = {
+        _id: apiUser._id,
+        name: `${apiUser.first_name} ${apiUser.last_name}`,
+        email: apiUser.email,
+        roles: apiUser.role ? [apiUser.role as any] : ["USER"],
+        createdAt: new Date().toISOString(), // Mocking if not provided by API
+        updatedAt: new Date().toISOString(),
+      };
+
       console.log(res, "response");
-      dispatch(setUser(res.data.user));
+      dispatch(setUser(transformedUser));
 
-      Cookies.set("token", res.data.token, { path: "/" }); // Optional: for API calls
-      Cookies.set("role", res.data.user.role, { path: "/" }); // "Admin" or "User"
+      Cookies.set("token", res.data.token, { path: "/" });
+      Cookies.set("role", apiUser.role, { path: "/" });
 
-      console.log(res,"res")
-    
+      console.log(res, "res");
 
-if (res.data.user.role === "User") {
-  // Check if the user has a subscription
-  if (res.data.user["plan id"] && res.data.user["subscription Plan"]) {
-    window.location.href = "/user-dashboard"; 
-  } else {
-    window.location.href = "/pricing"; 
-  }
-} else {
-  window.location.href = "/"; 
-}
-
-  } catch (error) {
-    handleError(error, "Login failed");
-  }
+      if (apiUser.role === "User") {
+        // Check if the user has a subscription
+        if (apiUser["plan id"] && apiUser["subscription Plan"]) {
+          window.location.href = "/user-dashboard";
+        } else {
+          window.location.href = "/pricing";
+        }
+      } else {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      handleError(error, "Login failed");
+    }
   };
 
   return (

@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-
-import React from 'react';
-import { Heart, MessageSquare, ShoppingBag, Users } from 'lucide-react';
-=======
 "use client";
 
 import React from "react";
@@ -10,7 +5,6 @@ import { Heart, MessageSquare, ShoppingBag, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { motion } from "framer-motion";
->>>>>>> 1c4b9d59abbf6c94bf94b2196258aae1dae4c71e
 
 const SupportSection: React.FC = () => {
   const router = useRouter();

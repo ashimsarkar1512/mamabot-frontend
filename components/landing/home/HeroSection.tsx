@@ -1,20 +1,9 @@
-<<<<<<< HEAD
-
-
-'use client'
-
-import CommonButton from '@/components/ui/Reusable/CommonButton'
-import { Heart } from 'lucide-react'
-import Image from 'next/image'
-=======
 "use client";
 
 import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
->>>>>>> 1c4b9d59abbf6c94bf94b2196258aae1dae4c71e
-
 import Cookies from "js-cookie";
 export default function HeroSection() {
   const router = useRouter();

@@ -30,16 +30,17 @@ export const authApi = baseApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
+          const { data: responseData } = await queryFulfilled;
+          const apiUser = responseData.data.user;
           // Transform API user to match User type
           const transformedUser: User = {
-            _id: data.user._id,
-            name: data.user.name,
-            phone: (data.user as any).phone || data.user.email,
-            email: data.user.email,
-            roles: (data.user.roles as ("ADMIN" | "USER")[]) || ["USER"],
-            createdAt: (data.user as any).createdAt || new Date().toISOString(),
-            updatedAt: (data.user as any).updatedAt || new Date().toISOString(),
+            _id: apiUser._id,
+            name: `${apiUser.first_name} ${apiUser.last_name}`,
+            phone: (apiUser as any).phone || apiUser.email,
+            email: apiUser.email,
+            roles: apiUser.role ? [apiUser.role as any] : ["USER"],
+            createdAt: (apiUser as any).createdAt || new Date().toISOString(),
+            updatedAt: (apiUser as any).updatedAt || new Date().toISOString(),
           };
           dispatch(
             setCredentials({
@@ -61,16 +62,17 @@ export const authApi = baseApi.injectEndpoints({
       }),
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
+          const { data: responseData } = await queryFulfilled;
+          const apiUser = responseData.data.user;
           // Transform API user to match User type
           const transformedUser: User = {
-            _id: data.user._id,
-            name: data.user.name,
-            phone: (data.user as any).phone || data.user.email,
-            email: data.user.email,
-            roles: (data.user.roles as ("ADMIN" | "USER")[]) || ["USER"],
-            createdAt: (data.user as any).createdAt || new Date().toISOString(),
-            updatedAt: (data.user as any).updatedAt || new Date().toISOString(),
+            _id: apiUser._id,
+            name: `${apiUser.first_name} ${apiUser.last_name}`,
+            phone: (apiUser as any).phone || apiUser.email,
+            email: apiUser.email,
+            roles: apiUser.role ? [apiUser.role as any] : ["USER"],
+            createdAt: (apiUser as any).createdAt || new Date().toISOString(),
+            updatedAt: (apiUser as any).updatedAt || new Date().toISOString(),
           };
           // Note: Registration response typically doesn't return an access token
           // In a real app, you might want to redirect to login after registration
