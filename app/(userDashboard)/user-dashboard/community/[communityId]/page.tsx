@@ -36,7 +36,7 @@ const GroupLandingPage = ({
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1">
           <div className="bg-[#E9F5FB] rounded-t-2xl p-6 mb-4 border-b-2 border-white!">
-            <h1 className="text-3xl font-bold text-[#2D88C8] mb-2">
+            <h1 className="text-xl md:text-[40px] font-bold text-[#229ECF] mb-2">
               First Trimester (0—12 Weeks)
             </h1>
             <div className="flex items-center gap-2 text-gray-500 text-sm">
