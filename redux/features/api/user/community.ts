@@ -4,7 +4,7 @@ const community = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCommunityPosts: builder.query({
       query: () => ({
-        url: "/community/posts",  
+        url: "/community/posts",
         method: "GET",
       }),
       providesTags: ["Community"],
@@ -16,6 +16,13 @@ const community = baseApi.injectEndpoints({
       }),
       providesTags: ["Community"],
     }),
+    getCommunityGroupById: builder.query({
+      query: (id: string | number) => ({
+        url: `/community-groups/${id}`,
+        method: "GET",
+      }),
+    }),
+
     joinCommunityGroup: builder.mutation({
       query: (id: number) => ({
         url: `/groups/join`,
@@ -47,20 +54,17 @@ const community = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Community"],
     }),
-     getRelaxationAudiosUserListen: builder.query({
+    getRelaxationAudiosUserListen: builder.query({
       query: () => ({
         url: "/relaxation-audios/user-listen",
         method: "GET",
       }),
-      
-    
     }),
-        getAllRelaxationAudios: builder.query({
+    getAllRelaxationAudios: builder.query({
       query: () => ({
         url: "/relaxation-audios",
         method: "GET",
       }),
-      
     }),
   }),
 });
@@ -69,10 +73,11 @@ export const {
   useGetCommunityPostsQuery,
   useGetCommunityGroupsQuery,
   useJoinCommunityGroupMutation,
+  useGetCommunityGroupByIdQuery,
   useLikeCommunityGroupPostMutation,
   useCommentCommunityGroupPostMutation,
   useGetRelaxationAudiosUserListenQuery,
-  useGetAllRelaxationAudiosQuery
+  useGetAllRelaxationAudiosQuery,
 } = community;
 
 export default community;

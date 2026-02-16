@@ -3,13 +3,11 @@
 import React, { useState } from "react";
 import {
   Users,
-  ChevronDown,
   Image as ImageIcon,
   Smile,
   Paperclip,
   Lock,
   Eye,
-  Plus,
   LocationEdit,
 } from "lucide-react";
 import Image from "next/image";
@@ -18,6 +16,7 @@ import PostCard from "@/components/User/userCommunity/PostCard";
 import { comfortaa } from "@/app/fonts";
 import { useCreateCommunityPostMutation } from "@/redux/features/api/user/Community/CommunityPost";
 import { toast, Toaster } from "sonner";
+import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
 
 const GroupLandingPage = ({
   params,
@@ -25,37 +24,58 @@ const GroupLandingPage = ({
   params: Promise<{ communityId: string }>;
 }) => {
   const { communityId } = React.use(params);
-  console.log(communityId);
+  // user data
+  const { data: profileRes } = useGetMyProfileQuery();
+  const user = profileRes?.data?.user;
+  const firstName = user?.first_name;
+  const lastName = user?.last_name;
+  const profileImage = user?.profile?.image;
+  const { data: postsRes, isLoading } = useGetCommunityPostsQuery({});
+  const posts = postsRes?.data || [];
+
+  // Filter posts for this group
+  const groupPosts = posts.filter(
+    (post: any) => post.group_id.toString() === communityId.toString(),
+  );
+
+  // Get group info from first post
+  const group = groupPosts?.[0]?.group;
+
   const [postTitle, setPostTitle] = useState("");
   const [hashtags, setHashtags] = useState("");
-
   const [postText, setPostText] = useState("");
   const [createCommunityPost, { isLoading: isPosting }] =
     useCreateCommunityPostMutation();
-  const { data: communityPosts } = useGetCommunityPostsQuery({});
-  // post now
+
   const handleCreatePost = async () => {
     if (!postTitle || !postText) return;
 
     try {
       await createCommunityPost({
-        group_id: communityId, // dynamic route param
+        group_id: communityId,
         title: postTitle,
         content: postText,
         week: 0,
       }).unwrap();
-      toast.success("Post created successfully");
 
-      // reset form after success
+      toast.success("Post created successfully");
       setPostTitle("");
       setPostText("");
       setHashtags("");
     } catch (error: any) {
-      const message =
-        error?.data?.message || "Failed to create post. Please try again.";
-      toast.error(message);
+      toast.error(
+        error?.data?.message || "Failed to create post. Please try again.",
+      );
     }
   };
+
+  if (isLoading) {
+    return <p className="text-center py-20">Loading group posts...</p>;
+  }
+
+  if (!group) {
+    return <p className="text-center py-20">Group not found</p>;
+  }
 
   return (
     <div className={`w-full mx-auto py-11 font-sans ${comfortaa.className}`}>
@@ -64,39 +84,28 @@ const GroupLandingPage = ({
         <div className="flex-1">
           <div className="bg-[#E9F5FB] rounded-t-2xl p-6 mb-4 border-b-2 border-white!">
             <h1 className="text-xl md:text-[40px] font-bold text-[#229ECF] mb-2">
-              First Trimester (0—12 Weeks)
+              {group.name}
             </h1>
             <div className="flex items-center gap-2 text-gray-500 text-sm">
               <Users className="w-4 h-4" />
-              <span>Private group • 1.2k members</span>
+              <span>Private group • {group.member_count} members</span>
             </div>
           </div>
 
           <div className="bg-gray-50/50 border-2 border-white! rounded-[24px] p-6 shadow-sm">
             <div className="flex items-start justify-between mb-4">
+              {/* user info */}
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
                   <Image
-                    src="https://i.pravatar.cc/150?u=sarahcollins"
-                    alt="Sarah Collins"
+                    src={profileImage || "https://i.pravatar.cc/150?u=default"}
+                    alt={`${firstName} ${lastName}`}
                     fill
                     className="object-cover"
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-800">Sarah Collins</h3>
-                  <div className="flex gap-2 mt-1">
-                    {/* Fake Dropdown 1 */}
-                    {/* <button className="flex items-center gap-1 bg-[#DDF1FB] text-[#2D88C8] text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-sky-200 transition-colors">
-                      <Plus className="w-3 h-3" /> {pregnancyWeek}{" "}
-                      <ChevronDown className="w-3 h-3" />
-                    </button> */}
-                    {/* Fake Dropdown 2 */}
-                    {/* <button className="flex items-center gap-1 bg-[#DDF1FB] text-[#2D88C8] text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-sky-200 transition-colors">
-                      <Plus className="w-3 h-3" /> {role}{" "}
-                      <ChevronDown className="w-3 h-3" />
-                    </button> */}
-                  </div>
+                  <h3 className="font-bold text-gray-800">{firstName} {lastName}</h3>
                 </div>
               </div>
 
@@ -114,26 +123,6 @@ const GroupLandingPage = ({
             </div>
 
             {/* Input Area */}
-            {/* <div className="relative bg-white border border-sky-200 rounded-2xl p-4 transition-all focus-within:ring-2 focus-within:ring-sky-100">
-              <textarea
-                value={postText}
-                onChange={(e) => setPostText(e.target.value)}
-                placeholder="Create a post...."
-                className="w-full h-24 resize-none outline-none text-gray-700 placeholder-gray-300"
-              />
-              <div className="flex items-center gap-4 mt-2">
-                <button className="text-sky-400 hover:text-sky-600 transition-colors">
-                  <ImageIcon className="w-5 h-5" />
-                </button>
-                <button className="text-sky-400 hover:text-sky-600 transition-colors">
-                  <Smile className="w-5 h-5" />
-                </button>
-                <button className="text-sky-400 hover:text-sky-600 transition-colors">
-                  <Paperclip className="w-5 h-5" />
-                </button>
-              </div>
-            </div> */}
-
             <div className="relative bg-white border border-sky-200 rounded-2xl p-4 transition-all focus-within:ring-2 focus-within:ring-sky-100 space-y-3">
               {/* TITLE / HEADING */}
               <input
@@ -141,7 +130,7 @@ const GroupLandingPage = ({
                 value={postTitle}
                 onChange={(e) => setPostTitle(e.target.value)}
                 placeholder="Post title "
-                className="w-full text-lg font-semibold outline-none border-b !border-gray-300 pb-2 placeholder-gray-300"
+                className="w-full text-lg font-semibold outline-none border-b border-gray-300! pb-2 placeholder-gray-300"
               />
 
               {/* MAIN CONTENT */}
@@ -177,14 +166,14 @@ const GroupLandingPage = ({
           </div>
 
           <div className="flex flex-col mt-6">
-            {communityPosts?.data?.length === 0 ? (
+            {groupPosts?.length === 0 ? (
               <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
                 <p className="text-gray-500 text-sm">
                   No community posts found
                 </p>
               </div>
             ) : (
-              communityPosts?.data?.map((post: any) => (
+              groupPosts.map((post: any) => (
                 <PostCard key={post.id} post={post} />
               ))
             )}
@@ -200,8 +189,7 @@ const GroupLandingPage = ({
             </div>
             <div className="px-5 pb-3">
               <p className="text-[#E73F80] text-sm leading-relaxed">
-                Join discussions, share your journey, and get expert-backed
-                advice.
+                {group.description}
               </p>
             </div>
           </div>

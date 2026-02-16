@@ -55,18 +55,22 @@ export interface IProfileUser {
   otp_expire_at: string | null;
   deleted_at: string | null;
   image: string | null;
+  profile?: {
+    user_id: number;
+    image: string | null;
+  };
 }
 
 // Main profile data structure
 export interface IProfileData {
   id: number;
   user_id: number;
-  
+
   // Pregnancy/Postpartum status
   pregnancy_status: "pregnancy" | "postpartum";
   current_week: number;
   postpartum_day: number;
-  
+
   // Medical information
   due_date: string;
   delivery_type: string;
@@ -74,28 +78,28 @@ export interface IProfileData {
   doctor_name: string | null;
   hospital_name: string | null;
   address: string;
-  
+
   // Preferences
   dietary_preferences: string;
   product_interest: string;
   support_type: string;
   AI_tone: string;
   language: string;
-  
+
   // Feature flags
   isHydrationGoal: boolean;
   isKickRemind: boolean;
   isWeightTrack: boolean;
   two_factor_auth: boolean;
-  
+
   // Documents
   pregnancy_document: string | null;
   image: string | null;
-  
+
   // Timestamps
   created_at: string;
   updated_at: string;
-  
+
   // Nested user object
   user: IProfileUser;
 }
