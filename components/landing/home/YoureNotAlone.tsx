@@ -5,7 +5,7 @@ import WhatUserSay from "./WhatUserSay";
 
 const YoureNotAlone = () => {
   return (
-    <div className="px-4 md:px-40 py-8 md:py-16 text-center bg-[#ffffff]/25 rounded-xl shadow-md">
+    <div className="px-4 md:px-40 py-8 md:py-16 text-center bg-[#ffffff]/25 rounded-xl shadow-md border-2 !border-white">
       <div className="bg-[#FCE7F3] text-start md:text-center rounded-full flex justify-center mb-3 items-center mx-auto text-xs w-48 gap-1 px-4 py-2 text-primary">
         <Users width={16} height={16} /> 10,000+ Active Members
       </div>

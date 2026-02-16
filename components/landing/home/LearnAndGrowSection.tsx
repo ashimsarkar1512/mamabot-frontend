@@ -20,7 +20,7 @@ export default function LearnAndGrow() {
   return (
     <section className="">
       {/* Featured Article Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 mb-12 border border-white rounded-[2.5rem] overflow-hidden shadow-sm bg-[#F8F9FB]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 mb-12 border-2 !border-white rounded-2xl overflow-hidden shadow-sm bg-[#F8F9FB]">
         {/* Left - Featured Image */}
         <div className="bg-[#FCE7F3] overflow-hidden flex items-end justify-center relative min-h-100 lg:h-auto">
           {/* Featured Badge */}
@@ -88,11 +88,11 @@ export default function LearnAndGrow() {
       </div>
 
       {/* Articles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {otherArticles.map((article) => (
           <div
             key={article.id}
-            className="bg-white flex flex-col rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+            className=" flex flex-col rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer  border-2 !border-white "
           >
             {/* Article Image */}
             <div className="relative w-full h-64 md:h-80 overflow-hidden">
@@ -106,7 +106,7 @@ export default function LearnAndGrow() {
             </div>
 
             {/* Article Content */}
-            <div className="p-4 md:p-6  flex flex-col flex-1">
+            <div className="p-4 md:p-6  flex flex-col flex-1 ">
               <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2">
                 {article.title}
               </h4>
