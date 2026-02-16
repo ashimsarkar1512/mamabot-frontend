@@ -23,11 +23,16 @@ import {
   useLikeCommunityGroupPostMutation,
 } from "@/redux/features/api/user/community";
 import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/savedItemsPost";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useShareCommunityPostMutation } from "@/redux/features/api/user/community";
 
 const PostCard = ({ post }: { post: any }) => {
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [showFullContent, setShowFullContent] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [savePost] = useSaveItemMutation();
   const handleSavePost = async () => {
     try {
@@ -37,10 +42,10 @@ const PostCard = ({ post }: { post: any }) => {
       }).unwrap();
 
       setIsSaved(true);
-      alert("Post saved");
+      toast.success("Post saved successfully!");
     } catch (error) {
       console.error("Failed to save post", error);
-      alert("Failed to save post");
+      toast.error("Failed to save post");
     }
   };
 
@@ -50,9 +55,57 @@ const PostCard = ({ post }: { post: any }) => {
 
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const [likeCommunityGroupPost] = useLikeCommunityGroupPostMutation();
-  const [joinCommunityGroup] = useJoinCommunityGroupMutation();
-  const [commentCommunityGroupPost] = useCommentCommunityGroupPostMutation();
+  const [likeCommunityGroupPost, { isLoading: isLiking }] = useLikeCommunityGroupPostMutation();
+  const [joinCommunityGroup, { isLoading: isJoining }] = useJoinCommunityGroupMutation();
+  const [commentCommunityGroupPost, { isLoading: isCommenting }] = useCommentCommunityGroupPostMutation();
+  const [shareCommunityPost, { isLoading: isSharing }] = useShareCommunityPostMutation();
+
+  const handleLike = async () => {
+    try {
+      await likeCommunityGroupPost(post.id).unwrap();
+      toast.success(post.is_liked ? "Post unliked" : "Post liked!");
+    } catch (error) {
+      toast.error("Failed to update like");
+    }
+  };
+
+  const handleJoinGroup = async () => {
+    try {
+      await joinCommunityGroup(post.group_id).unwrap();
+      toast.success("Joined group successfully!");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to join group");
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      await shareCommunityPost({
+        post_id: post.id,
+        platform: "mamabot_group",
+        group_id: post.group_id,
+      }).unwrap();
+      
+      // Also copy to clipboard for better UX
+      const url = `${window.location.origin}/user-dashboard/community?post=${post.id}`;
+      await navigator.clipboard.writeText(url);
+      
+      toast.success("Post shared and link copied!");
+    } catch (error) {
+      toast.error("Failed to share post");
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!comment.trim()) return;
+    try {
+      await commentCommunityGroupPost({ post_id: post.id, content: comment }).unwrap();
+      setComment("");
+      toast.success("Comment added!");
+    } catch (error) {
+      toast.error("Failed to add comment");
+    }
+  };
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -80,10 +133,16 @@ const PostCard = ({ post }: { post: any }) => {
           </button>
         )} */}
         <button
-          onClick={() => joinCommunityGroup(post.group_id)}
-          className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors"
+          onClick={handleJoinGroup}
+          disabled={isJoining}
+          className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors disabled:opacity-50"
         >
-          <Plus className="w-4 h-4 mr-1" /> Join Group
+          {isJoining ? (
+            <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+          ) : (
+            <Plus className="w-4 h-4 mr-1" />
+          )}
+          Join Group
         </button>
       </div>
 
@@ -177,14 +236,16 @@ const PostCard = ({ post }: { post: any }) => {
         </div>
       </div>
 
-      {/* Content */}
       <div className="mb-4">
         <h4 className="font-semibold text-gray-900 mb-2">{post.title}</h4>
         <p className="text-gray-600 text-sm leading-relaxed mb-2">
-          {post.content}
-          {post.content.length > 100 && (
-            <span className="text-pink-500 font-medium cursor-pointer ml-1 hover:underline">
-              Read More
+          {showFullContent ? post.content : `${post.content.substring(0, 200)}${post.content.length > 200 ? "..." : ""}`}
+          {post.content.length > 200 && (
+            <span 
+              onClick={() => setShowFullContent(!showFullContent)}
+              className="text-pink-500 font-medium cursor-pointer ml-1 hover:underline"
+            >
+              {showFullContent ? "Read Less" : "Read More"}
             </span>
           )}
         </p>
@@ -241,18 +302,73 @@ const PostCard = ({ post }: { post: any }) => {
       {/* Action Buttons */}
       <div className="flex items-center justify-between border-t border-b border-gray-200! py-2 mb-4">
         <button
-          onClick={() => likeCommunityGroupPost(post.id)}
-          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors text-gray-500 hover:text-gray-700`}
+          onClick={handleLike}
+          disabled={isLiking}
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors ${
+            post.is_liked ? "text-[#D82479]" : "text-gray-500 hover:text-gray-700"
+          } disabled:opacity-50`}
         >
-          <Heart className={`w-4 h-4`} /> Like
+          <Heart className={`w-4 h-4 ${post.is_liked ? "fill-current" : ""}`} /> 
+          Like
         </button>
-        <button className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 py-1 transition-colors">
-          <MessageSquare className="w-4 h-4" /> Comment
+        <button 
+          onClick={() => setShowComments(!showComments)}
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors ${showComments ? "text-sky-500" : "text-gray-500 hover:text-gray-700"}`}
+        >
+          <MessageSquare className={`w-4 h-4 ${showComments ? "fill-current" : ""}`} /> Comment
         </button>
-        <button className="flex-1 flex items-center justify-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 py-1 transition-colors">
-          <Share2 className="w-4 h-4" /> Share
+        <button 
+          onClick={handleShare}
+          disabled={isSharing}
+          className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors text-gray-500 hover:text-gray-700 disabled:opacity-50`}
+        >
+          {isSharing ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Share2 className="w-4 h-4" />
+          )}
+          Share
         </button>
       </div>
+
+      {/* Comments List */}
+      {showComments && (
+        <div className="space-y-4 mb-4 mt-2">
+          {post.comments && post.comments.length > 0 ? (
+            post.comments.map((cmt: any) => (
+              <div key={cmt.id} className="flex gap-3 items-start p-3 bg-gray-50/80 rounded-xl border border-gray-100">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200 shrink-0">
+                  <Image
+                    src={cmt.user?.image || "https://i.pravatar.cc/150?u=" + cmt.user?.id}
+                    alt={cmt.user?.first_name || "User"}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-sm font-semibold text-gray-800">
+                      {cmt.user?.first_name} {cmt.user?.last_name || ""}
+                    </span>
+                    <span className="text-[10px] text-gray-400">
+                      {cmt.created_at && !isNaN(new Date(cmt.created_at).getTime())
+                        ? formatDistanceToNow(new Date(cmt.created_at), { addSuffix: true })
+                        : "recently"}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed break-words">
+                    {cmt.content}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-400 text-xs py-2 italic">
+              No comments yet. Be the first to start the conversation!
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Comment Input */}
       <div className="flex gap-3">
@@ -275,7 +391,7 @@ const PostCard = ({ post }: { post: any }) => {
           />
           <div className="flex justify-between items-center mt-2">
             <div className="flex items-center gap-2">
-              <button className="text-gray-400 hover:text-sky-500">
+              {/* <button className="text-gray-400 hover:text-sky-500">
                 <ImageIcon className="w-4 h-4" />
               </button>
               <button className="text-gray-400 hover:text-sky-500">
@@ -283,16 +399,19 @@ const PostCard = ({ post }: { post: any }) => {
               </button>
               <button className="text-gray-400 hover:text-sky-500">
                 <Paperclip className="w-4 h-4" />
-              </button>
+              </button> */}
             </div>
             {comment && (
               <button
-                onClick={() =>
-                  commentCommunityGroupPost({ post_id: post.id, comment })
-                }
-                className="text-sky-500 hover:text-sky-600"
+                onClick={handleCommentSubmit}
+                disabled={isCommenting}
+                className="text-sky-500 hover:text-sky-600 disabled:opacity-50"
               >
-                <Send className="w-4 h-4" />
+                {isCommenting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
               </button>
             )}
           </div>

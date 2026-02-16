@@ -1,5 +1,6 @@
 import { baseApi } from "../baseApi";
 
+
 const community = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCommunityPosts: builder.query({
@@ -37,16 +38,25 @@ const community = baseApi.injectEndpoints({
       invalidatesTags: ["Community"],
     }),
     commentCommunityGroupPost: builder.mutation({
-      query: (body: { post_id: number; comment: string }) => ({
+      query: (body: { post_id: number; content: string }) => ({
         url: `/community/comment`,
         method: "POST",
         body: {
           post_id: body.post_id,
-          comment: body.comment,
+          content: body.content,
         },
       }),
       invalidatesTags: ["Community"],
     }),
+    shareCommunityPost: builder.mutation({
+      query: (body: { post_id: number; platform: string; group_id: number }) => ({
+        url: `/community/share`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Community"],
+    }),
+
      getRelaxationAudiosUserListen: builder.query({
       query: () => ({
         url: "/relaxation-audios/user-listen",
@@ -71,6 +81,7 @@ export const {
   useJoinCommunityGroupMutation,
   useLikeCommunityGroupPostMutation,
   useCommentCommunityGroupPostMutation,
+  useShareCommunityPostMutation,
   useGetRelaxationAudiosUserListenQuery,
   useGetAllRelaxationAudiosQuery
 } = community;
