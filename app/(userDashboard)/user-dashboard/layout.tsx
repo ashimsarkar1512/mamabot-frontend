@@ -16,6 +16,14 @@ export default function UserDashboardLayout({
 }: UserDashboardLayoutProps) {
   return (
     <Provider store={store}>
+      <div
+        className="absolute  lg:-top-60 lg:-right-60 lg:w-580 lg:h-100 
+        -top-15 -right-10 w-95 h-60
+    md:-top-20 md:-right-30 md:w-250 md:h-60
+        rounded-full 
+                  bg-[radial-gradient(circle_at_center,#F9DEEB_0%,transparent_70%)] 
+                  blur-2xl"
+      />
       <div className="min-h-screen relative ">
         {/* Fixed Navbar */}
         <UserHomeNavbar />
