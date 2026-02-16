@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Users,
   Image as ImageIcon,
@@ -47,27 +47,41 @@ const GroupLandingPage = ({
   const [createCommunityPost, { isLoading: isPosting }] =
     useCreateCommunityPostMutation();
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
   const handleCreatePost = async () => {
-    if (!postTitle || !postText) return;
+  if (!postTitle || !postText) return;
 
-    try {
-      await createCommunityPost({
-        group_id: communityId,
-        title: postTitle,
-        content: postText,
-        week: 0,
-      }).unwrap();
+  try {
+    await createCommunityPost({
+      group_id: communityId,
+      title: postTitle,
+      content: postText,
+      week: 0,
+    }).unwrap();
 
-      toast.success("Post created successfully");
-      setPostTitle("");
-      setPostText("");
-      setHashtags("");
-    } catch (error: any) {
-      toast.error(
-        error?.data?.message || "Failed to create post. Please try again.",
-      );
+    toast.success("Post created successfully");
+
+    // CLEAR ALL FIELDS
+    setPostTitle("");
+    setPostText("");
+    setHashtags("");
+    setSelectedImages([]);
+    setImagePreviews([]);
+
+    // Clear file input value
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
-  };
+  } catch (error: any) {
+    toast.error(
+      error?.data?.message || "Failed to create post. Please try again.",
+    );
+  }
+};
+
 
   if (isLoading) {
     return <p className="text-center py-20">Loading group posts...</p>;
@@ -105,7 +119,9 @@ const GroupLandingPage = ({
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-800">{firstName} {lastName}</h3>
+                  <h3 className="font-bold text-gray-800">
+                    {firstName} {lastName}
+                  </h3>
                 </div>
               </div>
 
@@ -149,18 +165,69 @@ const GroupLandingPage = ({
                 placeholder="#pregnancy #firstTrimester #mentalHealth"
                 className="w-full text-sm outline-none border border-gray-200 rounded-lg px-3 py-2 placeholder-gray-300"
               />
+              {imagePreviews.length > 0 && (
+                <div className="mt-3 grid grid-cols-3 gap-3">
+                  {imagePreviews.map((preview, index) => (
+                    <div
+                      key={index}
+                      className="relative max-w-64 h-80 rounded-xl overflow-hidden border"
+                    >
+                      <Image
+                        src={preview}
+                        alt={`preview-${index}`}
+                        fill
+                        className="w-full h-full object-cover"
+                      />
+
+                      {/* remove single image */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setImagePreviews((prev) =>
+                            prev.filter((_, i) => i !== index),
+                          );
+                          setSelectedImages((prev) =>
+                            prev.filter((_, i) => i !== index),
+                          );
+                        }}
+                        className="absolute top-1 right-1 bg-black/70 text-white text-xs px-2 py-0.5 rounded"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* ACTION ICONS */}
               <div className="flex items-center gap-4 mt-2">
-                <button className="text-sky-400 hover:text-sky-600 transition-colors">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-sky-400 hover:text-sky-600 transition-colors"
+                >
                   <ImageIcon className="w-5 h-5" />
                 </button>
-                <button className="text-sky-400 hover:text-sky-600 transition-colors">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+
+                    setSelectedImages((prev) => [...prev, file]);
+                    setImagePreviews((prev) => [...prev, URL.createObjectURL(file)]);
+                  }}
+                />
+
+                {/* <button className="text-sky-400 hover:text-sky-600 transition-colors">
                   <Smile className="w-5 h-5" />
-                </button>
-                <button className="text-sky-400 hover:text-sky-600 transition-colors">
+                </button> */}
+                {/* <button className="text-sky-400 hover:text-sky-600 transition-colors">
                   <Paperclip className="w-5 h-5" />
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

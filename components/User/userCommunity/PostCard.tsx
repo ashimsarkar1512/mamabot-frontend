@@ -129,18 +129,11 @@ const PostCard = ({ post }: { post: any }) => {
     <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
       {/* Group Header Line */}
       <div className="flex justify-between items-center pb-3">
-        <h3 className="font-medium text-gray-700 text-lg">
+        {/* <h3 className="font-medium text-gray-700 text-lg">
           {post.groupName ? post.groupName : "Group name"}
-        </h3>
-        {/* api not integrated here ------------------------ */}
-        {/* {isSaved ? (
-          <BookmarkIcon className="w-5 h-5 text-[#229ECF] fill-[#229ECF]" />
-        ) : (
-          <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
-            <Plus className="w-4 h-4 mr-1" /> Join Group
-          </button>
-        )} */}
-        <button
+        </h3> */}
+
+        {/* <button
           onClick={handleJoinGroup}
           disabled={isJoining}
           className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors disabled:opacity-50"
@@ -151,7 +144,7 @@ const PostCard = ({ post }: { post: any }) => {
             <Plus className="w-4 h-4 mr-1" />
           )}
           Join Group
-        </button>
+        </button> */}
       </div>
 
       {/* User Info Row */}
@@ -177,10 +170,6 @@ const PostCard = ({ post }: { post: any }) => {
               <span className="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded-full font-medium border border-pink-100">
                 Week {post.week}
               </span>
-              {/* <button className="text-pink-500 text-xs font-medium flex items-center gap-1 hover:text-pink-600">
-                <UserPlus className="w-3 h-3" />
-                {post.user.isFollowing ? "Following" : "Follow"}
-              </button> */}
             </div>
             <span className="text-xs text-gray-400">
               {post.updated_at && !isNaN(new Date(post.updated_at).getTime())
@@ -191,31 +180,10 @@ const PostCard = ({ post }: { post: any }) => {
             </span>
           </div>
         </div>
-        {/* <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => {
-              if (!isSaved) {
-                handleSavePost();
-              }
-              setMenuOpen(false);
-            }}
-            className="w-full text-left px-4 py-4 rounded-full text-sm hover:bg-gray-100 cursor-pointer transition"
-          >
-            {isSaved ? (
-              <Bookmark
-                width={22}
-                height={22}
-                className="text-[#229ECF] fill-[#229ECF]"
-              />
-            ) : (
-              <Bookmark className="text-[#229ECF]" width={22} height={22} />
-            )}
-          </button>
-        </div> */}
-        <div className="relative">
-  <PostMenu post={post} />
-</div>
 
+        <div className="relative">
+          <PostMenu post={post} />
+        </div>
       </div>
 
       <div className="mb-4">
