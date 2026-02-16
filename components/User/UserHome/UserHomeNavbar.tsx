@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { useLogoutMutation } from "@/redux/features/api/auth/authApi";
+
 import Cookies from "js-cookie";
 import {
   useGetMyProfileQuery,
@@ -18,6 +18,7 @@ import {
 } from "@/redux/features/api/user/notification";
 import { toast } from "sonner";
 import { useGetWebSettingsQuery } from "@/redux/features/api/user/Footer";
+import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function UserHomeNavbar() {
   const [isMobileAuthOpen, setIsMobileAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
-  const [logout] = useLogoutMutation();
+  const [logout] = useLogOutMutation();
   const router = useRouter();
   const { data } = useGetUserDashboardQuery(undefined);
   const profile = data?.data;

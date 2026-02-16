@@ -20,10 +20,11 @@ import {
   useGetMyProfileQuery,
   useGetUserDashboardQuery,
 } from "@/redux/features/api/user/profile";
-import { useLogoutMutation } from "@/redux/features/api/auth/authApi";
+
 import Cookies from "js-cookie";
 import { AnimatePresence, motion } from "framer-motion";
 import { useGetWebSettingsQuery } from "@/redux/features/api/user/Footer";
+import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 
 type UserType = {
   name?: string;
@@ -40,7 +41,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { data } = useGetUserDashboardQuery(undefined);
-  const [logout] = useLogoutMutation();
+  const [logout] = useLogOutMutation();
   const { data: profileResponse } = useGetMyProfileQuery(undefined);
   console.log(profileResponse, "profile");
   const profileImage = profileResponse?.data;
