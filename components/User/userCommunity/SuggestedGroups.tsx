@@ -3,40 +3,39 @@ import {
   useGetCommunityGroupsQuery,
   useJoinCommunityGroupMutation,
 } from "@/redux/features/api/user/community";
-import { Users, Baby, Activity, CalendarHeart } from "lucide-react";
-const MOCK_GROUPS = [
-  {
-    id: 1,
-    name: "First Trimester (0-12 Weeks)",
-    members: "4,312",
-    active: "178",
-    iconColor: "text-sky-500",
-    bgColor: "bg-sky-100",
-    Icon: Baby,
-  },
-  {
-    id: 2,
-    name: "2nd Trimester (13-27 Weeks)",
-    members: "4,312",
-    active: "178",
-    iconColor: "text-pink-500",
-    bgColor: "bg-pink-100",
-    Icon: CalendarHeart,
-  },
-  {
-    id: 3,
-    name: "3rd Trimester (28-40 Weeks)",
-    members: "4,312",
-    active: "178",
-    iconColor: "text-blue-600",
-    bgColor: "bg-blue-100",
-    Icon: Activity,
-  },
-];
+import { Users, Baby } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 const SuggestedGroups = () => {
   const { data: communityGroups } = useGetCommunityGroupsQuery({});
   const [joinCommunityGroup] = useJoinCommunityGroupMutation();
+  const router = useRouter();
+  const handleCardClick = (group: any) => {
+    if (group.is_member) {
+      router.push(`/user-dashboard/community/${group.id}`);
+    } else {
+      toast.warning(
+        "This is a private group. Please join the group to see what's new there!",
+      );
+    }
+  };
 
+  const handleJoinLeave = async (e: React.MouseEvent, group: any) => {
+    e.stopPropagation();
+
+    try {
+      await joinCommunityGroup(group.id).unwrap();
+
+      if (group.is_member) {
+        toast.info(`You left ${group.name} group`);
+      } else {
+        toast.success(`You joined ${group.name} group`);
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
   return (
     <div className="mb-6 bg-sky-50/50 rounded-2xl  border-3 border-white! overflow-hidden">
       <div className="px-6 pt-6 pb-2 bg-[#E9F5FA] border-b border-white!">
@@ -55,7 +54,10 @@ const SuggestedGroups = () => {
         {communityGroups?.data?.map((group: any) => (
           <div
             key={group.id}
-            className="bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow"
+            onClick={() => handleCardClick(group)}
+            className={`bg-white p-2 md:p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer ${
+              !group.is_member ? "opacity-90" : ""
+            }`}
           >
             <div className="flex items-start gap-3">
               <div
@@ -78,21 +80,13 @@ const SuggestedGroups = () => {
                 </div>
               </div>
             </div>
-            {group.is_member ? (
-              <button
-                onClick={() => joinCommunityGroup(group.id)}
-                className="w-full py-1.5 rounded-lg border border-sky-200 text-sky-500 text-sm font-medium hover:bg-sky-50 transition-colors"
-              >
-                Leave Group
-              </button>
-            ) : (
-              <button
-                onClick={() => joinCommunityGroup(group.id)}
-                className="w-full py-1.5 rounded-lg border border-sky-200 text-sky-500 text-sm font-medium hover:bg-sky-50 transition-colors"
-              >
-                Join Group
-              </button>
-            )}
+
+            <button
+              onClick={(e) => handleJoinLeave(e, group)}
+              className="w-full py-1.5 rounded-lg border border-sky-200 text-sky-500 text-sm font-medium hover:bg-sky-50 transition-colors"
+            >
+              {group.is_member ? "Leave Group" : "Join Group"}
+            </button>
           </div>
         ))}
       </div>
