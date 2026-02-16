@@ -68,40 +68,53 @@
 // };
 
 
-
 import { NextRequest, NextResponse } from "next/server";
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // ===============================
-  // ✅ 1. Allow static files
-  // ===============================
+  // ====================================
+  // ✅ 1. Allow Static Files First
+  // ====================================
   if (
     pathname.startsWith("/_next") ||
-    pathname === "/favicon.ico"
+    pathname.startsWith("/favicon.ico") ||
+    pathname.match(/\.(png|jpg|jpeg|svg|gif|webp)$/)
   ) {
     return NextResponse.next();
   }
 
-  // ===============================
-  // 🔐 2. Site Gate Check
-  // ===============================
+  // ====================================
+  // 🔑 2. Get Cookies
+  // ====================================
   const siteAccess = req.cookies.get("site_access")?.value;
-
-  if (!siteAccess && !pathname.startsWith("/authenticate")) {
-    return NextResponse.redirect(new URL("/authenticate", req.url));
-  }
-
-  // ===============================
-  // 🔑 3. Get Auth Cookies
-  // ===============================
   const token = req.cookies.get("token")?.value;
   const role = req.cookies.get("role")?.value;
 
-  // ===============================
-  // 🚫 4. If Logged In → Block Auth Pages
-  // ===============================
+  // ====================================
+  // 🔓 3. Public Routes (Always Allowed)
+  // ====================================
+  const isPublicRoute =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/register") ||
+    pathname.startsWith("/forgot-password") ||
+    pathname.startsWith("/reset-password") ||
+    pathname.startsWith("/emailVerification") ||
+    pathname.startsWith("/verification") ||
+    pathname.startsWith("/paymentSuccess") ||
+    pathname.startsWith("/authenticate") ||
+    pathname.startsWith("/api");
+
+  // ====================================
+  // 🔐 4. Site Access Gate
+  // ====================================
+  if (!siteAccess && !isPublicRoute) {
+    return NextResponse.redirect(new URL("/authenticate", req.url));
+  }
+
+  // ====================================
+  // 🚫 5. If Logged In → Block Auth Pages
+  // ====================================
   if (
     token &&
     (
@@ -119,9 +132,9 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/user-dashboard", req.url));
   }
 
-  // ===============================
-  // ❌ 5. Not Logged In → Block Dashboards
-  // ===============================
+  // ====================================
+  // ❌ 6. Not Logged In → Block Dashboards
+  // ====================================
   if (
     (pathname.startsWith("/user-dashboard") ||
       pathname.startsWith("/admin-dashboard")) &&
@@ -130,9 +143,9 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // ===============================
-  // 🔒 6. Role Protection
-  // ===============================
+  // ====================================
+  // 🔒 7. Role Protection
+  // ====================================
   if (pathname.startsWith("/admin-dashboard") && role !== "Admin") {
     return NextResponse.redirect(new URL("/user-dashboard", req.url));
   }
@@ -141,28 +154,11 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/admin-dashboard", req.url));
   }
 
-  // ===============================
-  // ✅ 7. Allow Public Routes
-  // ===============================
-  if (
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/register") ||
-    pathname.startsWith("/forgot-password") ||
-    pathname.startsWith("/reset-password") ||
-    pathname.startsWith("/emailVerification") ||
-    pathname.startsWith("/verification") ||
-    pathname.startsWith("/paymentSuccess") ||
-    pathname.startsWith("/authenticate") ||
-    pathname.startsWith("/api")
-  ) {
-    return NextResponse.next();
-  }
-
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.svg$).*)",
+    "/((?!_next/static|_next/image|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.svg$|.*\\.webp$).*)",
   ],
 };
