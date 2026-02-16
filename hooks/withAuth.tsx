@@ -1,6 +1,8 @@
+"use client";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 interface WithAuthOptions {
   roles?: string[]; // If specified, user must have one of these roles

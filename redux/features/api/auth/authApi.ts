@@ -24,11 +24,11 @@ export const authApi = baseApi.injectEndpoints({
           const transformedUser: User = {
             _id: data.user._id,
             name: data.user.name,
-            phone: (data.user as { phone?: string }).phone || data.user.email,
+            phone: (data.user as any).phone || data.user.email,
             email: data.user.email,
-            roles: data.user.roles || ["USER"], // Use roles from API response
-            createdAt: data.user.createdAt || new Date().toISOString(),
-            updatedAt: data.user.updatedAt || new Date().toISOString(),
+            roles: (data.user.roles as ("ADMIN" | "USER")[]) || ["USER"],
+            createdAt: (data.user as any).createdAt || new Date().toISOString(),
+            updatedAt: (data.user as any).updatedAt || new Date().toISOString(),
           };
           dispatch(
             setCredentials({
@@ -55,11 +55,11 @@ export const authApi = baseApi.injectEndpoints({
           const transformedUser: User = {
             _id: data.user._id,
             name: data.user.name,
-            phone: (data.user as { phone?: string }).phone || data.user.email,
+            phone: (data.user as any).phone || data.user.email,
             email: data.user.email,
-            roles: data.user.roles || ["USER"], // Use roles from API response
-            createdAt: data.user.createdAt || new Date().toISOString(),
-            updatedAt: data.user.updatedAt || new Date().toISOString(),
+            roles: (data.user.roles as ("ADMIN" | "USER")[]) || ["USER"],
+            createdAt: (data.user as any).createdAt || new Date().toISOString(),
+            updatedAt: (data.user as any).updatedAt || new Date().toISOString(),
           };
           // Note: Registration response typically doesn't return an access token
           // In a real app, you might want to redirect to login after registration
@@ -75,3 +75,4 @@ export const authApi = baseApi.injectEndpoints({
 });
 
 export const { useLoginMutation, useRegisterMutation } = authApi;
+
