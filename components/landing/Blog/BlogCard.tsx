@@ -32,6 +32,12 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
     }
   };
 
+  const getImageUrl = (url: string | null) => {
+    if (!url) return "/placeholder.jpg";
+    if (url.startsWith("http")) return url;
+    return `https://api.mamabot.de/${url.startsWith("/") ? "" : "/"}${url}`;
+  };
+
   return (
     <div
       className={`group relative ${comfortaa.className} bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col`}
@@ -39,7 +45,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, categoryTitle }) => {
       {/* Image */}
       <div className="w-full h-40 md:h-80 overflow-hidden">
         <Image
-          src={post.thumb_img || "/placeholder.jpg"}
+          src={getImageUrl(post.thumb_img)}
           width={524}
           height={320}
           alt={post.title}

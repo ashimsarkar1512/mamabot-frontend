@@ -26,12 +26,18 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({
 }) => {
   const router = useRouter();
 
+  const getImageUrl = (url: string | null) => {
+    if (!url) return "/images/blog/blog-details.png";
+    if (url.startsWith("http")) return url;
+    return `https://api.mamabot.de/${url.startsWith("/") ? "" : "/"}${url}`;
+  };
+
   return (
     <div className={`${comfortaa.className} min-h-screen pt-18`}>
       {/* Hero Section */}
       <div className="relative w-full h-50 md:h-200 overflow-hidden">
         <Image
-          src={post.thumb_img || "/images/blog/blog-details.png"}
+          src={getImageUrl(post.thumb_img)}
           fill
           alt={post.title}
           className="object-cover w-full h-full"

@@ -51,6 +51,12 @@ export default function UserHomeDashboard() {
     router.push("/user-dashboard/profile");
   };
 
+  const getImageUrl = (url: string | null) => {
+    if (!url) return "/images/user/userarticle.png";
+    if (url.startsWith("http")) return url;
+    return `https://api.mamabot.de/${url.startsWith("/") ? "" : "/"}${url}`;
+  };
+
   return (
     <div className="min-h-screen mt-8">
       {/* ================= Header ================= */}
@@ -510,10 +516,7 @@ export default function UserHomeDashboard() {
                         {/* ================= Article Image ================= */}
                         <div className="relative w-full h-44 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-xl overflow-hidden bg-muted flex items-center justify-center">
                           <Image
-                            src={
-                              article.thumb_img ||
-                              "/images/user/userarticle.png"
-                            }
+                            src={getImageUrl(article.thumb_img)}
                             alt={article.title}
                             fill
                             priority
