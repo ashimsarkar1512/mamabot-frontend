@@ -63,6 +63,7 @@ export const baseApi = createApi({
     "WellnessActivities",
     "savedItems",
     "FooterPages",
+    "ReportPost",
   ],
   endpoints: () => ({}),
 });

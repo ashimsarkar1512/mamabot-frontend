@@ -26,28 +26,29 @@ import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/sa
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useShareCommunityPostMutation } from "@/redux/features/api/user/community";
+import PostMenu from "./PostMenu";
 
 const PostCard = ({ post }: { post: any }) => {
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  // const [isSaved, setIsSaved] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [savePost] = useSaveItemMutation();
-  const handleSavePost = async () => {
-    try {
-      await savePost({
-        item_type: "post",
-        item_id: post.id,
-      }).unwrap();
+  // const handleSavePost = async () => {
+  //   try {
+  //     await savePost({
+  //       item_type: "post",
+  //       item_id: post.id,
+  //     }).unwrap();
 
-      setIsSaved(true);
-      toast.success("Post saved successfully!");
-    } catch (error) {
-      console.error("Failed to save post", error);
-      toast.error("Failed to save post");
-    }
-  };
+  //     setIsSaved(true);
+  //     toast.success("Post saved successfully!");
+  //   } catch (error) {
+  //     console.error("Failed to save post", error);
+  //     toast.error("Failed to save post");
+  //   }
+  // };
 
   const formatNumber = (num: number) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num;
@@ -55,10 +56,14 @@ const PostCard = ({ post }: { post: any }) => {
 
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const [likeCommunityGroupPost, { isLoading: isLiking }] = useLikeCommunityGroupPostMutation();
-  const [joinCommunityGroup, { isLoading: isJoining }] = useJoinCommunityGroupMutation();
-  const [commentCommunityGroupPost, { isLoading: isCommenting }] = useCommentCommunityGroupPostMutation();
-  const [shareCommunityPost, { isLoading: isSharing }] = useShareCommunityPostMutation();
+  const [likeCommunityGroupPost, { isLoading: isLiking }] =
+    useLikeCommunityGroupPostMutation();
+  const [joinCommunityGroup, { isLoading: isJoining }] =
+    useJoinCommunityGroupMutation();
+  const [commentCommunityGroupPost, { isLoading: isCommenting }] =
+    useCommentCommunityGroupPostMutation();
+  const [shareCommunityPost, { isLoading: isSharing }] =
+    useShareCommunityPostMutation();
 
   const handleLike = async () => {
     try {
@@ -85,11 +90,11 @@ const PostCard = ({ post }: { post: any }) => {
         platform: "mamabot_group",
         group_id: post.group_id,
       }).unwrap();
-      
+
       // Also copy to clipboard for better UX
       const url = `${window.location.origin}/user-dashboard/community?post=${post.id}`;
       await navigator.clipboard.writeText(url);
-      
+
       toast.success("Post shared and link copied!");
     } catch (error) {
       toast.error("Failed to share post");
@@ -99,7 +104,10 @@ const PostCard = ({ post }: { post: any }) => {
   const handleCommentSubmit = async () => {
     if (!comment.trim()) return;
     try {
-      await commentCommunityGroupPost({ post_id: post.id, content: comment }).unwrap();
+      await commentCommunityGroupPost({
+        post_id: post.id,
+        content: comment,
+      }).unwrap();
       setComment("");
       toast.success("Comment added!");
     } catch (error) {
@@ -121,18 +129,11 @@ const PostCard = ({ post }: { post: any }) => {
     <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
       {/* Group Header Line */}
       <div className="flex justify-between items-center pb-3">
-        <h3 className="font-medium text-gray-700 text-lg">
+        {/* <h3 className="font-medium text-gray-700 text-lg">
           {post.groupName ? post.groupName : "Group name"}
-        </h3>
-        {/* api not integrated here ------------------------ */}
-        {/* {isSaved ? (
-          <BookmarkIcon className="w-5 h-5 text-[#229ECF] fill-[#229ECF]" />
-        ) : (
-          <button className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors">
-            <Plus className="w-4 h-4 mr-1" /> Join Group
-          </button>
-        )} */}
-        <button
+        </h3> */}
+
+        {/* <button
           onClick={handleJoinGroup}
           disabled={isJoining}
           className="flex items-center text-sky-500 text-sm font-medium hover:text-sky-600 transition-colors disabled:opacity-50"
@@ -143,7 +144,7 @@ const PostCard = ({ post }: { post: any }) => {
             <Plus className="w-4 h-4 mr-1" />
           )}
           Join Group
-        </button>
+        </button> */}
       </div>
 
       {/* User Info Row */}
@@ -169,10 +170,6 @@ const PostCard = ({ post }: { post: any }) => {
               <span className="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded-full font-medium border border-pink-100">
                 Week {post.week}
               </span>
-              {/* <button className="text-pink-500 text-xs font-medium flex items-center gap-1 hover:text-pink-600">
-                <UserPlus className="w-3 h-3" />
-                {post.user.isFollowing ? "Following" : "Follow"}
-              </button> */}
             </div>
             <span className="text-xs text-gray-400">
               {post.updated_at && !isNaN(new Date(post.updated_at).getTime())
@@ -183,65 +180,20 @@ const PostCard = ({ post }: { post: any }) => {
             </span>
           </div>
         </div>
-        <div className="relative" ref={menuRef}>
-          {/* <button
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <MoreVertical className="w-5 h-5" />
-          </button> */}
 
-          {/* {menuOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 z-20 overflow-hidden">
-               */}
-
-          <button
-            onClick={() => {
-              if (!isSaved) {
-                handleSavePost();
-              }
-              setMenuOpen(false);
-            }}
-            className="w-full text-left px-4 py-4 rounded-full text-sm hover:bg-gray-100 cursor-pointer transition"
-          >
-            {isSaved ? (
-              <Bookmark
-                width={22}
-                height={22}
-                className="text-[#229ECF] fill-[#229ECF]"
-              />
-            ) : (
-              <Bookmark className="text-[#229ECF]" width={22} height={22} />
-            )}
-          </button>
-
-          {/* <button
-                onClick={() => {
-                  setMenuOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition"
-              >
-                Hide Post
-              </button>
-              <button
-                onClick={() => {
-                  setMenuOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition"
-              >
-                Report
-              </button> */}
-          {/* </div>
-          )} */}
+        <div className="relative">
+          <PostMenu post={post} />
         </div>
       </div>
 
       <div className="mb-4">
         <h4 className="font-semibold text-gray-900 mb-2">{post.title}</h4>
         <p className="text-gray-600 text-sm leading-relaxed mb-2">
-          {showFullContent ? post.content : `${post.content.substring(0, 200)}${post.content.length > 200 ? "..." : ""}`}
+          {showFullContent
+            ? post.content
+            : `${post.content.substring(0, 200)}${post.content.length > 200 ? "..." : ""}`}
           {post.content.length > 200 && (
-            <span 
+            <span
               onClick={() => setShowFullContent(!showFullContent)}
               className="text-pink-500 font-medium cursor-pointer ml-1 hover:underline"
             >
@@ -305,19 +257,24 @@ const PostCard = ({ post }: { post: any }) => {
           onClick={handleLike}
           disabled={isLiking}
           className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors ${
-            post.is_liked ? "text-[#D82479]" : "text-gray-500 hover:text-gray-700"
+            post.is_liked
+              ? "text-[#D82479]"
+              : "text-gray-500 hover:text-gray-700"
           } disabled:opacity-50`}
         >
-          <Heart className={`w-4 h-4 ${post.is_liked ? "fill-current" : ""}`} /> 
+          <Heart className={`w-4 h-4 ${post.is_liked ? "fill-current" : ""}`} />
           Like
         </button>
-        <button 
+        <button
           onClick={() => setShowComments(!showComments)}
           className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors ${showComments ? "text-sky-500" : "text-gray-500 hover:text-gray-700"}`}
         >
-          <MessageSquare className={`w-4 h-4 ${showComments ? "fill-current" : ""}`} /> Comment
+          <MessageSquare
+            className={`w-4 h-4 ${showComments ? "fill-current" : ""}`}
+          />{" "}
+          Comment
         </button>
-        <button 
+        <button
           onClick={handleShare}
           disabled={isSharing}
           className={`flex-1 flex items-center justify-center gap-2 text-sm font-medium py-1 transition-colors text-gray-500 hover:text-gray-700 disabled:opacity-50`}
@@ -336,10 +293,16 @@ const PostCard = ({ post }: { post: any }) => {
         <div className="space-y-4 mb-4 mt-2">
           {post.comments && post.comments.length > 0 ? (
             post.comments.map((cmt: any) => (
-              <div key={cmt.id} className="flex gap-3 items-start p-3 bg-gray-50/80 rounded-xl border border-gray-100">
+              <div
+                key={cmt.id}
+                className="flex gap-3 items-start p-3 bg-gray-50/80 rounded-xl border border-gray-100"
+              >
                 <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200 shrink-0">
                   <Image
-                    src={cmt.user?.image || "https://i.pravatar.cc/150?u=" + cmt.user?.id}
+                    src={
+                      cmt.user?.image ||
+                      "https://i.pravatar.cc/150?u=" + cmt.user?.id
+                    }
                     alt={cmt.user?.first_name || "User"}
                     fill
                     className="object-cover"
@@ -351,8 +314,11 @@ const PostCard = ({ post }: { post: any }) => {
                       {cmt.user?.first_name} {cmt.user?.last_name || ""}
                     </span>
                     <span className="text-[10px] text-gray-400">
-                      {cmt.created_at && !isNaN(new Date(cmt.created_at).getTime())
-                        ? formatDistanceToNow(new Date(cmt.created_at), { addSuffix: true })
+                      {cmt.created_at &&
+                      !isNaN(new Date(cmt.created_at).getTime())
+                        ? formatDistanceToNow(new Date(cmt.created_at), {
+                            addSuffix: true,
+                          })
                         : "recently"}
                     </span>
                   </div>
