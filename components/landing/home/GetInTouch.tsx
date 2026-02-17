@@ -150,7 +150,7 @@ const GetInTouch = () => {
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-1 h-4 w-4"
+                  className=" h-4 w-4"
                 />
                 <label className="text-sm text-gray-600">
                   I have read and understood the{" "}
@@ -170,9 +170,9 @@ const GetInTouch = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl"
+                  className="flex gap-2 px-6 py-3 bg-primary text-white rounded-xl justify-center w-full"
                 >
-                  <Play size={18} />
+                  {/* <Play size={18} /> */}
                   {isLoading ? "Sending..." : "Send Message"}
                 </button>
               </div>

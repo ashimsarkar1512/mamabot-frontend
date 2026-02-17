@@ -48,6 +48,8 @@ export default function Navbar() {
   const { data: webSettingsData, isLoading: settingsLoading } =
     useGetWebSettingsQuery();
 
+    console.log(webSettingsData,"data")
+
   // Get logo URL
   const logoUrl = webSettingsData?.data?.logo || "/images/icon.png";
   // Derive authentication state from API data

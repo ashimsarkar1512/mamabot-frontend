@@ -23,7 +23,7 @@ export function Footer() {
   const settings = data.data;
   const pages = FooterPage?.data || [];
   return (
-    <div className="py-2 px-4 md:px-10 md:py-10 mt-5 md:mt-14 mx-0 md:mx-25 mb-10 rounded-xl bg-[#F5F5F5] shadow-xl  text-gray-900">
+    <div className="py-2 px-4 md:px-10 md:py-10 mt-5  mb-10 rounded-xl bg-[#F5F5F5] shadow-xl  text-gray-900 container mx-auto">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 ">
         <div>
           <Link href="/" className="flex items-center mb-2 cursor-pointer">
@@ -50,7 +50,7 @@ export function Footer() {
               {settings.site_name}
             </span>
           </Link>
-          <p className=" text-base sm:text-lg md:text-2xl text-muted-foreground">
+          <p className=" text-base pl-2 mt-4 text-muted-foreground">
             {settings.footer_description ||
               " AI-powered advice for expecting and new parents."}
           </p>
