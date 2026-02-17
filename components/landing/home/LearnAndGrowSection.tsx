@@ -84,6 +84,15 @@ export default function LearnAndGrow() {
               className="rounded-lg py-2 px-6"
             />
           </div>
+           <div className="absolute right-0 bottom-0 w-50 h-50 md:w-70 md:h-70 pointer-events-none select-none opacity-40 lg:opacity-100 py-10">
+            <Image
+              src="/images/home/articleBottom.png"
+              alt="Pregnancy Illustration"
+              width={250}
+              height={250}
+              className="object-contain object-bottom-right"
+            />
+          </div>
         </div>
       </div>
 

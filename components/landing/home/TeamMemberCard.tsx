@@ -63,7 +63,7 @@ interface TeamCardProps {
 
 const TeamCard = ({ member }: TeamCardProps) => {
   return (
-    <div className="bg-[#F9FAFB] rounded-2xl shadow-md px-6 py-8 text-center hover:shadow-lg transition">
+    <div className="bg-[#F9FAFB] border-2 !border-white rounded-2xl shadow-md px-6 py-8 text-center hover:shadow-lg transition">
       {/* Image */}
       <div className="flex justify-center mb-5">
         <div className="w-24 h-24 rounded-full overflow-hidden shadow">
