@@ -33,7 +33,7 @@ export default function LearnAndGrow() {
               src={featuredArticle.main_img || "/images/home/article.png"}
               alt={featuredArticle.title || "Pregnant woman"}
               fill
-              className="object-contain px-2 md:px-0 object-center"
+              className="object-cover object-center"
               priority
             />
           </div>
@@ -109,7 +109,7 @@ export default function LearnAndGrow() {
                 src={article.thumb_img || "/placeholder.svg"}
                 alt={article.title}
                 fill
-                className="object-cover w-full h-full px-2 md:px-0 transition-transform duration-300 hover:scale-105"
+                className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                 style={{ objectPosition: "center" }}
               />
             </div>
