@@ -3,13 +3,16 @@ import {
   useGetCommunityGroupsQuery,
   useJoinCommunityGroupMutation,
 } from "@/redux/features/api/user/community";
-import { Users, Baby } from "lucide-react";
+import { useState } from "react";
+import { Users, Baby, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import CreateGroupModal from "./CreateGroupModal";
 
 const SuggestedGroups = () => {
   const { data: communityGroups } = useGetCommunityGroupsQuery({});
   const [joinCommunityGroup] = useJoinCommunityGroupMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const handleCardClick = (group: any) => {
     if (group.is_member) {
@@ -39,15 +42,27 @@ const SuggestedGroups = () => {
   return (
     <div className="mb-6 bg-sky-50/50 rounded-2xl  border-3 border-white! overflow-hidden">
       <div className="px-6 pt-6 pb-2 bg-[#E9F5FA] border-b border-white!">
-        <div className="flex items-center gap-2 mb-1">
-          <Users className="w-5 h-5 text-sky-600" />
-          <h3 className="text-lg font-bold text-gray-800">
-            Suggested Community Groups
-          </h3>
+        <div className="flex items-center justify-between gap-4 mb-2">
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-sky-600" />
+            <h3 className="text-lg font-bold text-gray-800">
+              Suggested Community Groups
+            </h3>
+          </div>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#229ECF] text-white text-sm font-semibold shadow-md shadow-sky-100 hover:shadow-lg transition-all active:scale-95"
+          >
+            <Plus className="w-4 h-4" />
+            Create Group
+          </button>
         </div>
         <p className="text-sm text-gray-500 mb-4">
           Join groups based on your pregnancy stage
         </p>
+
+        
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 md:p-6 overflow-x-auto">
@@ -90,6 +105,10 @@ const SuggestedGroups = () => {
           </div>
         ))}
       </div>
+      <CreateGroupModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

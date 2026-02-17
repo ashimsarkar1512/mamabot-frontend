@@ -7,7 +7,11 @@ import Loading from "@/components/Loading";
 export default function PaymentSuccess() {
   const { data, isLoading, isError } = useSuccessPaymentQuery(undefined);
 
-  if (isLoading)<Loading/>
+  console.log(data,"payment")
+
+  if (isLoading || !data) {
+    return <Loading />;
+  }
 
   if (isError || !data?.success) {
     return (

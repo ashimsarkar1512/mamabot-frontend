@@ -27,6 +27,7 @@ import {
 import { useGetHydrationLogsQuery } from "@/redux/features/api/user/hydration";
 import { useRouter } from "next/navigation";
 import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
+import { useGetAiCountQuery } from "@/redux/features/api/user/aiCount";
 
 export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,8 +37,8 @@ export default function UserHomeDashboard() {
   const { data: user } = useGetUserDashboardQuery(undefined);
   const { data: hydration } = useGetHydrationLogsQuery(undefined);
   const { data: pregnancyArticle } = useGetArticlesQuery(undefined);
-  console.log(pregnancyArticle, "pregnancyArticle");
-  console.log(profile,"user")
+  const{data:aiCount}=useGetAiCountQuery(undefined)
+  console.log(aiCount,"ai count")
 
   const week = profile?.data?.current_week;
   const totalGlass = hydration?.data?.glass_count ?? 0;
@@ -437,10 +438,10 @@ export default function UserHomeDashboard() {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span>Queries</span>
-                  <span className="font-semibold">4/10</span>
+                  <span className="font-semibold">{aiCount?.data?.usage_display || "0/0"}</span>
                 </div>
                 <Progress
-                  value={40}
+                  value={aiCount?.data?.percentage || 0}
                   className="h-2"
                   indicatorClassName="bg-primary"
                 />

@@ -67,6 +67,11 @@ export default function UserHomeNavbar() {
       label: "Subscription & Plan",
       href: "/user-dashboard/subscription-plan",
     },
+    {
+      name: "myPost",
+      label:"My Posts",
+      href: "/user-dashboard/myPost",
+    },
     { name: "settings", label: "Settings", href: "/user-dashboard/settings" },
   ];
   // Mock state for demonstration (matching the image provided)
