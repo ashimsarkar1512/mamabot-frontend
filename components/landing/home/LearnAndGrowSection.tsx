@@ -33,7 +33,7 @@ export default function LearnAndGrow() {
               src={featuredArticle.main_img || "/images/home/article.png"}
               alt={featuredArticle.title || "Pregnant woman"}
               fill
-              className="object-cover px-2 md:px-0 object-center"
+              className="object-contain px-2 md:px-0 object-center"
               priority
             />
           </div>
