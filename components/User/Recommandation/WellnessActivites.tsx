@@ -14,6 +14,33 @@ interface Activity {
   duration: string;
 }
 
+const dummyActivities = [
+  {
+    id: 101,
+    title: "Prenatal Yoga Flow",
+    description: "Gentle yoga poses tailored for pregnancy to improve flexibility and reduce stress.",
+    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2070&auto=format&fit=crop",
+    video_url: "https://www.youtube.com/watch?v=B4kNiCwtl7M",
+    duration: "15"
+  },
+{
+  id: 102,
+  title: "Guided Meditation for Sleep",
+  description: "Relax your mind and body for a restful night's sleep with this guided session.",
+  image: "https://images.unsplash.com/photo-1544367563-1219114dbbb4?auto=format&fit=crop&w=1200&q=80",
+  video_url: "https://www.youtube.com/watch?v=aEqlQvczMJQ",
+  duration: "10"
+},
+  {
+    id: 103,
+    title: "Healthy Pregnancy Nutrition",
+    description: "Expert tips on maintaining a balanced diet for you and your baby's health.",
+    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=2053&auto=format&fit=crop",
+    video_url: "https://www.youtube.com/watch?v=7y9D6r6z7X8",
+    duration: "12"
+  }
+];
+
 export default function WellnessActivities() {
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
   const { data: wellness } = useGetWellnessActivitiesQuery(undefined);
@@ -32,7 +59,8 @@ export default function WellnessActivities() {
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
-  const activities = wellness?.data || [];
+  const realActivities = wellness?.data || [];
+  const activities = realActivities.length > 0 ? realActivities : dummyActivities;
 
   return (
     <section className="w-full py-12">

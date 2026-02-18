@@ -48,7 +48,11 @@ export default function ProductAndFoodRecommendationsPage({
   const { data: productData, isLoading: productsLoading } =
     useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
 
+  console.log(productData, "productData");
+
   const { data: foodData } = useGetPregnancyFoodWeeklyLogsQuery(undefined);
+
+  console.log(foodData, "foodData");
 
   const searchParams = useSearchParams();
   const foodSectionRef = useRef<HTMLDivElement>(null);
