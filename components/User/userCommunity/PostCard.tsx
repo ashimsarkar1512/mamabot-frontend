@@ -29,8 +29,9 @@ import { useShareCommunityPostMutation } from "@/redux/features/api/user/communi
 import PostMenu from "./PostMenu";
 
 import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
+import { comfortaa } from "@/app/fonts";
 
-const PostCard = ({ post }: { post: any }) => {
+const PostCard = ({ post, isMyPost }: { post: any; isMyPost?: boolean }) => {
   const { data: profile } = useGetMyProfileQuery(undefined);
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -135,7 +136,7 @@ const PostCard = ({ post }: { post: any }) => {
   }, []);
 
   return (
-    <div className="bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200">
+    <div className={`bg-gray-50/50 rounded-2xl p-4 md:p-6 mb-6 border border-gray-200 ${comfortaa.className}`}>
       {/* Group Header Line */}
       <div className="flex justify-between items-center pb-3">
         {/* <h3 className="font-medium text-gray-700 text-lg">
@@ -191,7 +192,7 @@ const PostCard = ({ post }: { post: any }) => {
         </div>
 
         <div className="relative">
-          <PostMenu post={post} />
+          <PostMenu post={post} isMyPost={isMyPost} />
         </div>
       </div>
 
@@ -229,20 +230,31 @@ const PostCard = ({ post }: { post: any }) => {
       {/* Images Grid */}
       {post.image_urls && post.image_urls.length > 0 ? (
         <div
-          className={`grid gap-2 mb-4 ${
+          className={`grid gap-2 md:gap-3 mb-4 ${
             post.image_urls.length === 1
-              ? "grid-cols-1 h-[400px] md:h-[500px]"
-              : "grid-cols-2 h-[300px] md:h-[400px]"
+              ? "grid-cols-1 h-[350px] md:h-[500px]"
+              : post.image_urls.length === 2
+                ? "grid-cols-2 h-[250px] md:h-[400px]"
+                : "grid-cols-2 lg:grid-cols-3"
           }`}
         >
           {post.image_urls.map((img: any, idx: any) => (
-            <div key={idx} className="relative h-full w-full bg-gray-100/80 rounded-xl overflow-hidden">
+            <div
+              key={idx}
+              className={`relative rounded-xl overflow-hidden group/image border border-gray-100 shadow-sm ${
+                post.image_urls.length > 2
+                  ? "h-48 md:h-64 lg:h-80 w-full"
+                  : "h-full w-full bg-gray-100/80"
+              }`}
+            >
               <Image
                 src={img}
                 alt="Post content"
                 fill
-                className="w-full h-full object-cover"
+                className="object-cover transition-transform duration-500 group-hover/image:scale-110"
               />
+              {/* Optional: Add a subtle overlay on hover */}
+              <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/5 transition-colors duration-300" />
             </div>
           ))}
         </div>
@@ -265,7 +277,7 @@ const PostCard = ({ post }: { post: any }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-between border-t border-b border-gray-200! py-2 mb-4">
+      <div className="flex items-center justify-between border-t border-b !border-gray-200 py-2 mb-4">
         <button
           onClick={handleLike}
           disabled={isLiking}
@@ -367,7 +379,7 @@ const PostCard = ({ post }: { post: any }) => {
             className="object-cover"
           />
         </div>
-        <div className="flex-1 flex flex-col bg-[#229ECF]/2 rounded-xl  px-3 py-2 gap-2 border border-[#229ECF]/30! duration-300 focus-within:border-[#229ECF]/50! focus-within:bg-white transition-all">
+        <div className="flex-1 flex flex-col bg-[#229ECF]/5 rounded-xl px-3 py-2 gap-2 border !border-[#229ECF]/30 duration-300 focus-within:!border-[#229ECF]/50 focus-within:bg-white transition-all shadow-sm">
           <textarea
             rows={3}
             placeholder="Comment your thoughts..."

@@ -4,12 +4,14 @@ import { useSaveItemMutation } from "@/redux/features/api/user/recommandetion/sa
 
 import { toast } from "sonner";
 import { useReportPostMutation } from "@/redux/features/api/user/Community/ReportPost";
+import EditPostModal from "./EditPostModal";
 
-const PostMenu = ({ post }: { post: any }) => {
+const PostMenu = ({ post, isMyPost }: { post: any; isMyPost?: boolean }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState(post.is_saved || false);
   const [isReported, setIsReported] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [reportReason, setReportReason] = useState<"spam"|"sexual_content"|"harassment"|"other">("spam");
   const [reportComment, setReportComment] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
@@ -29,16 +31,27 @@ const PostMenu = ({ post }: { post: any }) => {
 
   const handleSave = async () => {
     try {
-      await savePost({ item_type: "post", item_id: post.id }).unwrap();
+      const result = await savePost({ item_type: "post", item_id: post.id }).unwrap();
+      
+      // If the backend returns a specific message, use it. Otherwise, assume toggle based on local state.
+      const message = result?.message || (isSaved ? "Post unsaved!" : "Post saved!");
+      
       setIsSaved(!isSaved);
-      toast.success(isSaved ? "Post unsaved!" : "Post saved!");
+      toast.success(message);
       setMenuOpen(false);
-    } catch (err) {
-      toast.error("Failed to save post");
+    } catch (err: any) {
+      console.error("Failed to save post:", err);
+      toast.error(err?.data?.message || "Failed to save post");
     }
   };
 
+  const handleEdit = () => {
+    setEditModalOpen(true);
+    setMenuOpen(false);
+  };
+
   const handleReportSubmit = async () => {
+
     try {
       await reportPost({ post_id: post.id, report_cause: reportReason, comment: reportComment }).unwrap();
       setIsReported(true);
@@ -69,13 +82,23 @@ const PostMenu = ({ post }: { post: any }) => {
           >
             {isSaved ? "Unsave Post" : "Save Post"}
           </button>
-          <button
-            onClick={() => setReportModalOpen(true)}
-            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition ${isReported ? "text-gray-400 cursor-not-allowed" : ""}`}
-            disabled={isReported}
-          >
-            {isReported ? "Reported" : "Report Post"}
-          </button>
+          
+          {isMyPost ? (
+            <button
+              onClick={handleEdit}
+              className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition"
+            >
+              Edit Post
+            </button>
+          ) : (
+            <button
+              onClick={() => setReportModalOpen(true)}
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition ${isReported ? "text-gray-400 cursor-not-allowed" : ""}`}
+              disabled={isReported}
+            >
+              {isReported ? "Reported" : "Report Post"}
+            </button>
+          )}
         </div>
       )}
 
@@ -120,6 +143,12 @@ const PostMenu = ({ post }: { post: any }) => {
           </div>
         </div>
       )}
+
+      <EditPostModal
+        post={post}
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+      />
     </div>
   );
 };
