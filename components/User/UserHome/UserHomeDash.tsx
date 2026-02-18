@@ -85,7 +85,7 @@ export default function UserHomeDashboard() {
                   {user?.data.first_name}
                 </span>
                 , Welcome back to{" "}
-                <span className="text-pink-500 font-semibold">Mamabot!</span> 👋
+                <span className="text-pink-500 font-semibold">Mamabot!</span> <span className="wave-hand">👋</span>
               </h1>
               <p className="text-sm md:text-base text-slate-400 mt-1">
                 You are in week {week} of pregnancy
