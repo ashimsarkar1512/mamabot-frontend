@@ -1,0 +1,18 @@
+services:
+  admin:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        SITE_ACCESS_PASSWORD: ${SITE_ACCESS_PASSWORD}
+    image: arafat2025/nrw_client:latest
+    container_name: nrw_client
+    platform: linux/arm64
+
+    env_file:
+      - .env
+
+    ports:
+      - "3000:3000"
+
+    restart: unless-stopped

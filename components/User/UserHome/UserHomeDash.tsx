@@ -27,6 +27,7 @@ import {
 import { useGetHydrationLogsQuery } from "@/redux/features/api/user/hydration";
 import { useRouter } from "next/navigation";
 import { useGetArticlesQuery } from "@/redux/features/api/user/articles/pregnancyArticle";
+import { useGetAiCountQuery } from "@/redux/features/api/user/aiCount";
 
 export default function UserHomeDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,8 +37,8 @@ export default function UserHomeDashboard() {
   const { data: user } = useGetUserDashboardQuery(undefined);
   const { data: hydration } = useGetHydrationLogsQuery(undefined);
   const { data: pregnancyArticle } = useGetArticlesQuery(undefined);
-  console.log(pregnancyArticle, "pregnancyArticle");
-  console.log(profile,"user")
+  const{data:aiCount}=useGetAiCountQuery(undefined)
+  console.log(aiCount,"ai count")
 
   const week = profile?.data?.current_week;
   const totalGlass = hydration?.data?.glass_count ?? 0;
@@ -49,6 +50,12 @@ export default function UserHomeDashboard() {
 
   const handleClick = () => {
     router.push("/user-dashboard/profile");
+  };
+
+  const getImageUrl = (url: string | null) => {
+    if (!url) return "/images/user/userarticle.png";
+    if (url.startsWith("http")) return url;
+    return `https://api.mamabot.de/${url.startsWith("/") ? "" : "/"}${url}`;
   };
 
   return (
@@ -431,10 +438,10 @@ export default function UserHomeDashboard() {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span>Queries</span>
-                  <span className="font-semibold">4/10</span>
+                  <span className="font-semibold">{aiCount?.data?.usage_display || "0/0"}</span>
                 </div>
                 <Progress
-                  value={40}
+                  value={aiCount?.data?.percentage || 0}
                   className="h-2"
                   indicatorClassName="bg-primary"
                 />
@@ -510,10 +517,7 @@ export default function UserHomeDashboard() {
                         {/* ================= Article Image ================= */}
                         <div className="relative w-full h-44 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-xl overflow-hidden bg-muted flex items-center justify-center">
                           <Image
-                            src={
-                              article.thumb_img ||
-                              "/images/user/userarticle.png"
-                            }
+                            src={getImageUrl(article.thumb_img)}
                             alt={article.title}
                             fill
                             priority

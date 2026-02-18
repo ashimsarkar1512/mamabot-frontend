@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
+
 import Cookies from "js-cookie";
 import {
   useGetMyProfileQuery,
@@ -18,6 +18,7 @@ import {
 } from "@/redux/features/api/user/notification";
 import { toast } from "sonner";
 import { useGetWebSettingsQuery } from "@/redux/features/api/user/Footer";
+import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 
 export default function UserHomeNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -65,6 +66,11 @@ export default function UserHomeNavbar() {
       name: "subscription",
       label: "Subscription & Plan",
       href: "/user-dashboard/subscription-plan",
+    },
+    {
+      name: "myPost",
+      label:"My Posts",
+      href: "/user-dashboard/myPost",
     },
     { name: "settings", label: "Settings", href: "/user-dashboard/settings" },
   ];

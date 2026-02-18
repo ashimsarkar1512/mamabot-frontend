@@ -33,6 +33,8 @@ export default function SingleArticlePage() {
     error,
   } = useGetArticleByIdQuery(articleId);
 
+  console.log(articleData, "articleData");
+
   const { data: pregnancyArticle } = useGetArticlesQuery(undefined);
 
   if (isLoading) return <Loading />;

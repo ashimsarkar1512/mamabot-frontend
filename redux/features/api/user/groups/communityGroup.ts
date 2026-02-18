@@ -1,6 +1,5 @@
 import { baseApi } from "../../baseApi";
 
-
 const communityGroupsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET all community groups
@@ -10,6 +9,15 @@ const communityGroupsApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["CommunityGroups"],
+    }),
+
+    createCommunityGroup: builder.mutation({
+      query: (body: { name: string; description: string; stage: string }) => ({
+        url: "/community-groups",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["CommunityGroups"],
     }),
 
     // POST join community group
@@ -28,6 +36,7 @@ const communityGroupsApi = baseApi.injectEndpoints({
 export const {
   useGetGroupQuery,
   useJoinGroupMutation,
+  useCreateCommunityGroupMutation,
 } = communityGroupsApi;
 
 export default communityGroupsApi;

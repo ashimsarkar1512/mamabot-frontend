@@ -28,7 +28,10 @@ import { Loader2 } from "lucide-react";
 import { useShareCommunityPostMutation } from "@/redux/features/api/user/community";
 import PostMenu from "./PostMenu";
 
+import { useGetMyProfileQuery } from "@/redux/features/api/user/profile";
+
 const PostCard = ({ post }: { post: any }) => {
+  const { data: profile } = useGetMyProfileQuery(undefined);
   const [comment, setComment] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   // const [isSaved, setIsSaved] = useState(false);
@@ -85,19 +88,25 @@ const PostCard = ({ post }: { post: any }) => {
 
   const handleShare = async () => {
     try {
+      // API call to record the share
       await shareCommunityPost({
         post_id: post.id,
         platform: "mamabot_group",
-        group_id: post.group_id,
+        group_id: post.group_id || 0, // Fallback if group_id is missing
       }).unwrap();
 
-      // Also copy to clipboard for better UX
-      const url = `${window.location.origin}/user-dashboard/community?post=${post.id}`;
-      await navigator.clipboard.writeText(url);
-
-      toast.success("Post shared and link copied!");
+      // Handle clipboard separately so it doesn't break the whole function
+      try {
+        const url = `${window.location.origin}/user-dashboard/community?post=${post.id}`;
+        await navigator.clipboard.writeText(url);
+        toast.success("Post shared and link copied!");
+      } catch (clipboardError) {
+        console.error("Clipboard copy failed", clipboardError);
+        toast.success("Post shared successfully!"); // Still success even if only clipboard failed
+      }
     } catch (error) {
-      toast.error("Failed to share post");
+      console.error("Failed to share post", error);
+      toast.error("Failed to share post. Please try again.");
     }
   };
 
@@ -153,9 +162,9 @@ const PostCard = ({ post }: { post: any }) => {
           <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-200">
             <Image
               src={
-                post.user?.image
-                  ? post.user.image
-                  : "https://i.pravatar.cc/150?u=sarah"
+                post.user?.profile?.image ||
+                post.user?.image ||
+                "https://i.pravatar.cc/150?u=" + (post.user?.id || post.user_id)
               }
               alt={post.user?.first_name ?? "User"}
               fill
@@ -168,7 +177,7 @@ const PostCard = ({ post }: { post: any }) => {
                 {post.user?.first_name ?? "User"} {post.user?.last_name ?? ""}
               </span>
               <span className="bg-pink-50 text-pink-600 text-xs px-2 py-0.5 rounded-full font-medium border border-pink-100">
-                Week {post.week}
+              {post.role_label}
               </span>
             </div>
             <span className="text-xs text-gray-400">
@@ -220,15 +229,19 @@ const PostCard = ({ post }: { post: any }) => {
       {/* Images Grid */}
       {post.image_urls && post.image_urls.length > 0 ? (
         <div
-          className={`grid gap-2 mb-4 rounded-xl overflow-hidden ${post.image_urls.length > 1 ? "grid-cols-2 h-64" : "grid-cols-1 h-72"}`}
+          className={`grid gap-2 mb-4 ${
+            post.image_urls.length === 1
+              ? "grid-cols-1 h-[400px] md:h-[500px]"
+              : "grid-cols-2 h-[300px] md:h-[400px]"
+          }`}
         >
           {post.image_urls.map((img: any, idx: any) => (
-            <div key={idx} className="relative h-full w-full">
+            <div key={idx} className="relative h-full w-full bg-gray-100/80 rounded-xl overflow-hidden">
               <Image
                 src={img}
                 alt="Post content"
                 fill
-                className="object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
           ))}
@@ -300,6 +313,7 @@ const PostCard = ({ post }: { post: any }) => {
                 <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200 shrink-0">
                   <Image
                     src={
+                      cmt.user?.profile?.image ||
                       cmt.user?.image ||
                       "https://i.pravatar.cc/150?u=" + cmt.user?.id
                     }
@@ -310,9 +324,16 @@ const PostCard = ({ post }: { post: any }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
-                    <span className="text-sm font-semibold text-gray-800">
-                      {cmt.user?.first_name} {cmt.user?.last_name || ""}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-gray-800">
+                        {cmt.user?.first_name} {cmt.user?.last_name || ""}
+                      </span>
+                      {(cmt.role_label || cmt.user?.role_label) && (
+                        <span className="bg-pink-50 text-pink-600 text-[10px] px-1.5 py-0.5 rounded-full font-medium border border-pink-100">
+                          {cmt.role_label || cmt.user?.role_label}
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[10px] text-gray-400">
                       {cmt.created_at &&
                       !isNaN(new Date(cmt.created_at).getTime())
@@ -339,9 +360,8 @@ const PostCard = ({ post }: { post: any }) => {
       {/* Comment Input */}
       <div className="flex gap-3">
         <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden shrink-0 relative">
-          {/* Current User Avatar Placeholder */}
           <Image
-            src="https://i.pravatar.cc/150?u=me"
+            src={profile?.data?.image || "/images/avatar.png"}
             alt="Me"
             fill
             className="object-cover"

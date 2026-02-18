@@ -104,7 +104,7 @@ export const communityPostApi = baseApi.injectEndpoints({
     /* ---------- CREATE POST ---------- */
     createCommunityPost: builder.mutation<
       { success: boolean; message: string; data: CommunityPost },
-      CreateCommunityPostPayload
+      FormData
     >({
       query: (body) => ({
         url: "/community/posts",
