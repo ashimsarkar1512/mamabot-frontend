@@ -57,7 +57,7 @@ export default function PricingPart() {
     }
   };
   return (
-    <div className="py-6 px-4">
+    <div id="pricing" className="py-6 px-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl md:text-[32px] font-semibold ">

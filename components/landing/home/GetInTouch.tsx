@@ -153,14 +153,7 @@ const GetInTouch = () => {
                   className=" h-4 w-4"
                 />
                 <label className="text-sm text-gray-600">
-                  I have read and understood the{" "}
-                  <a
-                    href="/terms-and-conditions"
-                    target="_blank"
-                    className="text-primary underline"
-                  >
-                    Terms & Conditions
-                  </a>{" "}
+                  I have read and understood the Terms of Services {" "}
                   <span className="italic">(Optional)</span>
                 </label>
               </div>

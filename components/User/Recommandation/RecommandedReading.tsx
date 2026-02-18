@@ -17,7 +17,7 @@ interface Article {
 }
 
 interface CommunityRecommendationsProps {
- profile?: IProfileResponse;
+  profile?: IProfileResponse;
 }
 
 const placeholderImage =
@@ -25,7 +25,7 @@ const placeholderImage =
 
 export default function RecommendedReading({
   profile,
-}: CommunityRecommendationsProps){
+}: CommunityRecommendationsProps) {
   const [showAll, setShowAll] = useState(false);
   const { data } = useGetArticlesQuery(undefined);
 
@@ -42,7 +42,7 @@ export default function RecommendedReading({
 
   const displayedArticles = showAll ? articles : articles.slice(0, 3);
 
-  const week=profile?.data?.current_week
+  const week = profile?.data?.current_week;
 
   return (
     <section className="py-12">
@@ -67,36 +67,40 @@ export default function RecommendedReading({
           {displayedArticles.map((article) => (
             <div
               key={article.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 transition"
+              className="bg-white flex flex-col  justify-between rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 transition"
             >
-              {/* Image */}
-              <div className="relative w-full aspect-video">
-                <Image
-                  src={article.image || placeholderImage}
-                  alt={article.title}
-                  fill
-                  className="object-cover brightness-90"
-                />
+              <div>
+                {/* Image */}
+                <div className="relative w-full aspect-video">
+                  <Image
+                    src={article.image || placeholderImage}
+                    alt={article.title}
+                    fill
+                    className="object-cover brightness-90"
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="flex flex-col justify-between p-4">
+                  <h3 className="font-semibold text-lg mb-1 line-clamp-2">
+                    {article.title}
+                  </h3>
+                  <span className="inline-block bg-pink-100 text-pink-700 text-xs w-fit font-semibold px-2.5 py-0.5 rounded mb-2">
+                    {article.timeToRead}
+                  </span>
+                  <p className="text-sm text-gray-600 line-clamp-3">
+                    {article.description}
+                  </p>
+                </div>
               </div>
 
-              {/* Content */}
               <div className="p-4">
-                <h3 className="font-semibold text-lg mb-1 line-clamp-2">
-                  {article.title}
-                </h3>
-                <span className="inline-block bg-pink-100 text-pink-700 text-xs font-semibold px-2.5 py-0.5 rounded mb-2">
-                  {article.timeToRead}
-                </span>
-                <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-                  {article.description}
-                </p>
-
                 <Link
-    href={`/user-dashboard/articles/${article.id}`}
-    className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2.5 rounded-md flex items-center justify-center gap-2 font-semibold transition cursor-pointer"
-  >
-    📖 Read Now
-  </Link>
+                  href={`/user-dashboard/articles/${article.id}`}
+                  className="w-full mt-auto bg-cyan-500 hover:bg-cyan-600 text-white py-2.5 rounded-md flex items-center justify-center gap-2 font-semibold transition cursor-pointer"
+                >
+                  📖 Read Now
+                </Link>
               </div>
             </div>
           ))}
