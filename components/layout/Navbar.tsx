@@ -49,7 +49,7 @@ export default function Navbar() {
   const { data: webSettingsData, isLoading: settingsLoading } =
     useGetWebSettingsQuery();
 
-    console.log(webSettingsData,"data")
+  console.log(webSettingsData, "data");
 
   // Get logo URL
   const logoUrl = webSettingsData?.data?.logo || "/images/icon.png";
@@ -79,13 +79,13 @@ export default function Navbar() {
   };
 
   const menuItems = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Blog", href: "#blog" },
-    { label: "Community", href: "#community" },
-    { label: "Service", href: "#service" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Newsletter", href: "#newsletter" },
+    { label: "Home", href: "/#home" },
+    { label: "About", href: "/#about" },
+    { label: "Blog", href: "/#blog" },
+    { label: "Community", href: "/#community" },
+    { label: "Service", href: "/#service" },
+    { label: "Pricing", href: "/#pricing" },
+    { label: "Newsletter", href: "/#newsletter" },
   ];
 
   useEffect(() => {
