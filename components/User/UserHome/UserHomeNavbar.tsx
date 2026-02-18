@@ -1,6 +1,16 @@
 "use client";
 
-import { Menu, X, Bell, BookOpen } from "lucide-react";
+import {
+  Menu,
+  X,
+  Bell,
+  BookOpen,
+  User,
+  SubscriptIcon,
+  Clipboard,
+  Settings2,
+  LogOutIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
@@ -55,7 +65,12 @@ export default function UserHomeNavbar() {
     { label: "Contact Us", href: "/user-dashboard/contact-us" },
   ];
   const links = [
-    { name: "profile", label: "My Profile", href: "/user-dashboard/profile" },
+    {
+      name: "profile",
+      label: "My Profile",
+      href: "/user-dashboard/profile",
+      icon: <User size={18} />,
+    },
     {
       name: "saved",
       label: "Saved Recommends",
@@ -66,13 +81,20 @@ export default function UserHomeNavbar() {
       name: "subscription",
       label: "Subscription & Plan",
       href: "/user-dashboard/subscription-plan",
+      icon: <SubscriptIcon size={18} />,
     },
     {
       name: "myPost",
-      label:"My Posts",
+      label: "My Posts",
       href: "/user-dashboard/myPost",
+      icon: <Clipboard size={18} />,
     },
-    { name: "settings", label: "Settings", href: "/user-dashboard/settings" },
+    {
+      name: "settings",
+      label: "Settings",
+      href: "/user-dashboard/settings",
+      icon: <Settings2 size={18} />,
+    },
   ];
   // Mock state for demonstration (matching the image provided)
   const [isAuthenticated] = useState(true);
@@ -254,7 +276,7 @@ export default function UserHomeNavbar() {
                           <button
                             onClick={handleLogout}
                             className="cursor-pointer flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
-                          >
+                          ><LogOutIcon size={18} />
                             Logout
                           </button>
                         </div>
@@ -427,6 +449,7 @@ export default function UserHomeNavbar() {
                           }}
                           className="cursor-pointer flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
                         >
+                          <LogOutIcon size={18} />
                           Logout
                         </button>
                       </motion.div>
