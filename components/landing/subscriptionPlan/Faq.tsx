@@ -1,36 +1,35 @@
 "use client";
 
+import { useGetFaqsQuery } from "@/redux/features/api/user/Faq";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-const faqs = [
-  {
-    question: "Can I cancel anytime?",
-    answer:
-      "Yes, you can cancel your subscription at any time from your account settings. There are no long-term commitments.",
-  },
-  {
-    question: "What happens if I switch devices?",
-    answer:
-      "Your account is cloud-based, so you can access Mamabot from any device by logging in with your credentials.",
-  },
-  {
-    question: "Do I lose access if I downgrade?",
-    answer:
-      "If you downgrade, you’ll retain access to features included in your new plan. Premium features will be disabled.",
-  },
-  {
-    question: "Is Mamabot Premium medical advice?",
-    answer:
-      "No. Mamabot provides informational support only and does not replace professional medical advice.",
-  },
-];
 const Faq = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const toggle = (index: number) => {
+  const { data, isLoading, isError } = useGetFaqsQuery();
+
+  const faqs = data?.data?.filter((faq) => faq.is_active === 1) || [];
+
+ const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
+  if (isLoading) {
+    return (
+      <section className="py-10 text-center text-gray-500">
+        Loading FAQs...
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="py-10 text-center text-red-500">
+        Failed to load FAQs
+      </section>
+    );
+  }
   return (
     <section id="faq" className="w-full py-3 md:py-6 scroll-mt-5">
       <div className="mx-auto">
@@ -40,7 +39,7 @@ const Faq = () => {
           </h2>
         </div>
 
-        <div className="mb-5 md:mb-14 h-[2px] w-full mx-auto bg-[#BAE1F0] " />
+        <div className="mb-5 md:mb-14 h-0.5 w-full mx-auto bg-[#BAE1F0] " />
 
         <div className="space-y-4 max-w-5xl mx-auto">
           {faqs.map((faq, index) => (
