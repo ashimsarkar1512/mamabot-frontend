@@ -130,7 +130,7 @@ export default function ProductAndFoodRecommendationsPage({
                 (product: Product, index: number) => (
                   <div
                     key={product.id || index}
-                    className="group rounded-2xl border bg-white shadow-sm hover:shadow-md transition overflow-hidden"
+                    className="flex flex-col h-full group rounded-2xl border bg-white shadow-sm hover:shadow-md transition overflow-hidden"
                   >
                     <div className="relative h-34 md:h-68 w-full">
                       <Image
@@ -149,7 +149,7 @@ export default function ProductAndFoodRecommendationsPage({
                       />
                     </div>
 
-                    <div className="p-5 flex flex-col">
+                    <div className="p-5 flex flex-col flex-1">
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="font-semibold text-[#229ECF] text-lg">
                           {product.title}

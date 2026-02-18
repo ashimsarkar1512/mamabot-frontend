@@ -11,7 +11,10 @@ import {
   LocationEdit,
 } from "lucide-react";
 import Image from "next/image";
-import { useGetCommunityPostsQuery } from "@/redux/features/api/user/community";
+import { 
+  useGetCommunityPostsQuery,
+  useGetCommunityGroupsQuery 
+} from "@/redux/features/api/user/community";
 import PostCard from "@/components/User/userCommunity/PostCard";
 import { comfortaa } from "@/app/fonts";
 import { useCreateCommunityPostMutation } from "@/redux/features/api/user/Community/CommunityPost";
@@ -30,16 +33,17 @@ const GroupLandingPage = ({
   const firstName = user?.first_name;
   const lastName = user?.last_name;
   const profileImage = user?.profile?.image;
-  const { data: postsRes, isLoading } = useGetCommunityPostsQuery({});
+  const { data: groupsRes, isLoading: isGroupsLoading, error: groupsError } = useGetCommunityGroupsQuery({});
+  const groups = groupsRes?.data || [];
+  const group = groups.find((g: any) => g.id.toString() === communityId.toString());
+
+  const { data: postsRes, isLoading: isPostsLoading } = useGetCommunityPostsQuery({});
   const posts = postsRes?.data || [];
 
   // Filter posts for this group
   const groupPosts = posts.filter(
     (post: any) => post.group_id.toString() === communityId.toString(),
   );
-
-  // Get group info from first post
-  const group = groupPosts?.[0]?.group;
 
   const [postTitle, setPostTitle] = useState("");
   const [hashtags, setHashtags] = useState("");
@@ -52,43 +56,53 @@ const GroupLandingPage = ({
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const handleCreatePost = async () => {
-  if (!postTitle || !postText) return;
+    if (!postTitle || !postText) return;
 
-  try {
-    await createCommunityPost({
-      group_id: communityId,
-      title: postTitle,
-      content: postText,
-      week: 0,
-    }).unwrap();
+    try {
+      const formData = new FormData();
+      formData.append("group_id", communityId.toString());
+      formData.append("title", postTitle);
+      formData.append("content", postText);
+      formData.append("week", "0");
 
-    toast.success("Post created successfully");
+      // Append all selected images
+      selectedImages.forEach((image) => {
+        formData.append("images[]", image);
+      });
 
-    // CLEAR ALL FIELDS
-    setPostTitle("");
-    setPostText("");
-    setHashtags("");
-    setSelectedImages([]);
-    setImagePreviews([]);
+      await createCommunityPost(formData).unwrap();
 
-    // Clear file input value
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      toast.success("Post created successfully");
+
+      // CLEAR ALL FIELDS
+      setPostTitle("");
+      setPostText("");
+      setHashtags("");
+      setSelectedImages([]);
+      setImagePreviews([]);
+
+      // Clear file input value
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.message || "Failed to create post. Please try again.",
+      );
     }
-  } catch (error: any) {
-    toast.error(
-      error?.data?.message || "Failed to create post. Please try again.",
+  };
+
+
+  if (isGroupsLoading || isPostsLoading) {
+    return <p className="text-center py-20">Loading group details...</p>;
+  }
+
+  if (!group || groupsError) {
+    return (
+      <p className="text-center py-20 font-bold text-red-500">
+        {groupsError ? "Error loading groups. Please try again later." : "Group not found or you don't have access."}
+      </p>
     );
-  }
-};
-
-
-  if (isLoading) {
-    return <p className="text-center py-20">Loading group posts...</p>;
-  }
-
-  if (!group) {
-    return <p className="text-center py-20">Group not found</p>;
   }
 
   return (

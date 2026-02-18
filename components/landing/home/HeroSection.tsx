@@ -4,7 +4,6 @@ import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import Cookies from "js-cookie";
 export default function HeroSection() {
   const router = useRouter();

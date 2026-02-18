@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       "nrw.inkleinelevators.com",
       "images-na.ssl-images-amazon.com",
       "m.media-amazon.com",
+      "api.mamabot.de",
     ],
     remotePatterns: [
       {
@@ -31,8 +32,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.media-amazon.com",
       },
+      {
+  protocol: "https",
+  hostname: "api.mamabot.de",
+}
+
     ],
   },
+   output: "standalone",
 };
 
 export default nextConfig;
