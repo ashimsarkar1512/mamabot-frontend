@@ -277,7 +277,7 @@ export default function UserHomeNavbar() {
                             onClick={handleLogout}
                             className="cursor-pointer flex w-full items-center gap-3 px-4 py-4 text-[15px] font-bold text-red-500 hover:bg-red-50/50 rounded-2xl transition-colors mt-2"
                           ><LogOutIcon size={18} />
-                            Logout
+                            LogOut
                           </button>
                         </div>
                       </motion.div>
