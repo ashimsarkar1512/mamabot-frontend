@@ -152,6 +152,19 @@ export const communityPostApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Community"],
     }),
+
+    /* ---------- UPDATE POST ---------- */
+    updateCommunityPost: builder.mutation<
+      { success: boolean; message: string; data: CommunityPost },
+      FormData
+    >({
+      query: (body) => ({
+        url: "/community/posts",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Community"],
+    }),
   }),
 });
 
@@ -161,4 +174,5 @@ export const {
   useLikeCommunityPostMutation,
   useCommentCommunityPostMutation,
   useShareCommunityPostMutation,
+  useUpdateCommunityPostMutation,
 } = communityPostApi;

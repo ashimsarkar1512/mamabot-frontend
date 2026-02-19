@@ -13,6 +13,7 @@ import MessageBubble from "./MessageBubble";
 import ChatBotIcon from "@/public/images/icon.png";
 import Image from "next/image";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function ChatArea({ store }: any) {
   const chat = store.activeChat;
@@ -68,6 +69,7 @@ function LandingPage({ store, chat }: any) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
@@ -78,7 +80,10 @@ function LandingPage({ store, chat }: any) {
 
     if (!chat) {
       const newChatId = store.createChat(null);
-      store.sendMessage(inputValue, files, { chatId: newChatId, projectId: null });
+      store.sendMessage(inputValue, files, {
+        chatId: newChatId,
+        projectId: null,
+      });
       setInputValue("");
       setSelectedImage(null);
       setSelectedFile(null);
@@ -273,7 +278,13 @@ function LandingPage({ store, chat }: any) {
       </div>
 
       {/* Upgrade Pro Tab */}
-      <div className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-pink-500 text-white py-4 px-1 rounded-l-md writing-mode-vertical cursor-pointer flex flex-col items-center gap-2">
+      <div
+        onClick={() => router.push("/user-dashboard/subscription-plan#pricing")}
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 
+             bg-pink-500 text-white py-4 px-1 rounded-l-md 
+             writing-mode-vertical cursor-pointer 
+             flex flex-col items-center gap-2 hover:bg-pink-600"
+      >
         <span
           className="block transform -rotate-180"
           style={{ writingMode: "vertical-rl" }}
@@ -281,10 +292,7 @@ function LandingPage({ store, chat }: any) {
           Upgrade Pro
         </span>
 
-        <ChessQueen
-          className="w-4 h-4 text-yellow-500 block transform -rotate-90"
-          style={{ writingMode: "vertical-rl" }}
-        />
+        <ChessQueen className="w-4 h-4 text-yellow-500 block transform -rotate-90" />
       </div>
     </div>
   );

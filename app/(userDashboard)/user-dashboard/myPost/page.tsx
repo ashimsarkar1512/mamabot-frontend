@@ -28,7 +28,7 @@ export default function MyPost() {
           </div>
         ) : (
           myPosts?.data?.map((post: any) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post.id} post={post} isMyPost={true} />
           ))
         )}
       </div>

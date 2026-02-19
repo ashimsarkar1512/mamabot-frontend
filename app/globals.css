@@ -387,3 +387,19 @@ html {
   transform-origin: 70% 70%;
   animation: wave 2s infinite;
 }
+
+@keyframes floatY {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.float-y {
+  animation: floatY 4s ease-in-out infinite;
+}

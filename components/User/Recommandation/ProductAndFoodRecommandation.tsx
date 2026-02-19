@@ -42,13 +42,26 @@ export default function ProductAndFoodRecommendationsPage({
 
   const userInfo = useSelector((state: RootState) => state.auth.userFullInfo);
   const { data: profile } = useGetMyProfileQuery(undefined);
+  console.log(profile,"profile ")
 
   const week = profile?.data?.current_week;
 
   const { data: productData, isLoading: productsLoading } =
     useGetPregnancyProductsByWeekQuery(week!, { skip: !week });
 
-  const { data: foodData } = useGetPregnancyFoodWeeklyLogsQuery(undefined);
+  console.log(productData, "productData");
+
+  const { data: foodData, isLoading: foodLoading } =
+    useGetPregnancyFoodWeeklyLogsQuery(
+      {
+        pregnancy_week: profile?.data?.current_week,
+        dietary_preference:
+          profile?.data?.dietary_preferences?.toLowerCase() || "",
+      },
+      { skip: !profile?.data?.current_week },
+    );
+
+  console.log(foodData, "foodData");
 
   const searchParams = useSearchParams();
   const foodSectionRef = useRef<HTMLDivElement>(null);
@@ -81,10 +94,10 @@ export default function ProductAndFoodRecommendationsPage({
 
   // Extract today's food items from API
   const getTodaysFoodItems = (): FoodItem[] => {
-    if (!foodData?.data?.length) return [];
+    if (!foodData?.data) return [];
     const todayIndex = new Date().getDay(); // 0-6 (Sun-Sat)
     const currentDay = todayIndex === 0 ? 7 : todayIndex;
-    const weeklyLogs = foodData.data[0]?.daily_plan || [];
+    const weeklyLogs = foodData.data.daily_plan || [];
     const todaysPlan = weeklyLogs.find((d: any) => d.day === currentDay);
     return todaysPlan?.items || [];
   };
@@ -206,51 +219,113 @@ export default function ProductAndFoodRecommendationsPage({
 
       {/* Food Section */}
       {(active === "all" || active === "nutrition") && (
-        <section className="" ref={foodSectionRef}>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 p-5 rounded-t-xl bg-white">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl sm:text-4xl">🥗</span>
+        <section
+          className="bg-[#F8F9FD] p-4 sm:p-6 md:p-8 rounded-[24px] sm:rounded-[32px] border border-gray-100 shadow-sm"
+          ref={foodSectionRef}
+        >
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0">
+                <Image
+                  src="/images/recommandation/food.png"
+                  alt="Food"
+                  width={56}
+                  height={56}
+                  className="object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                    const parent = (e.target as HTMLImageElement).parentElement;
+                    if (parent) {
+                      parent.innerText = "🥗";
+                      parent.className =
+                        "text-4xl sm:text-5xl flex items-center justify-center";
+                    }
+                  }}
+                />
+              </div>
               <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#E91E8C]">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#D81B60] tracking-tight leading-tight">
                   Today's Recommended Foods
                 </h2>
-                <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                <p className="text-xs sm:text-sm text-gray-400 mt-0.5 sm:mt-1 font-medium">
                   Personalized nutrition for Week {week || "N/A"}
                 </p>
               </div>
             </div>
+            <span className="bg-[#10B981] text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-sm self-start sm:self-auto">
+              <Sparkles size={14} className="fill-white sm:w-4 sm:h-4" /> Fresh
+            </span>
           </div>
 
           {todaysFoodItems.length ? (
-            <div className="space-y-3 sm:space-y-4 bg-white/25 px-6 pb-6">
+            <div className="space-y-3 sm:space-y-4">
               {todaysFoodItems.map((item: FoodItem, index: number) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 p-4 sm:p-5 md:p-6 hover:shadow-sm transition-shadow"
+                  className="bg-white rounded-[16px] sm:rounded-[20px] border border-[#E5E7EB] p-4 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 lg:gap-8 shadow-sm hover:shadow-md transition-all duration-300"
                 >
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <span className="text-2xl sm:text-3xl">🥗</span>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-900 text-sm sm:text-base">
-                        {item.name}
-                      </span>
-                      {item.nutrient && (
-                        <span className="text-xs text-gray-500">
+                  {/* Left row: Icon and Name for mobile focus */}
+                  <div className="flex items-center gap-4 w-full md:w-auto">
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#F3F4F6] flex items-center justify-center overflow-hidden border border-[#E5E7EB]">
+                        <span className="text-xl sm:text-2xl">🥗</span>
+                      </div>
+                    </div>
+                    <h3 className="text-[#374151] font-bold text-base sm:text-lg md:min-w-[150px] lg:min-w-[200px]">
+                      {item.name}
+                    </h3>
+                  </div>
+
+                  {/* Middle row: Nutrient and Benefit */}
+                  <div className="flex-1 w-full flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+                    {/* Nutrient Badge */}
+                    {item.nutrient && (
+                      <div className="sm:min-w-[160px] md:min-w-[180px] lg:min-w-[220px]">
+                        <span className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#F0FDF4] text-[#10B981] text-[10px] sm:text-xs font-bold border border-[#DCFCE7] whitespace-nowrap">
+                          <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-[#10B981] flex items-center justify-center flex-shrink-0">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="w-2 sm:w-2.5 h-2 sm:h-2.5"
+                            >
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          </div>
                           {item.nutrient}
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
+
+                    {/* Benefit */}
+                    <p className="text-[#6B7280] text-xs sm:text-sm flex-1 leading-relaxed">
+                      {item.benefit}
+                    </p>
                   </div>
-                  <p className="text-gray-600 text-xs sm:text-sm mt-2">
-                    {item.benefit}
-                  </p>
+
+                  {/* Right Actions */}
+                  <div className="flex flex-row items-center gap-2 sm:gap-3 w-full md:w-auto mt-1 md:mt-0">
+                    <button className="flex-1 md:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-[#BAE1F0] text-[#229ECF] text-[10px] sm:text-xs font-bold hover:bg-[#BAE1F0]/10 transition-all whitespace-nowrap">
+                    View Full Meal Plan
+                    </button>
+                    <button className="flex-1 md:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl border border-[#E5E7EB] text-[#6B7280] text-[10px] sm:text-xs font-bold hover:bg-gray-50 transition-all whitespace-nowrap">
+                     Ask Al for Recipes
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="px-6 pb-6">
-              No food recommendations available for today.
-            </p>
+            <div className="py-10 sm:py-12 flex flex-col items-center justify-center text-gray-400 bg-white rounded-[16px] sm:rounded-[20px] border border-dashed border-gray-200">
+              <Sparkles size={40} className="sm:w-12 sm:h-12 mb-3 sm:mb-4 text-gray-200" />
+              <p className="text-base sm:text-lg font-medium text-center px-4">
+                No food recommendations available for today.
+              </p>
+            </div>
           )}
         </section>
       )}
