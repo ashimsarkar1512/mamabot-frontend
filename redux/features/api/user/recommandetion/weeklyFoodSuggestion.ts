@@ -4,10 +4,17 @@ export const pregnancyFoodWeeklyLogsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
 
     getPregnancyFoodWeeklyLogs: builder.query({
-      query: () => ({
-        url: "/pregnancy-food-weekly-logs",
-        method: "GET",
-      }),
+      query: ({ pregnancy_week, dietary_preference }) => {
+        const params = new URLSearchParams();
+        if (pregnancy_week) params.append("pregnancy_week", pregnancy_week);
+        if (dietary_preference)
+          params.append("dietary_preference", dietary_preference);
+
+        return {
+          url: `/pregnancy-foods/fetch?${params.toString()}`,
+          method: "GET",
+        };
+      },
       providesTags: ["PregnancyFoodWeeklyLogs"],
     }),
 
