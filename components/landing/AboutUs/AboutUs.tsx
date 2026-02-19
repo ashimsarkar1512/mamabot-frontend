@@ -43,7 +43,7 @@ const AboutUs = () => {
               <span
                 className={`${beauRivage.className} text-2xl md:text-[26px] text-primary tracking-wide`}
               >
-                {title} —
+                {title}
               </span>
             </div>
 

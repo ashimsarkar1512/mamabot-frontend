@@ -5,10 +5,11 @@ import CommonButton from "@/components/ui/Reusable/CommonButton";
 import { useGetOurJourneyQuery } from "@/redux/features/api/user/OurJourney/OurJourney";
 import { BookOpenIcon } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 const StoryBehind = () => {
   const { data, isLoading, isError } = useGetOurJourneyQuery();
-
+  const [showFull, setShowFull] = useState(false);
   if (isLoading) {
     return (
       <section className="py-16 text-center">
@@ -26,7 +27,7 @@ const StoryBehind = () => {
   }
 
   const journey = data.data[0];
-
+  const truncatedDescription = journey.description.slice(0, 200) + "...";
   return (
     <section
       className={`w-full relative ${comfortaa.className} overflow-hidden`}
@@ -44,7 +45,8 @@ const StoryBehind = () => {
             </h2>
 
             <div className="space-y-4 text-gray-600 text-sm leading-relaxed">
-              <p>{journey.description}</p>
+              {/* <p>{journey.description}</p> */}
+              <p>{showFull ? journey.description : truncatedDescription}</p>
             </div>
 
             {/* <button className="mt-5 md:mt-10 inline-flex items-center gap-2 rounded-xl bg-[#229ECF] px-6 py-3 text-lg font-medium text-white shadow-md transition hover:opacity-80 cursor-pointer">
@@ -52,8 +54,9 @@ const StoryBehind = () => {
             </button> */}
             <div className="mt-5 md:mt-10">
               <CommonButton
-                text="Read Full Story"
+                text={showFull ? "Show Less" : "Read Full Story"}
                 iconPosition="left"
+                onClick={() => setShowFull(!showFull)}
                 icon={<BookOpenIcon width={24} height={24} />}
                 bgColor="bg-[#229ECF]"
               />
