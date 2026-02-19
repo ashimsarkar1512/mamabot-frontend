@@ -628,7 +628,7 @@ const Section = ({ title, children, hasUpload }: any) => (
       <h2 className="text-[#3EB1E4] text-xl font-bold">{title}</h2>
       {hasUpload && (
         <button className="flex items-center gap-2 text-[#3EB1E4] text-xs font-bold border border-blue-100 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer">
-          <Upload size={14} /> Upload Document
+          {/* <Upload size={14} /> Upload Document */}
         </button>
       )}
     </div>
