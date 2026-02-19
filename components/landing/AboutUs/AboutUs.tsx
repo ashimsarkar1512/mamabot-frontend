@@ -73,7 +73,7 @@ const AboutUs = () => {
             <div className="relative">
               {/* Main Image */}
               {main_img && (
-                <div className="relative max-w-105 md:max-w-163 z-10 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="relative  max-w-105 md:max-w-163 z-10 rounded-2xl overflow-hidden">
                   <Image
                     src={main_img}
                     alt={title}
@@ -87,14 +87,14 @@ const AboutUs = () => {
 
               {/* Inset Image */}
               {inset_img && (
-                <div className="absolute -bottom-8 -left-4 md:-left-12 lg:-left-16 z-20">
-                  <div className="relative w-24 h-24 md:w-44 md:h-44 lg:w-48 lg:h-48 overflow-hidden shadow-xl">
+                <div className="absolute -bottom-8 -left-4 md:-left-12 lg:-left-16 z-20 float-y">
+                  <div className="relative w-24 h-24 md:w-44 md:h-44 lg:w-48 lg:h-52 rounded-3xl overflow-hidden ">
                     <Image
                       src={inset_img}
                       alt="About Mamabot"
                       width={180}
                       height={180}
-                      className="h-full w-full object-cover"
+                      className="h-full  w-full object-cover"
                     />
                   </div>
                 </div>
