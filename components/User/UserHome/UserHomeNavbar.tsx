@@ -31,10 +31,12 @@ import { useGetWebSettingsQuery } from "@/redux/features/api/user/Footer";
 import { useLogOutMutation } from "@/redux/features/api/auth/authApi";
 
 export default function UserHomeNavbar() {
+  const DEFAULT_AVATAR = "/images/avatar.png";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileAuthOpen, setIsMobileAuthOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [avatarSrc, setAvatarSrc] = useState(DEFAULT_AVATAR);
   const pathname = usePathname();
   const [logout] = useLogOutMutation();
   const router = useRouter();
@@ -103,6 +105,15 @@ export default function UserHomeNavbar() {
     email: "sarah@mamabot.com",
     avatar: "/images/user-avatar.png", // Replace with actual path
   });
+  // Sync avatarSrc with API response; fallback to default if image is missing
+  useEffect(() => {
+    if (profileImage?.image) {
+      setAvatarSrc(profileImage.image);
+    } else {
+      setAvatarSrc(DEFAULT_AVATAR);
+    }
+  }, [profileImage?.image]);
+
   const authDropdownRef = useRef<HTMLDivElement>(null);
   // Handle outside clicks to close dropdown
   useEffect(() => {
@@ -211,15 +222,13 @@ export default function UserHomeNavbar() {
                     }`}
                   >
                     <Image
-                      src={profileImage?.image || "/images/avatar.png"}
+                      src={avatarSrc}
                       alt="Profile"
                       width={40}
                       height={40}
                       className="object-cover"
                       unoptimized
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/images/avatar.png";
-                      }}
+                      onError={() => setAvatarSrc(DEFAULT_AVATAR)}
                     />
                   </button>
 
@@ -366,15 +375,13 @@ export default function UserHomeNavbar() {
                   >
                     <div className="relative h-10 w-10 shrink-0">
                       <Image
-                        src={profileImage?.image || "/images/avatar.png"}
+                        src={avatarSrc}
                         alt="User"
                         width={40}
                         height={40}
                         className="rounded-full border border-pink-100"
                         unoptimized
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/images/avatar.png";
-                        }}
+                        onError={() => setAvatarSrc(DEFAULT_AVATAR)}
                       />
                     </div>
                     <div className="flex-1 text-left">
