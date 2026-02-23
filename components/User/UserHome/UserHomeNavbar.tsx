@@ -216,6 +216,10 @@ export default function UserHomeNavbar() {
                       width={40}
                       height={40}
                       className="object-cover"
+                      unoptimized
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/images/avatar.png";
+                      }}
                     />
                   </button>
 
@@ -367,6 +371,10 @@ export default function UserHomeNavbar() {
                         width={40}
                         height={40}
                         className="rounded-full border border-pink-100"
+                        unoptimized
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/images/avatar.png";
+                        }}
                       />
                     </div>
                     <div className="flex-1 text-left">
