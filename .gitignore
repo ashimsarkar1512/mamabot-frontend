@@ -19,18 +19,26 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
 
-# debug
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
@@ -38,6 +46,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-config.bat
-temp_auto_push.bat
-temp_interactive_push.bat
+
+# IDE & editor
+.vscode/
+.idea/
+
+# OS files
+Desktop.ini
+
+# cache
+.cache/
+.turbo/
+
+# uploads/temp
+/uploads
+/tmp
+
+# package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
