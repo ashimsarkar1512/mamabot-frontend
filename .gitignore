@@ -1,69 +1,126 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/
+
+
 
 # dependencies
+
 /node_modules
+
 /.pnp
+
 .pnp.*
+
 .yarn/*
+
 !.yarn/patches
+
 !.yarn/plugins
+
 !.yarn/releases
+
 !.yarn/versions
 
+
+
 # testing
+
 /coverage
 
+
+
 # next.js
+
 /.next/
+
 /out/
 
+
+
 # production
+
 /build
+
 /dist
 
+
+
 # misc
+
 .DS_Store
+
 Thumbs.db
-*.pem
 
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-.pnpm-debug.log*
-
-# env files
-.env.development.local
-.env.test.local
-.env.production.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDE & editor
-.vscode/
-.idea/
-
-# OS files
 Desktop.ini
 
+*.pem
+
+
+
+# logs
+
+npm-debug.log*
+
+yarn-debug.log*
+
+yarn-error.log*
+
+pnpm-debug.log*
+
+.pnpm-debug.log*
+
+
+
+# env files (IMPORTANT)
+
+
+
+.env.development.local
+
+.env.test.local
+
+.env.production.local
+
+
+
+# vercel
+
+.vercel
+
+
+
+# typescript
+
+*.tsbuildinfo
+
+next-env.d.ts
+
+
+
+# IDE & editor
+
+.vscode/
+
+.idea/
+
+
+
 # cache
+
 .cache/
+
 .turbo/
 
-# uploads/temp
+
+
+# uploads/temp (only if really needed)
+
 /uploads
+
 /tmp
 
-# package managers
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+branch_structure.json
+
 temp_auto_push.bat
+
 temp_interactive_push.bat
 config.bat
