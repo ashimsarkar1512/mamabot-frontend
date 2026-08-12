@@ -1,12 +1,15 @@
 {
   "default_branch": "main",
   "branches": [
-    "main"
+    "main",
+    "origin"
   ],
   "parent": {
-    "main": null
+    "main": null,
+    "origin": "main"
   },
   "order": [
-    "main"
+    "main",
+    "origin"
   ]
 }
